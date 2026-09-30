@@ -1,6 +1,7 @@
 
 import AwarenessGap from '../components/AwarenessGap'
 import FertilityAwareness from '../components/FertilityAwareness'
+import FoundersSection from '../components/FoundersSection'
 import HeroBanner from '../components/HeroBanner'
 import HowQYXWorks from '../components/HowQYXWorks'
 import Navbar from '../components/Navbar'
@@ -24,6 +25,7 @@ const HomePage = () => {
       <HowQYXWorks/>
       <PrivateCareFeature/>
       <QYXCarousel/>
+      <FoundersSection/>
     
       <br></br>
         <br></br>
