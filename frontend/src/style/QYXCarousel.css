@@ -1,0 +1,306 @@
+.qyx-carousel {
+  padding: clamp(64px, 8vw, 112px) 24px;
+  background: #fffdf7;
+}
+
+.qyx-carousel-container {
+  width: min(100%, 1200px);
+  margin: 0 auto;
+}
+
+.qyx-carousel-heading {
+  max-width: 800px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+
+.qyx-carousel-heading > span {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: #587b60;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.qyx-carousel-heading h2 {
+  margin: 0;
+  color: #24352c;
+  font-size: clamp(2rem, 3.7vw, 3.6rem);
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+}
+
+.qyx-carousel-layout {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 52px;
+  align-items: center;
+  gap: 24px;
+}
+
+.qyx-carousel-stage {
+  position: relative;
+  min-width: 0;
+  height: 470px;
+  isolation: isolate;
+  touch-action: pan-y;
+}
+
+/* Fixed left, middle and right positions */
+.qyx-carousel-card {
+  position: absolute;
+  top: 24px;
+  left: calc(50% + var(--slot) * 22%);
+  width: min(400px, 56%);
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #e0e8dc;
+  border-radius: 22px;
+  background: #fff;
+
+  transform: translateX(-50%) scale(0.88);
+  opacity: 0.4;
+  box-shadow: 0 10px 28px rgba(36, 53, 44, 0.08);
+  pointer-events: none;
+
+  transition:
+    left 0.4s ease,
+    transform 0.4s ease,
+    opacity 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+/* Active card comes forward */
+.qyx-carousel-card.is-active {
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+  box-shadow: 0 20px 48px rgba(36, 53, 44, 0.16);
+}
+
+.qyx-carousel-card-header {
+  flex-shrink: 0;
+  min-height: 84px;
+  padding: 20px 24px;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  background: #b6d5b7;
+  text-align: center;
+}
+
+.qyx-carousel-card-header h3 {
+  margin: 0;
+  color: #24352c;
+  font-size: 1.1rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.qyx-carousel-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 28px;
+  text-align: center;
+}
+
+.qyx-carousel-circle {
+  width: 180px;
+  height: 180px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  padding: 20px;
+  border: 9px solid #dcebd9;
+  border-top-color: #587b60;
+  border-right-color: #587b60;
+  border-radius: 50%;
+  background: #f8faf6;
+}
+
+.qyx-carousel-circle span {
+  color: #24352c;
+  font-size: 1.65rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.qyx-carousel-card-body p {
+  max-width: 310px;
+  margin: 0;
+  color: #526257;
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+.qyx-carousel-arrow {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #aac7ae;
+  border-radius: 50%;
+  background: #fffdf7;
+  color: #42694b;
+  font-size: 1.7rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.qyx-carousel-arrow:hover {
+  background: #e0ecdd;
+}
+
+.qyx-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.qyx-carousel-dot {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.qyx-carousel-dot::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  background: #c6d6c4;
+}
+
+.qyx-carousel-dot.is-active::before {
+  background: #42694b;
+}
+
+.qyx-carousel-arrow:focus-visible,
+.qyx-carousel-dot:focus-visible {
+  outline: 3px solid #587b60;
+  outline-offset: 3px;
+}
+
+.qyx-carousel-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .qyx-carousel-layout {
+    gap: 12px;
+  }
+
+  .qyx-carousel-card {
+    width: min(360px, 62%);
+    left: calc(50% + var(--slot) * 18%);
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .qyx-carousel {
+    padding: 56px 16px;
+  }
+
+  .qyx-carousel-heading {
+    margin-bottom: 30px;
+  }
+
+  .qyx-carousel-layout {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .qyx-carousel-stage {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    height: 420px;
+  }
+
+  .qyx-carousel-card {
+    top: 12px;
+    left: calc(50% + var(--relative) * 24px);
+    width: min(340px, calc(100% - 64px));
+    height: 390px;
+    transform: translateX(-50%) scale(0.9);
+    opacity: 0.35;
+  }
+
+  .qyx-carousel-card.is-active {
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+
+  .qyx-carousel-card-header {
+    min-height: 76px;
+    padding: 16px;
+  }
+
+  .qyx-carousel-card-header h3 {
+    font-size: 1rem;
+  }
+
+  .qyx-carousel-card-body {
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .qyx-carousel-circle {
+    width: 150px;
+    height: 150px;
+    border-width: 8px;
+  }
+
+  .qyx-carousel-circle span {
+    font-size: 1.4rem;
+  }
+
+  .qyx-carousel-card-body p {
+    font-size: 0.93rem;
+  }
+
+  .qyx-carousel-arrow {
+    width: 44px;
+    height: 44px;
+  }
+
+  .qyx-carousel-previous {
+    justify-self: end;
+  }
+
+  .qyx-carousel-next {
+    justify-self: start;
+  }
+
+  .qyx-carousel-dots {
+    margin-top: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qyx-carousel-card,
+  .qyx-carousel-arrow {
+    transition: none;
+  }
+}

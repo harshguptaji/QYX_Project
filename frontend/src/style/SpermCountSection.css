@@ -1,0 +1,91 @@
+.sperm-count-section {
+  padding: clamp(64px, 8vw, 120px) 24px;
+  background: #f8faf6;
+}
+
+.sperm-count-container {
+  width: min(100%, 1200px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: clamp(36px, 6vw, 96px);
+}
+
+.sperm-count-image {
+  min-width: 0;
+}
+
+.sperm-count-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 24px;
+  box-shadow: 0 18px 50px rgba(36, 53, 44, 0.1);
+}
+
+.sperm-count-content {
+  max-width: 520px;
+}
+
+.sperm-count-label {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: #587b60;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+}
+
+.sperm-count-content h2 {
+  margin: 0;
+  color: #24352c;
+  font-size: clamp(2rem, 3.4vw, 3.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.sperm-count-content p {
+  margin: 24px 0 0;
+  color: #526257;
+  font-size: clamp(1rem, 1.15vw, 1.125rem);
+  line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+  .sperm-count-section {
+    padding: 64px 20px;
+  }
+
+  .sperm-count-container {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .sperm-count-content {
+    max-width: 650px;
+  }
+
+  .sperm-count-image img {
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sperm-count-section {
+    padding: 48px 16px;
+  }
+
+  .sperm-count-container {
+    gap: 28px;
+  }
+
+  .sperm-count-label {
+    font-size: 0.72rem;
+  }
+
+  .sperm-count-content p {
+    margin-top: 18px;
+    line-height: 1.7;
+  }
+}

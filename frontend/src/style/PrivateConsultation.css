@@ -1,0 +1,122 @@
+.private-consultation {
+  padding: clamp(64px, 8vw, 112px) 24px;
+  background: #f8faf6;
+}
+
+.private-consultation-container {
+  width: min(100%, 1200px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(36px, 6vw, 88px);
+}
+
+.private-consultation-content {
+  max-width: 520px;
+}
+
+.private-consultation-label {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: #587b60;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+}
+
+.private-consultation-content h2 {
+  margin: 0;
+  color: #24352c;
+  font-size: clamp(2rem, 3.5vw, 3.6rem);
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+}
+
+.private-consultation-content p {
+  margin: 22px 0 0;
+  color: #526257;
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  line-height: 1.75;
+}
+
+.private-consultation-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 52px;
+  margin-top: 32px;
+  padding: 0 26px;
+  border-radius: 999px;
+  background: #587b60;
+  color: #fff;
+  font-size: 0.98rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.private-consultation-button:hover {
+  background: #42694b;
+  transform: translateY(-2px);
+}
+
+.private-consultation-button:focus-visible {
+  outline: 3px solid #24352c;
+  outline-offset: 4px;
+}
+
+.private-consultation-image {
+  min-width: 0;
+}
+
+.private-consultation-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 24px;
+  box-shadow: 0 18px 48px rgba(36, 53, 44, 0.12);
+}
+
+@media (max-width: 768px) {
+  .private-consultation {
+    padding: 64px 20px;
+  }
+
+  .private-consultation-container {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .private-consultation-image {
+    order: -1;
+  }
+
+  .private-consultation-content {
+    max-width: 640px;
+  }
+}
+
+@media (max-width: 480px) {
+  .private-consultation {
+    padding: 48px 16px;
+  }
+
+  .private-consultation-container {
+    gap: 28px;
+  }
+
+  .private-consultation-image img {
+    border-radius: 16px;
+  }
+
+  .private-consultation-content p {
+    margin-top: 18px;
+  }
+
+  .private-consultation-button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}

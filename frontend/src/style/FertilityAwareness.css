@@ -1,0 +1,86 @@
+.fertility-awareness {
+  padding: clamp(64px, 8vw, 112px) 24px;
+  background-color: #fffdf7;
+}
+
+.fertility-awareness-container {
+  width: min(100%, 1200px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: clamp(36px, 6vw, 88px);
+}
+
+.fertility-awareness-image {
+  min-width: 0;
+}
+
+.fertility-awareness-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 22px;
+  box-shadow: 0 16px 40px rgba(30, 65, 45, 0.08);
+}
+
+.fertility-awareness-content {
+  max-width: 520px;
+}
+
+.fertility-awareness-label {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: #587b60;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+}
+
+.fertility-awareness-content h2 {
+  margin: 0;
+  color: #183e2b;
+  font-size: clamp(2rem, 3.5vw, 3.6rem);
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+}
+
+.fertility-awareness-content p {
+  margin: 22px 0 0;
+  color: #526257;
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  line-height: 1.75;
+}
+
+@media (max-width: 768px) {
+  .fertility-awareness {
+    padding: 64px 20px;
+  }
+
+  .fertility-awareness-container {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .fertility-awareness-content {
+    max-width: 640px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fertility-awareness {
+    padding: 48px 16px;
+  }
+
+  .fertility-awareness-image img {
+    border-radius: 16px;
+  }
+
+  .fertility-awareness-container {
+    gap: 28px;
+  }
+
+  .fertility-awareness-content p {
+    margin-top: 18px;
+  }
+}
