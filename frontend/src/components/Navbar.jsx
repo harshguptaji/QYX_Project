@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import "../style/Navbar.css";
 
 const Navbar = ({ isLoggedIn = true }) => {
@@ -31,9 +32,9 @@ const Navbar = ({ isLoggedIn = true }) => {
           className={`navbar-menu ${menuOpen ? "navbar-menu-open" : ""}`}
         >
           <div className="navbar-links">
-            <a href="/" onClick={closeMenu}>
-              Home
-            </a>
+            <Link to={"/faq"} onClick={closeMenu}>
+              FAQ
+            </Link>
             <a href="/about" onClick={closeMenu}>
               About Us
             </a>
