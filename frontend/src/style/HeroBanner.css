@@ -72,6 +72,7 @@
   border-radius: 999px;
   font-size: 1rem;
   font-weight: 600;
+  cursor: pointer;
   text-decoration: none;
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
