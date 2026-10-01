@@ -1,4 +1,5 @@
 import "../style/HeroBanner.css"
+import FertilityQuiz from "./FertilityQuiz"
 
 const HeroBanner = () => {
   return (
@@ -13,8 +14,8 @@ const HeroBanner = () => {
                 <a className="hero-prm-btn" href="#">Book Consultation</a>
             </span>
             <span>
-                <a className="hero-sec-btn" href="#">Quiz</a>
-            </span>
+  <FertilityQuiz />
+</span>
         </div>
     </section>
   )
