@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import careMemberImage from "../assets/boy.png";
+import careMemberImage from "../assets/Boy.png";
 import "../style/CareOutcomes.css";
 
 const metrics = {
