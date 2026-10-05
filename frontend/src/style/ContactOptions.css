@@ -1,0 +1,227 @@
+.qyx-contact-options {
+  --options-background: #fafaf5;
+  --options-heading: #233f2c;
+  --options-green: #597c62;
+  --options-green-dark: #34543b;
+  --options-text: #4c5f4e;
+  --options-border: #dce4d5;
+
+  width: 100%;
+  background: var(--options-background);
+  color: var(--options-heading);
+  font-family: Inter, Arial, sans-serif;
+}
+
+.qyx-contact-options,
+.qyx-contact-options * {
+  box-sizing: border-box;
+}
+
+.qyx-contact-options__container {
+  width: min(100%, 1280px);
+  margin-inline: auto;
+  padding: clamp(44px, 6vw, 72px) clamp(20px, 5vw, 64px);
+}
+
+.qyx-contact-options__heading {
+  max-width: 650px;
+  margin: 0 auto 32px;
+  text-align: center;
+}
+
+.qyx-contact-options__eyebrow {
+  color: var(--options-green-dark);
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.15em;
+}
+
+.qyx-contact-options__heading h2 {
+  margin: 14px 0;
+  color: var(--options-heading);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.9rem, 3vw, 2.75rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.qyx-contact-options__heading h2 span {
+  color: var(--options-green-dark);
+}
+
+.qyx-contact-options__heading p {
+  margin: 0;
+  color: var(--options-text);
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.qyx-contact-options__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.qyx-contact-options__card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: clamp(24px, 3vw, 32px);
+  border: 1px solid var(--options-border);
+  border-radius: 20px;
+  background: #ffffff;
+
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.qyx-contact-options__card:hover {
+  border-color: #a6b99b;
+  box-shadow: 0 12px 30px rgb(35 63 44 / 6%);
+}
+
+.qyx-contact-options__category {
+  color: var(--options-green-dark);
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.7;
+  letter-spacing: 0.1em;
+}
+
+.qyx-contact-options__card h3 {
+  margin: 18px 0 12px;
+  color: var(--options-heading);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.4rem, 2vw, 1.7rem);
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.qyx-contact-options__card > p {
+  margin: 0 0 22px;
+  color: var(--options-text);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+.qyx-contact-options__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 44px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--options-border);
+
+  color: var(--options-green-dark);
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.qyx-contact-options__link span {
+  flex-shrink: 0;
+  font-size: 1.2rem;
+}
+
+.qyx-contact-options__link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.qyx-contact-options__link:focus-visible {
+  outline: 3px solid var(--options-green-dark);
+  outline-offset: 5px;
+  border-radius: 4px;
+}
+
+.qyx-contact-options__note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 18px 22px;
+  border-radius: 14px;
+  background: #edf2e7;
+}
+
+.qyx-contact-options__note-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border: 1px solid var(--options-green);
+  border-radius: 50%;
+  color: var(--options-green-dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.qyx-contact-options__note p {
+  margin: 0;
+  color: var(--options-text);
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 900px) {
+  .qyx-contact-options__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .qyx-contact-options__card:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .qyx-contact-options__container {
+    padding: 40px 20px;
+  }
+
+  .qyx-contact-options__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .qyx-contact-options__card:last-child {
+    grid-column: auto;
+  }
+
+  .qyx-contact-options__card {
+    padding: 24px;
+  }
+
+  .qyx-contact-options__heading {
+    margin-bottom: 26px;
+  }
+
+  .qyx-contact-options__note {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  .qyx-contact-options__container {
+    padding-inline: 18px;
+  }
+
+  .qyx-contact-options__card {
+    padding: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qyx-contact-options__card {
+    transition: none;
+  }
+}
