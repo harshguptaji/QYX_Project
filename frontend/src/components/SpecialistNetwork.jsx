@@ -215,7 +215,9 @@ export default function SpecialistNetwork() {
           </p>
 
           <a
-            href="/specialist-apply"
+            href={`https://wa.me/917453898747?text=${encodeURIComponent(
+                "Hello QYX team, I would like to apply to join the QYX Specialist Network as a doctor specializing in male fertility. Please share the eligibility requirements, credential verification process, and next steps to register. Thank you."
+                )}`}
             className="qyx-network__apply"
           >
             Apply to Join the Specialist Network

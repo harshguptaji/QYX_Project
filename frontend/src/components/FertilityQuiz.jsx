@@ -54,6 +54,12 @@ const questions = [
   },
 ];
 
+const emptyContact = {
+  email: "",
+  phone: "",
+  purpose: "",
+};
+
 function getResult(answers) {
   if (answers[2] === 2) {
     return [
@@ -86,18 +92,23 @@ export default function FertilityQuiz() {
   const dialogRef = useRef(null);
   const headingRef = useRef(null);
   const triggerRef = useRef(null);
+  const phoneRef = useRef(null);
+  const purposeRef = useRef(null);
+
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState([]);
-  const [contact, setContact] = useState({
-    email: "",
-    phone: "",
+  const [contact, setContact] = useState({ ...emptyContact });
+  const [error, setError] = useState({
+    field: "",
+    message: "",
   });
-  const [error, setError] = useState("");
 
+  const totalSteps = questions.length + 1;
   const isQuestion = step < questions.length;
   const isContact = step === questions.length;
-  const isResult = step === questions.length + 1;
+  const isResult = step === totalSteps;
+
   const question = questions[step];
   const result = getResult(answers);
 
@@ -113,16 +124,25 @@ export default function FertilityQuiz() {
   }, [open]);
 
   useEffect(() => {
-    if (open) headingRef.current?.focus();
+    if (open) {
+      headingRef.current?.focus();
+    }
   }, [open, step]);
+
+  const clearError = () => {
+    setError({ field: "", message: "" });
+  };
 
   const startQuiz = () => {
     setStep(0);
     setAnswers([]);
-    setContact({ email: "", phone: "" });
-    setError("");
+    setContact({ ...emptyContact });
+    clearError();
     setOpen(true);
-    dialogRef.current?.showModal();
+
+    if (!dialogRef.current?.open) {
+      dialogRef.current?.showModal();
+    }
   };
 
   const closeQuiz = () => {
@@ -142,12 +162,23 @@ export default function FertilityQuiz() {
     });
 
     setStep((previous) => previous + 1);
-    setError("");
+    clearError();
   };
 
   const goBack = () => {
     setStep((previous) => Math.max(0, previous - 1));
-    setError("");
+    clearError();
+  };
+
+  const updateContact = (event) => {
+    const { name, value } = event.target;
+
+    setContact((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
+
+    clearError();
   };
 
   const submitContact = (event) => {
@@ -155,6 +186,7 @@ export default function FertilityQuiz() {
 
     const email = contact.email.trim();
     const phone = contact.phone.trim();
+    const purpose = contact.purpose.trim();
     const digits = phone.replace(/\D/g, "");
 
     if (
@@ -162,38 +194,54 @@ export default function FertilityQuiz() {
       digits.length < 10 ||
       digits.length > 15
     ) {
-      setError("Please enter a valid phone number with country code if needed.");
+      setError({
+        field: "phone",
+        message:
+          "Please enter a valid phone number with country code if needed.",
+      });
+
+      phoneRef.current?.focus();
       return;
     }
 
-    setContact({ email, phone });
-    setError("");
+    if (!purpose) {
+      setError({
+        field: "purpose",
+        message: "Please enter your purpose of visiting.",
+      });
 
-    // Add your API request here to save:
-    // { email, phone, answers }
-    // Move to the result after the request succeeds.
+      purposeRef.current?.focus();
+      return;
+    }
 
-    setStep(questions.length + 1);
+    const submission = {
+      email,
+      phone,
+      purpose,
+      answers,
+    };
+
+    setContact({ email, phone, purpose });
+    clearError();
+
+    // Connect your backend here to save `submission`.
+    // These details currently remain in component state.
+    // Example payload:
+    // { email, phone, purpose, answers }
+
+    setStep(totalSteps);
   };
 
   return (
     <>
-      {/* <button
+      <button
         ref={triggerRef}
         type="button"
-        className="qyx-quiz-trigger"
+        className="hero-sec-btn"
         onClick={startQuiz}
       >
         Quiz
-      </button> */}
-      <button
-  ref={triggerRef}
-  type="button"
-  className="hero-sec-btn"
-  onClick={startQuiz}
->
-  Quiz
-</button>
+      </button>
 
       <dialog
         ref={dialogRef}
@@ -201,7 +249,17 @@ export default function FertilityQuiz() {
         aria-labelledby="qyx-quiz-title"
         onClose={handleClosed}
         onClick={(event) => {
-          if (event.target === event.currentTarget) closeQuiz();
+          if (event.target !== event.currentTarget) return;
+
+          const bounds = event.currentTarget.getBoundingClientRect();
+
+          const clickedOutside =
+            event.clientX < bounds.left ||
+            event.clientX > bounds.right ||
+            event.clientY < bounds.top ||
+            event.clientY > bounds.bottom;
+
+          if (clickedOutside) closeQuiz();
         }}
       >
         {open && (
@@ -233,9 +291,10 @@ export default function FertilityQuiz() {
                 <div className="qyx-quiz__progress-label">
                   <span>
                     {isQuestion
-                      ? `Question ${step + 1} of 5`
+                      ? `Question ${step + 1} of ${questions.length}`
                       : "One last step"}
                   </span>
+
                   <span>YOUR NEXT STEP</span>
                 </div>
 
@@ -244,11 +303,13 @@ export default function FertilityQuiz() {
                   role="progressbar"
                   aria-label="Quiz progress"
                   aria-valuemin={0}
-                  aria-valuemax={6}
+                  aria-valuemax={totalSteps}
                   aria-valuenow={step}
                 >
                   <span
-                    style={{ width: `${(step / 6) * 100}%` }}
+                    style={{
+                      width: `${(step / totalSteps) * 100}%`,
+                    }}
                   />
                 </div>
               </div>
@@ -328,8 +389,8 @@ export default function FertilityQuiz() {
                   </h2>
 
                   <p className="qyx-quiz__subtitle">
-                    Enter your email and phone number to view your
-                    personalized summary.
+                    Enter your email, phone number, and purpose of
+                    visiting to view your personalized summary.
                   </p>
 
                   <form
@@ -349,13 +410,7 @@ export default function FertilityQuiz() {
                       maxLength={254}
                       required
                       value={contact.email}
-                      onChange={(event) => {
-                        setContact((previous) => ({
-                          ...previous,
-                          email: event.target.value,
-                        }));
-                        setError("");
-                      }}
+                      onChange={updateContact}
                     />
 
                     <label htmlFor="qyx-quiz-phone">
@@ -363,6 +418,7 @@ export default function FertilityQuiz() {
                     </label>
 
                     <input
+                      ref={phoneRef}
                       id="qyx-quiz-phone"
                       type="tel"
                       name="phone"
@@ -371,26 +427,44 @@ export default function FertilityQuiz() {
                       maxLength={25}
                       required
                       value={contact.phone}
-                      aria-invalid={Boolean(error)}
+                      onChange={updateContact}
+                      aria-invalid={error.field === "phone"}
                       aria-describedby={
-                        error ? "qyx-quiz-error" : undefined
+                        error.field === "phone"
+                          ? "qyx-quiz-error"
+                          : undefined
                       }
-                      onChange={(event) => {
-                        setContact((previous) => ({
-                          ...previous,
-                          phone: event.target.value,
-                        }));
-                        setError("");
-                      }}
                     />
 
-                    {error && (
+                    <label htmlFor="qyx-quiz-purpose">
+                      Purpose of visiting
+                    </label>
+
+                    <textarea
+                      ref={purposeRef}
+                      id="qyx-quiz-purpose"
+                      name="purpose"
+                      placeholder="Tell us what you would like help with."
+                      rows={3}
+                      maxLength={500}
+                      required
+                      value={contact.purpose}
+                      onChange={updateContact}
+                      aria-invalid={error.field === "purpose"}
+                      aria-describedby={
+                        error.field === "purpose"
+                          ? "qyx-quiz-error"
+                          : undefined
+                      }
+                    />
+
+                    {error.message && (
                       <p
                         id="qyx-quiz-error"
                         className="qyx-quiz__error"
                         role="alert"
                       >
-                        {error}
+                        {error.message}
                       </p>
                     )}
 
@@ -398,7 +472,8 @@ export default function FertilityQuiz() {
                       type="submit"
                       className="qyx-quiz__primary"
                     >
-                      View my summary <span aria-hidden="true">→</span>
+                      View my summary
+                      <span aria-hidden="true">→</span>
                     </button>
                   </form>
 
@@ -450,7 +525,8 @@ export default function FertilityQuiz() {
             </div>
 
             <footer className="qyx-quiz__footer">
-              A starting point for a conversation, not a fertility diagnosis.
+              A starting point for a conversation, not a fertility
+              diagnosis.
             </footer>
           </div>
         )}
