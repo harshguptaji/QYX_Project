@@ -8,7 +8,7 @@ import {
 const bannerHighlights = [
   {
     id: 1,
-    title: "12 clear answers",
+    title: "Answers",
     description: "Common patient questions",
     icon: BookOpenText,
   },
