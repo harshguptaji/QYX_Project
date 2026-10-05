@@ -1,0 +1,446 @@
+.qyx-network,
+.qyx-network * {
+  box-sizing: border-box;
+}
+
+.qyx-network {
+  --network-forest: #263b2e;
+  --network-green: #597c62;
+  --network-sage: #c9dda9;
+  --network-muted: #687565;
+  --network-line: #dce4d5;
+
+  width: 100%;
+  padding: clamp(56px, 7vw, 100px) 20px;
+  overflow: hidden;
+  color: var(--network-forest);
+  background: #fafaf5;
+  font-family: Inter, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.qyx-network__container {
+  width: min(100%, 1200px);
+  margin-inline: auto;
+}
+
+.qyx-network__header {
+  max-width: 900px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.qyx-network__eyebrow {
+  display: block;
+  color: var(--network-green);
+  font-size: 0.72rem;
+  font-weight: 750;
+  line-height: 1.6;
+  letter-spacing: 0.15em;
+}
+
+.qyx-network__header h2 {
+  margin: 18px 0 22px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(32px, 4.5vw, 58px);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.qyx-network__header h2 > span {
+  color: var(--network-green);
+}
+
+.qyx-network__header > p {
+  max-width: 740px;
+  margin: 0 auto;
+  color: var(--network-muted);
+  font-size: clamp(15px, 1.4vw, 17px);
+  line-height: 1.8;
+}
+
+/* Carousel */
+
+.qyx-network__carousel {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) 56px;
+  align-items: center;
+  gap: 28px;
+  margin-top: 48px;
+}
+
+.qyx-network__stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  min-width: 0;
+  padding: 20px 0 45px;
+  isolation: isolate;
+}
+
+.qyx-network__card {
+  grid-area: 1 / 1;
+  width: 68%;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--network-line);
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 12px 35px rgba(38, 59, 46, 0.08);
+  transform-origin: left top;
+  transition:
+    transform 380ms ease,
+    opacity 380ms ease,
+    filter 380ms ease;
+}
+
+.qyx-network__card--0 {
+  z-index: 3;
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.qyx-network__card--1 {
+  z-index: 2;
+  opacity: 0.5;
+  filter: saturate(0.6);
+  transform: translate(27%, 24px) scale(0.94);
+  pointer-events: none;
+}
+
+.qyx-network__card--2 {
+  z-index: 1;
+  opacity: 0.25;
+  filter: saturate(0.4);
+  transform: translate(54%, 46px) scale(0.88);
+  pointer-events: none;
+}
+
+.qyx-network__card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 64px;
+  padding: 18px 28px;
+  background: var(--network-sage);
+  color: #35503b;
+  font-size: 0.72rem;
+  font-weight: 750;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+}
+
+.qyx-network__card-top > span:last-child {
+  font-size: 1rem;
+  letter-spacing: 0;
+  opacity: 0.65;
+}
+
+.qyx-network__card-body {
+  padding: 28px;
+}
+
+.qyx-network__symbol {
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  margin-bottom: 22px;
+  border: 1px solid #dce6d0;
+  border-radius: 20px;
+  background: #f0f5e9;
+  color: var(--network-green);
+}
+
+.qyx-network__symbol svg {
+  width: 42px;
+  height: 42px;
+}
+
+.qyx-network__card h3 {
+  margin: 0 0 14px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(25px, 2.8vw, 36px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.qyx-network__card-body > p {
+  margin: 0;
+  color: var(--network-muted);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+.qyx-network__list {
+  display: grid;
+  gap: 18px;
+  margin: 26px 0 0;
+  padding: 24px 0 0;
+  border-top: 1px solid #e7ebdf;
+  list-style: none;
+}
+
+.qyx-network__list li {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+}
+
+.qyx-network__number {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #edf3e5;
+  color: var(--network-green);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.qyx-network__list h4 {
+  margin: 0 0 5px;
+  font-size: 0.85rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.qyx-network__list p {
+  margin: 0;
+  color: var(--network-muted);
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+
+.qyx-network__arrow {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 1px solid #a9bca1;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--network-green);
+  cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.qyx-network__arrow svg {
+  width: 25px;
+  height: 25px;
+}
+
+.qyx-network__arrow:hover {
+  background: var(--network-green);
+  color: #ffffff;
+}
+
+.qyx-network__dots {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.qyx-network__dots button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.qyx-network__dots button::after {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #cbd5c3;
+  content: "";
+}
+
+.qyx-network__dots button.is-active::after {
+  background: var(--network-green);
+}
+
+/* Application CTA */
+
+.qyx-network__application {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.qyx-network__application > p {
+  margin: 0 0 20px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(20px, 2.2vw, 26px);
+  line-height: 1.5;
+}
+
+.qyx-network__application > p > span {
+  color: var(--network-muted);
+}
+
+.qyx-network__apply {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 100%;
+  min-height: 52px;
+  padding: 14px 26px;
+  border: 1px solid var(--network-green);
+  border-radius: 999px;
+  background: var(--network-green);
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 650;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 180ms ease;
+}
+
+.qyx-network__apply:hover {
+  background: #41654a;
+}
+
+.qyx-network button:focus-visible,
+.qyx-network a:focus-visible {
+  outline: 3px solid #91aa7d;
+  outline-offset: 4px;
+}
+
+.qyx-network__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Tablet */
+
+@media (max-width: 900px) {
+  .qyx-network__carousel {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    gap: 16px;
+  }
+
+  .qyx-network__arrow {
+    width: 44px;
+    height: 44px;
+  }
+
+  .qyx-network__card {
+    width: 78%;
+  }
+
+  .qyx-network__card--1 {
+    transform: translate(16%, 20px) scale(0.95);
+  }
+
+  .qyx-network__card--2 {
+    transform: translate(32%, 40px) scale(0.9);
+  }
+
+  .qyx-network__card-body,
+  .qyx-network__card-top {
+    padding-inline: 22px;
+  }
+}
+
+/* Mobile: one readable card, controls below */
+
+@media (max-width: 600px) {
+  .qyx-network {
+    padding: 48px 16px;
+  }
+
+  .qyx-network__header h2 {
+    font-size: clamp(30px, 8vw, 40px);
+  }
+
+  .qyx-network__carousel {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 28px;
+  }
+
+  .qyx-network__stage {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding: 0;
+  }
+
+  .qyx-network__card {
+    width: 100%;
+  }
+
+  .qyx-network__card--1,
+  .qyx-network__card--2 {
+    visibility: hidden;
+    opacity: 0;
+    transform: none;
+  }
+
+  .qyx-network__card--0 {
+    transform: none;
+  }
+
+  .qyx-network__arrow--previous {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: end;
+  }
+
+  .qyx-network__arrow--next {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+  }
+
+  .qyx-network__card-body {
+    padding: 24px 20px;
+  }
+
+  .qyx-network__card-top {
+    padding: 16px 20px;
+    font-size: 0.65rem;
+  }
+
+  .qyx-network__card h3 {
+    font-size: 28px;
+  }
+
+  .qyx-network__application {
+    margin-top: 24px;
+  }
+
+  .qyx-network__apply {
+    width: 100%;
+    padding-inline: 18px;
+    font-size: 0.82rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qyx-network__card,
+  .qyx-network__arrow,
+  .qyx-network__apply {
+    transition: none;
+  }
+}
