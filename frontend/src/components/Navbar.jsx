@@ -31,20 +31,23 @@ const Navbar = ({ isLoggedIn = true }) => {
           id="navbar-links"
           className={`navbar-menu ${menuOpen ? "navbar-menu-open" : ""}`}
         >
-          <div className="navbar-links">
-            <Link to={"/faq"} onClick={closeMenu}>
-              FAQ
-            </Link>
-            <a href="/about" onClick={closeMenu}>
-              About Us
-            </a>
-            <a href="/specialists" onClick={closeMenu}>
-              Specialists
-            </a>
-            <a href="/contact" onClick={closeMenu}>
-              Contact
-            </a>
-          </div>
+        <div className="navbar-links">
+          <Link to="/faq" onClick={closeMenu}>
+            FAQ
+          </Link>
+
+          <Link to="/about" onClick={closeMenu}>
+            About Us
+          </Link>
+
+          <Link to="/specialists" onClick={closeMenu}>
+            Specialists
+          </Link>
+
+          <Link to="/contact" onClick={closeMenu}>
+            Contact
+          </Link>
+        </div>
 
           <div className="navbar-actions">
             {isLoggedIn ? (
