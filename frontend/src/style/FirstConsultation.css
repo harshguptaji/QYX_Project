@@ -1,0 +1,202 @@
+.qyx-first-consultation {
+  --consultation-background: #fafaf4;
+  --consultation-heading: #243e2e;
+  --consultation-green: #557a60;
+  --consultation-green-dark: #3e6247;
+  --consultation-text: #526556;
+  --consultation-border: #d6e1d1;
+
+  width: 100%;
+  scroll-margin-top: 90px;
+  background: var(--consultation-background);
+  color: var(--consultation-heading);
+  font-family: Inter, Arial, sans-serif;
+}
+
+.qyx-first-consultation,
+.qyx-first-consultation * {
+  box-sizing: border-box;
+}
+
+.qyx-first-consultation__container {
+  width: min(100%, 1260px);
+  margin-inline: auto;
+  padding:
+    clamp(44px, 6vw, 76px)
+    clamp(20px, 6vw, 76px);
+}
+
+.qyx-first-consultation__heading {
+  max-width: 680px;
+  margin-bottom: 38px;
+}
+
+.qyx-first-consultation__eyebrow {
+  display: inline-block;
+  color: var(--consultation-green-dark);
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: 0.14em;
+}
+
+.qyx-first-consultation__heading h2 {
+  margin: 16px 0 20px;
+  color: var(--consultation-heading);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 3.5vw, 2.9rem);
+  font-weight: 400;
+  line-height: 1.16;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.qyx-first-consultation__heading h2 span {
+  display: block;
+  color: var(--consultation-green);
+}
+
+.qyx-first-consultation__heading > p {
+  max-width: 550px;
+  margin: 0;
+  color: var(--consultation-text);
+  font-size: 0.95rem;
+  line-height: 1.85;
+}
+
+.qyx-first-consultation__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--consultation-border);
+}
+
+.qyx-first-consultation__item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 30px 28px 0;
+}
+
+.qyx-first-consultation__item:first-child {
+  padding-left: 0;
+}
+
+.qyx-first-consultation__item:last-child {
+  padding-right: 0;
+}
+
+.qyx-first-consultation__item + .qyx-first-consultation__item {
+  border-left: 1px solid var(--consultation-border);
+}
+
+.qyx-first-consultation__item-label {
+  display: block;
+  color: var(--consultation-green-dark);
+  font-size: 0.67rem;
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: 0.1em;
+}
+
+.qyx-first-consultation__item h3 {
+  max-width: 280px;
+  margin: 22px 0 18px;
+  color: var(--consultation-heading);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.qyx-first-consultation__description {
+  margin: 0 0 24px;
+  color: var(--consultation-text);
+  font-size: 0.9rem;
+  line-height: 1.85;
+}
+
+.qyx-first-consultation__note {
+  margin: auto 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--consultation-border);
+  color: var(--consultation-green-dark);
+  font-size: 0.76rem;
+  line-height: 1.75;
+}
+
+@media (max-width: 1000px) {
+  .qyx-first-consultation__container {
+    padding-inline: 28px;
+  }
+
+  .qyx-first-consultation__item {
+    padding-inline: 20px;
+  }
+
+  .qyx-first-consultation__item h3 {
+    font-size: 1.55rem;
+  }
+}
+
+@media (max-width: 740px) {
+  .qyx-first-consultation__container {
+    padding: 44px 22px;
+  }
+
+  .qyx-first-consultation__heading {
+    margin-bottom: 28px;
+  }
+
+  .qyx-first-consultation__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .qyx-first-consultation__item,
+  .qyx-first-consultation__item:first-child,
+  .qyx-first-consultation__item:last-child {
+    padding: 26px 0;
+  }
+
+  .qyx-first-consultation__item
+    + .qyx-first-consultation__item {
+    border-left: 0;
+    border-top: 1px solid var(--consultation-border);
+  }
+
+  .qyx-first-consultation__item h3 {
+    max-width: none;
+    margin: 16px 0 12px;
+    font-size: 1.7rem;
+  }
+
+  .qyx-first-consultation__description {
+    max-width: 580px;
+    margin-bottom: 14px;
+  }
+
+  .qyx-first-consultation__note {
+    margin: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .qyx-first-consultation__container {
+    padding: 36px 18px;
+  }
+
+  .qyx-first-consultation__heading h2 {
+    font-size: 2rem;
+  }
+
+  .qyx-first-consultation__heading > p {
+    font-size: 0.9rem;
+  }
+
+  .qyx-first-consultation__item h3 {
+    font-size: 1.55rem;
+  }
+}

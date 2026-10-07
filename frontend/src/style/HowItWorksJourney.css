@@ -1,0 +1,397 @@
+.qyx-how-journey {
+  --journey-background: #fafaf4;
+  --journey-heading: #243e2e;
+  --journey-green: #557a60;
+  --journey-green-dark: #35583e;
+  --journey-text: #526556;
+  --journey-border: #d6e1d1;
+  --journey-selected: #eaf1e8;
+
+  width: 100%;
+  scroll-margin-top: 90px;
+  background: var(--journey-background);
+  color: var(--journey-heading);
+  font-family: Inter, Arial, sans-serif;
+}
+
+.qyx-how-journey,
+.qyx-how-journey * {
+  box-sizing: border-box;
+}
+
+.qyx-how-journey__container {
+  width: min(100%, 1260px);
+  margin-inline: auto;
+  padding:
+    clamp(44px, 6vw, 78px)
+    clamp(20px, 6vw, 76px);
+}
+
+.qyx-how-journey__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 34px;
+}
+
+.qyx-how-journey__header > div {
+  min-width: 0;
+}
+
+.qyx-how-journey__eyebrow {
+  display: inline-block;
+  color: #3e6247;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: 0.14em;
+}
+
+.qyx-how-journey__header h2 {
+  margin: 14px 0 0;
+  color: var(--journey-heading);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 3.5vw, 2.9rem);
+  font-weight: 400;
+  line-height: 1.16;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.qyx-how-journey__header h2 span {
+  display: block;
+}
+
+.qyx-how-journey__header > p {
+  max-width: 340px;
+  margin: 0 0 4px;
+  color: var(--journey-text);
+  font-size: 0.94rem;
+  line-height: 1.8;
+}
+
+.qyx-how-journey__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: start;
+  gap: clamp(24px, 4vw, 40px);
+}
+
+.qyx-how-journey__tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.qyx-how-journey__tab {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  min-height: 88px;
+  padding: 17px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: transparent;
+  color: var(--journey-heading);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+
+.qyx-how-journey__tab:hover {
+  background: #f0f4eb;
+}
+
+.qyx-how-journey__tab--active,
+.qyx-how-journey__tab--active:hover {
+  border-color: var(--journey-border);
+  background: var(--journey-selected);
+}
+
+.qyx-how-journey__number {
+  width: 38px;
+  flex-shrink: 0;
+  color: var(--journey-green);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.qyx-how-journey__tab-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.qyx-how-journey__tab-title {
+  color: var(--journey-heading);
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.qyx-how-journey__tab-subtitle {
+  color: var(--journey-text);
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
+.qyx-how-journey__tab-arrow {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--journey-green-dark);
+  font-size: 1.15rem;
+}
+
+.qyx-how-journey__panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  padding: clamp(24px, 3vw, 36px);
+  border: 1px solid var(--journey-border);
+  border-radius: 24px;
+  background: #ffffff;
+}
+
+.qyx-how-journey__panel h3 {
+  margin: 14px 0 18px;
+  color: var(--journey-heading);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.8rem, 2.8vw, 2.25rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.qyx-how-journey__description {
+  margin: 0;
+  color: var(--journey-text);
+  font-size: 0.93rem;
+  line-height: 1.85;
+}
+
+.qyx-how-journey__points {
+  margin: 22px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.qyx-how-journey__points li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--journey-border);
+  color: var(--journey-heading);
+  font-size: 0.86rem;
+  line-height: 1.7;
+}
+
+.qyx-how-journey__points li > span {
+  flex-shrink: 0;
+  color: var(--journey-green);
+  font-weight: 700;
+}
+
+.qyx-how-journey__conversation {
+  padding: 24px;
+  border-radius: 16px;
+  background: #f2f5ed;
+}
+
+.qyx-how-journey__conversation-label {
+  display: block;
+  color: var(--journey-green-dark);
+  font-size: 0.65rem;
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: 0.1em;
+}
+
+.qyx-how-journey__bubble {
+  width: fit-content;
+  max-width: 90%;
+  margin: 14px 0 0;
+  padding: 13px 16px;
+  border-radius: 12px 12px 12px 3px;
+  background: #ffffff;
+  color: var(--journey-heading);
+  font-size: 0.82rem;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.qyx-how-journey__bubble--reply {
+  margin-left: auto;
+  border-radius: 12px 12px 3px 12px;
+  background: #dfe9d9;
+}
+
+.qyx-how-journey__panel-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.qyx-how-journey__panel-footer > span {
+  color: var(--journey-text);
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
+.qyx-how-journey__next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 10px 0 10px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--journey-green-dark);
+  font: 600 0.82rem/1.5 Inter, Arial, sans-serif;
+  text-align: left;
+  cursor: pointer;
+}
+
+.qyx-how-journey__next:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+.qyx-how-journey__next > span {
+  font-size: 1.1rem;
+}
+
+.qyx-how-journey__tab:focus-visible,
+.qyx-how-journey__panel:focus-visible,
+.qyx-how-journey__next:focus-visible {
+  outline: 3px solid var(--journey-green-dark);
+  outline-offset: 4px;
+}
+
+@media (max-width: 1000px) {
+  .qyx-how-journey__container {
+    padding-inline: 28px;
+  }
+
+  .qyx-how-journey__layout {
+    gap: 24px;
+  }
+
+  .qyx-how-journey__tab {
+    gap: 12px;
+    padding: 15px 12px;
+  }
+
+  .qyx-how-journey__tab-arrow {
+    display: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .qyx-how-journey__header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .qyx-how-journey__header > p {
+    max-width: 540px;
+    margin: 0;
+  }
+
+  .qyx-how-journey__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+  }
+
+  .qyx-how-journey__tab {
+    min-height: 76px;
+    padding: 14px 18px;
+  }
+
+  .qyx-how-journey__tab-arrow {
+    display: block;
+  }
+}
+
+@media (max-width: 520px) {
+  .qyx-how-journey__container {
+    padding: 40px 20px;
+  }
+
+  .qyx-how-journey__header {
+    margin-bottom: 26px;
+  }
+
+  .qyx-how-journey__header h2 {
+    font-size: 2rem;
+  }
+
+  .qyx-how-journey__panel {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+
+  .qyx-how-journey__panel h3 {
+    font-size: 1.85rem;
+  }
+
+  .qyx-how-journey__conversation {
+    padding: 18px;
+  }
+
+  .qyx-how-journey__bubble {
+    max-width: 96%;
+  }
+}
+
+@media (max-width: 380px) {
+  .qyx-how-journey__container {
+    padding-inline: 18px;
+  }
+
+  .qyx-how-journey__tab {
+    gap: 10px;
+    padding: 13px;
+  }
+
+  .qyx-how-journey__number {
+    width: 30px;
+    font-size: 1.45rem;
+  }
+
+  .qyx-how-journey__panel {
+    padding: 22px 16px;
+  }
+
+  .qyx-how-journey__panel-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .qyx-how-journey__next {
+    padding-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qyx-how-journey__tab {
+    transition: none;
+  }
+}

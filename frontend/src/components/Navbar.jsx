@@ -47,6 +47,9 @@ const Navbar = ({ isLoggedIn = true }) => {
           <Link to="/contact" onClick={closeMenu}>
             Contact
           </Link>
+          <Link to="/how-it-works" onClick={closeMenu}>
+            How It Works
+          </Link>
         </div>
 
           <div className="navbar-actions">
