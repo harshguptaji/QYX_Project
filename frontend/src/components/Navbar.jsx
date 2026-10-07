@@ -50,6 +50,9 @@ const Navbar = ({ isLoggedIn = true }) => {
           <Link to="/how-it-works" onClick={closeMenu}>
             How It Works
           </Link>
+          <Link to="/doctors" onClick={closeMenu}>
+            Doctors
+          </Link>
         </div>
 
           <div className="navbar-actions">
