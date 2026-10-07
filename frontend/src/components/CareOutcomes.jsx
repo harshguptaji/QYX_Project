@@ -4,9 +4,9 @@ import "../style/CareOutcomes.css";
 
 const metrics = {
   headline: 60,
-  intention: 89,
-  memberRate: 94.6,
-  comparisonRate: 74,
+  intention: 50,
+  memberRate: 1,
+  comparisonRate: 2,
   outcomeRate: 55.4,
 };
 
@@ -208,11 +208,10 @@ export default function CareOutcomes() {
               </span>
             </div>
 
-            <h3>Informed decisions</h3>
+            <h3> Sperm Concentration Decline</h3>
 
             <p>
-              Help people understand available care options and
-              choose their next step with confidence.
+              Global sperm concentration has fallen by roughly half since 1973 — and the decline is accelerating.
             </p>
           </article>
 
@@ -236,7 +235,7 @@ export default function CareOutcomes() {
                     {percentage(metrics.memberRate)}
                   </span>
 
-                  <small>Sample member rate</small>
+                  {/* <small>Sample member rate</small> */}
                 </div>
               </div>
 
@@ -245,15 +244,14 @@ export default function CareOutcomes() {
                   {percentage(metrics.comparisonRate)}
                 </span>
 
-                <small>Sample benchmark</small>
+                {/* <small>Sample benchmark</small> */}
               </div>
             </div>
 
-            <h3>Personalized support</h3>
+            <h3>Male Factor Infertility</h3>
 
             <p>
-              Connect with guidance that considers individual
-              needs, questions, and priorities.
+              1 in 2 infertility cases in India involves a male factor — yet men are rarely consulted first.
             </p>
           </article>
 
@@ -288,11 +286,10 @@ export default function CareOutcomes() {
               </div>
             </div>
 
-            <h3>A clearer next step</h3>
+            <h3>The Delay Gap</h3>
 
             <p>
-              Make care easier to navigate through accessible
-              consultations and thoughtful follow-up.
+              Men wait 3–5 years longer than women, on average, before their first fertility consultation.
             </p>
           </article>
         </div>
