@@ -197,3 +197,54 @@
     padding: 0 18px;
   }
 }
+
+button.navbar-login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 44px;
+  padding: 10px 24px;
+
+  appearance: none;
+  border: 1px solid #557a60;
+  border-radius: 999px;
+  background: transparent;
+  color: #35583e;
+
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  cursor: pointer;
+
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+button.navbar-login:hover {
+  border-color: #35583e;
+  background: #35583e;
+  color: #ffffff;
+}
+
+button.navbar-login:focus-visible {
+  outline: 3px solid rgba(85, 122, 96, 0.4);
+  outline-offset: 4px;
+}
+
+@media (max-width: 600px) {
+  button.navbar-login {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.navbar-login {
+    transition: none;
+  }
+}

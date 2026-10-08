@@ -1,0 +1,323 @@
+.qyx-login-overlay {
+  --login-heading: #243e2e;
+  --login-green: #557a60;
+  --login-green-dark: #35583e;
+  --login-text: #526556;
+  --login-border: #d6e1d1;
+  --login-ivory: #fafaf4;
+  --login-soft: #eaf1e8;
+
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+  overflow-y: auto;
+  background: rgba(22, 37, 27, 0.58);
+  backdrop-filter: blur(7px);
+
+  font-family: Inter, Arial, sans-serif;
+}
+
+.qyx-login,
+.qyx-login * {
+  box-sizing: border-box;
+}
+
+.qyx-login {
+  position: relative;
+  width: 100%;
+  max-width: 490px;
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
+  margin: auto;
+  padding: 40px;
+  overflow-y: auto;
+
+  border: 1px solid var(--login-border);
+  border-radius: 26px;
+  background: var(--login-ivory);
+  color: var(--login-heading);
+  box-shadow: 0 30px 90px rgba(15, 30, 20, 0.24);
+}
+
+.qyx-login__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+
+  display: grid;
+  place-items: center;
+
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--login-heading);
+  cursor: pointer;
+}
+
+.qyx-login__close:hover {
+  background: var(--login-soft);
+}
+
+.qyx-login__close svg {
+  width: 22px;
+  height: 22px;
+}
+
+.qyx-login__brand {
+  width: fit-content;
+  margin-bottom: 30px;
+  padding-right: 35px;
+  color: var(--login-heading);
+  font-size: 29px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+}
+
+.qyx-login__brand span {
+  color: var(--login-green);
+}
+
+.qyx-login__eyebrow {
+  margin: 0 0 12px;
+  color: var(--login-green-dark);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  line-height: 1.5;
+}
+
+.qyx-login h2 {
+  margin: 0;
+  color: var(--login-heading);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(36px, 6vw, 46px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -1.5px;
+}
+
+.qyx-login h2 em {
+  color: var(--login-green);
+  font-weight: 400;
+}
+
+.qyx-login__description {
+  margin: 16px 0 28px;
+  color: var(--login-text);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.qyx-login__form {
+  display: grid;
+  gap: 20px;
+}
+
+.qyx-login__field {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+}
+
+.qyx-login__field label {
+  color: var(--login-heading);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.qyx-login__field input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 52px;
+  padding: 13px 15px;
+
+  border: 1px solid var(--login-border);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--login-heading);
+
+  font: inherit;
+  font-size: 16px;
+}
+
+.qyx-login__field input::placeholder {
+  color: #727e73;
+  font-size: 14px;
+}
+
+.qyx-login__field input:focus {
+  border-color: var(--login-green);
+  outline: 3px solid rgba(85, 122, 96, 0.15);
+}
+
+.qyx-login__password {
+  position: relative;
+}
+
+.qyx-login__password input {
+  padding-right: 56px;
+}
+
+.qyx-login__visibility {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+
+  display: grid;
+  place-items: center;
+
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--login-text);
+  cursor: pointer;
+}
+
+.qyx-login__visibility:hover {
+  background: var(--login-soft);
+}
+
+.qyx-login__visibility svg {
+  width: 21px;
+  height: 21px;
+}
+
+.qyx-login__message {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--login-soft);
+  color: var(--login-green-dark);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.qyx-login__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+
+  width: 100%;
+  min-height: 52px;
+  margin-top: 3px;
+  padding: 13px 22px;
+
+  border: 1px solid var(--login-green);
+  border-radius: 999px;
+  background: var(--login-green);
+  color: #ffffff;
+
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: background-color 180ms ease;
+}
+
+.qyx-login__submit:hover {
+  border-color: var(--login-green-dark);
+  background: var(--login-green-dark);
+}
+
+.qyx-login__submit span {
+  font-size: 21px;
+  line-height: 1;
+}
+
+.qyx-login__note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-top: 24px;
+  padding: 13px 14px;
+
+  border-radius: 12px;
+  background: var(--login-soft);
+  color: var(--login-text);
+}
+
+.qyx-login__note svg {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--login-green-dark);
+}
+
+.qyx-login__note p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.qyx-login__support {
+  margin: 20px 0 0;
+  color: var(--login-text);
+  font-size: 12px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.qyx-login__support a {
+  color: var(--login-green-dark);
+  font-weight: 600;
+  text-underline-offset: 3px;
+}
+
+.qyx-login button:focus-visible,
+.qyx-login a:focus-visible {
+  outline: 3px solid var(--login-green);
+  outline-offset: 3px;
+}
+
+@media (max-width: 520px) {
+  .qyx-login-overlay {
+    padding: 16px;
+  }
+
+  .qyx-login {
+    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
+    padding: 32px 24px;
+    border-radius: 22px;
+  }
+
+  .qyx-login__brand {
+    margin-bottom: 25px;
+  }
+}
+
+@media (max-width: 380px) {
+  .qyx-login-overlay {
+    padding: 12px;
+  }
+
+  .qyx-login {
+    max-height: calc(100vh - 24px);
+    max-height: calc(100dvh - 24px);
+    padding: 30px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qyx-login__submit {
+    transition: none;
+  }
+}
