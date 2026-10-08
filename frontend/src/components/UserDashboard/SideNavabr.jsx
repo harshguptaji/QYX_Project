@@ -25,8 +25,8 @@ const links = [
     icon: CalendarDays,
   },
   {
-    to: "/settings",
-    label: "Account settings",
+    to: "/dashboard",
+    label: "Admin Dashboard",
     icon: Settings2,
   },
 ];

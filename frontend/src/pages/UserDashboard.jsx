@@ -23,6 +23,7 @@ export default function UserDashboard() {
     city: "Jaipur",
     gender: "male",
     role: "user",
+    id: "USER-001",
   });
 
   const navigate = useNavigate();

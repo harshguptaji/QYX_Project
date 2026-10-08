@@ -15,6 +15,8 @@ import DoctorPage from "./pages/DoctorPage";
 // Dashboard layout and pages
 import UserDashboard from "./pages/UserDashboard";
 import UserProfilePage from "./pages/UserProfilePage";
+import UserAppointmentsPage from "./pages/UserAppointmentsPage";
+import AppointmentDetailsPage from "./pages/AppointmentDetailsPage";
 
 function App() {
   const { pathname } = useLocation();
@@ -50,6 +52,15 @@ function App() {
           path="/profile"
           element={<UserProfilePage />}
         />
+        <Route
+    path="/appointments"
+    element={<UserAppointmentsPage />}
+  />
+
+  <Route
+    path="/appointments/:appointmentId"
+    element={<AppointmentDetailsPage />}
+  />
       </Route>
 
       {/* Page not found */}
