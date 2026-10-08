@@ -1,0 +1,363 @@
+.qyx-signup-overlay {
+  --signup-heading: #243e2e;
+  --signup-green: #557a60;
+  --signup-green-dark: #35583e;
+  --signup-text: #526556;
+  --signup-border: #d6e1d1;
+  --signup-ivory: #fafaf4;
+  --signup-soft: #eaf1e8;
+
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+  overflow-y: auto;
+  background: rgba(22, 37, 27, 0.58);
+  backdrop-filter: blur(7px);
+
+  font-family: Inter, Arial, sans-serif;
+}
+
+.qyx-signup,
+.qyx-signup * {
+  box-sizing: border-box;
+}
+
+.qyx-signup {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
+  margin: auto;
+  padding: 40px;
+  overflow-y: auto;
+
+  border: 1px solid var(--signup-border);
+  border-radius: 26px;
+  background: var(--signup-ivory);
+  color: var(--signup-heading);
+  box-shadow: 0 30px 90px rgba(15, 30, 20, 0.24);
+}
+
+.qyx-signup__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+
+  display: grid;
+  place-items: center;
+
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--signup-heading);
+  cursor: pointer;
+}
+
+.qyx-signup__close:hover {
+  background: var(--signup-soft);
+}
+
+.qyx-signup__close svg {
+  width: 22px;
+  height: 22px;
+}
+
+.qyx-signup__brand {
+  width: fit-content;
+  margin-bottom: 26px;
+  padding-right: 35px;
+
+  color: var(--signup-heading);
+  font-size: 29px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+}
+
+.qyx-signup__brand span {
+  color: var(--signup-green);
+}
+
+.qyx-signup__eyebrow {
+  margin: 0 0 12px;
+  color: var(--signup-green-dark);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+}
+
+.qyx-signup h2 {
+  margin: 0;
+  color: var(--signup-heading);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(34px, 6vw, 44px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -1.3px;
+}
+
+.qyx-signup h2 em {
+  color: var(--signup-green);
+  font-weight: 400;
+}
+
+.qyx-signup__description {
+  max-width: 480px;
+  margin: 16px 0 28px;
+  color: var(--signup-text);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.qyx-signup__form {
+  display: grid;
+  gap: 22px;
+}
+
+.qyx-signup__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.qyx-signup__field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+}
+
+.qyx-signup__field--full {
+  grid-column: 1 / -1;
+}
+
+.qyx-signup__field label {
+  color: var(--signup-heading);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.qyx-signup__field input,
+.qyx-signup__field select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 52px;
+  padding: 13px 15px;
+
+  border: 1px solid var(--signup-border);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--signup-heading);
+
+  font: inherit;
+  font-size: 16px;
+}
+
+.qyx-signup__field input::placeholder {
+  color: #727e73;
+  font-size: 14px;
+}
+
+.qyx-signup__field select {
+  cursor: pointer;
+}
+
+.qyx-signup__field input:focus,
+.qyx-signup__field select:focus {
+  border-color: var(--signup-green);
+  outline: 3px solid rgba(85, 122, 96, 0.15);
+}
+
+.qyx-signup__field small {
+  color: var(--signup-text);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.qyx-signup__mobile {
+  position: relative;
+}
+
+.qyx-signup__mobile > span {
+  position: absolute;
+  top: 0;
+  left: 14px;
+
+  display: flex;
+  align-items: center;
+
+  height: 52px;
+  color: var(--signup-green-dark);
+  font-size: 14px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.qyx-signup__mobile input {
+  padding-left: 53px;
+}
+
+.qyx-signup__password {
+  position: relative;
+}
+
+.qyx-signup__password input {
+  padding-right: 56px;
+}
+
+.qyx-signup__visibility {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+
+  display: grid;
+  place-items: center;
+
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--signup-text);
+  cursor: pointer;
+}
+
+.qyx-signup__visibility:hover {
+  background: var(--signup-soft);
+}
+
+.qyx-signup__visibility svg {
+  width: 21px;
+  height: 21px;
+}
+
+.qyx-signup__message {
+  margin: 0;
+  padding: 12px 14px;
+
+  border-radius: 10px;
+  background: var(--signup-soft);
+  color: var(--signup-green-dark);
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.qyx-signup__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+
+  width: 100%;
+  min-height: 52px;
+  padding: 13px 22px;
+
+  border: 1px solid var(--signup-green);
+  border-radius: 999px;
+  background: var(--signup-green);
+  color: #ffffff;
+
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: background-color 180ms ease;
+}
+
+.qyx-signup__submit:hover {
+  border-color: var(--signup-green-dark);
+  background: var(--signup-green-dark);
+}
+
+.qyx-signup__submit span {
+  font-size: 21px;
+  line-height: 1;
+}
+
+.qyx-signup__note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-top: 24px;
+  padding: 13px 14px;
+
+  border-radius: 12px;
+  background: var(--signup-soft);
+  color: var(--signup-text);
+}
+
+.qyx-signup__note svg {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--signup-green-dark);
+}
+
+.qyx-signup__note p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.qyx-signup button:focus-visible,
+.qyx-signup a:focus-visible {
+  outline: 3px solid var(--signup-green);
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .qyx-signup-overlay {
+    padding: 16px;
+  }
+
+  .qyx-signup {
+    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
+    padding: 32px 24px;
+    border-radius: 22px;
+  }
+
+  .qyx-signup__grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .qyx-signup__field--full {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 380px) {
+  .qyx-signup-overlay {
+    padding: 12px;
+  }
+
+  .qyx-signup {
+    max-height: calc(100vh - 24px);
+    max-height: calc(100dvh - 24px);
+    padding: 30px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qyx-signup__submit {
+    transition: none;
+  }
+}

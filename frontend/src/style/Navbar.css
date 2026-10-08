@@ -248,3 +248,43 @@ button.navbar-login:focus-visible {
     transition: none;
   }
 }
+
+button.navbar-signup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 44px;
+  padding: 10px 24px;
+
+  appearance: none;
+  border: 1px solid #557a60;
+  border-radius: 999px;
+  background: #557a60;
+  color: #ffffff;
+
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  cursor: pointer;
+
+  transition: background-color 180ms ease;
+}
+
+button.navbar-signup:hover {
+  border-color: #35583e;
+  background: #35583e;
+}
+
+button.navbar-signup:focus-visible {
+  outline: 3px solid rgba(85, 122, 96, 0.4);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.navbar-signup {
+    transition: none;
+  }
+}

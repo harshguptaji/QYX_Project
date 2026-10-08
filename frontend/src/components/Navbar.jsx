@@ -2,11 +2,13 @@ import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 
 import Login from "./Login";
+import Signup from "./Signup";
 import "../style/Navbar.css";
 
 const Navbar = ({ isLoggedIn = false }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const [signupOpen, setSignupOpen] = useState(false);
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -18,6 +20,15 @@ const Navbar = ({ isLoggedIn = false }) => {
   const closeLogin = useCallback(() => {
     setLoginOpen(false);
   }, []);
+
+  const openSignup = () => {
+  closeMenu();
+  setSignupOpen(true);
+};
+
+const closeSignup = useCallback(() => {
+  setSignupOpen(false);
+}, []);
 
   return (
     <>
@@ -112,13 +123,15 @@ const Navbar = ({ isLoggedIn = false }) => {
                     Login
                   </button>
 
-                  <Link
-                    to="/signup"
-                    className="navbar-signup"
-                    onClick={closeMenu}
-                  >
-                    Sign Up
-                  </Link>
+                  <button
+  type="button"
+  className="navbar-signup"
+  aria-haspopup="dialog"
+  aria-expanded={signupOpen}
+  onClick={openSignup}
+>
+  Sign Up
+</button>
                 </>
               )}
             </div>
@@ -127,6 +140,7 @@ const Navbar = ({ isLoggedIn = false }) => {
       </header>
 
       <Login isOpen={loginOpen} onClose={closeLogin} />
+      <Signup isOpen={signupOpen} onClose={closeSignup} />
     </>
   );
 };
