@@ -62,20 +62,8 @@ const closeSignup = useCallback(() => {
             }`}
           >
             <div className="navbar-links">
-              <Link to="/faq" onClick={closeMenu}>
-                FAQ
-              </Link>
-
-              <Link to="/about" onClick={closeMenu}>
-                About Us
-              </Link>
-
               <Link to="/specialists" onClick={closeMenu}>
-                Specialists
-              </Link>
-
-              <Link to="/contact" onClick={closeMenu}>
-                Contact
+                Meet Our Specialists
               </Link>
 
               <Link to="/how-it-works" onClick={closeMenu}>
@@ -84,6 +72,18 @@ const closeSignup = useCallback(() => {
 
               <Link to="/doctors" onClick={closeMenu}>
                 Doctors
+              </Link>
+
+              <Link to="/about" onClick={closeMenu}>
+                About Us
+              </Link>
+
+              <Link to="/contact" onClick={closeMenu}>
+                Contact
+              </Link>
+
+              <Link to="/faq" onClick={closeMenu}>
+                FAQ
               </Link>
             </div>
 

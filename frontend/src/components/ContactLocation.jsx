@@ -1,14 +1,14 @@
 import "../style/ContactLocation.css";
 
 const ContactLocation = () => {
-  // Replace these values when the final office address is available.
-  const officeAddress = "Clock Tower, Dehradun, Uttarakhand, India";
+  const officeAddress =
+    "B-2, IT Park, Sahastradhara Road, Dehradun, Uttarakhand, India - 248001";
 
   const mapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(
     officeAddress
   )}&output=embed`;
 
-  const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
     officeAddress
   )}`;
 
@@ -30,26 +30,26 @@ const ContactLocation = () => {
 
           <p className="qyx-contact-location__description">
             Have a question about QYX or want to connect with our team?
-            Reach out before planning your visit so we can guide you.
+            Contact us before planning your visit so we can help you
+            coordinate.
           </p>
 
           <div className="qyx-contact-location__address">
             <span className="qyx-contact-location__label">
-                LOCATION
+              OFFICE ADDRESS
             </span>
 
-            <h3>Clock Tower area</h3>
+            <h3>QYX Office, Dehradun</h3>
 
             <address>
-              Dehradun, Uttarakhand
+              B-2, IT Park
+              <br />
+              Sahastradhara Road
+              <br />
+              Dehradun, Uttarakhand – 248001
               <br />
               India
             </address>
-
-            <p className="qyx-contact-location__placeholder">
-              Temporary location — our final office address and visiting
-              details will be updated here.
-            </p>
           </div>
 
           <div className="qyx-contact-location__actions">
@@ -59,7 +59,7 @@ const ContactLocation = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Open in Google Maps
+              Get directions
               <span aria-hidden="true">↗</span>
             </a>
 
@@ -77,7 +77,7 @@ const ContactLocation = () => {
           <iframe
             className="qyx-contact-location__map"
             src={mapEmbedUrl}
-            title="Google Map showing the sample Clock Tower location in Dehradun"
+            title="QYX office at B-2, IT Park, Sahastradhara Road, Dehradun"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             allowFullScreen
@@ -85,15 +85,15 @@ const ContactLocation = () => {
 
           <div className="qyx-contact-location__map-caption">
             <div>
-              <strong>Dehradun · Location</strong>
-              <p>Final office address to be confirmed</p>
+              <strong>QYX Office · Dehradun</strong>
+              <p>B-2, IT Park, Sahastradhara Road</p>
             </div>
 
             <a
               href={directionsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Open sample Dehradun location in Google Maps"
+              aria-label="Get directions to the QYX office in Google Maps"
             >
               <span aria-hidden="true">↗</span>
             </a>

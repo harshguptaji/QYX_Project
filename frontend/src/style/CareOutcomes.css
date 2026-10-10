@@ -225,7 +225,7 @@
   max-width: calc(100% - 34px);
   aspect-ratio: 1;
   margin-right: 28px;
-  border: 1px solid var(--outcomes-sage);
+  border: 2px solid var(--outcomes-sage);
   border-radius: 50%;
 }
 
@@ -233,7 +233,9 @@
   position: absolute;
   inset: 13px;
   border-radius: 50%;
-  background: var(--outcomes-sage);
+  background: #36594a;
+  border: 1.5px solid var(--outcomes-sage);
+  
   transform-origin: center;
 }
 
@@ -361,6 +363,9 @@
   .qyx-outcomes__visual {
     gap: 12px;
   }
+  .qyx-outcomes__person{
+    right:-5.5vw;
+  }
 
   .qyx-outcomes__portrait {
     height: 350px;
@@ -467,13 +472,19 @@
 
   .qyx-outcomes__person {
     top: 0;
+    right:-6vw;
     max-width: 135px;
-    padding: 7px 9px;
+    padding: 2px 8px;
     font-size: 0.62rem;
   }
 
   .qyx-outcomes__large-number {
     font-size: clamp(48px, 14vw, 70px);
+  }
+  .qyx-outcomes__eyebrow {
+    margin-top: 10vw;
+    margin-bottom: 12px;
+    font-size: 0.65rem;
   }
 
   .qyx-outcomes__headline-stat p {

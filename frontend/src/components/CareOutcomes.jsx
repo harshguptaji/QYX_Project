@@ -232,20 +232,19 @@ export default function CareOutcomes() {
 
                 <div className="qyx-outcomes__circle-content">
                   <span aria-hidden="true">
-                    {percentage(metrics.memberRate)}
+                    {/* {percentage(metrics.memberRate)} */}
+                    1 in 2
                   </span>
 
                   {/* <small>Sample member rate</small> */}
                 </div>
               </div>
 
-              <div className="qyx-outcomes__average-circle">
+              {/* <div className="qyx-outcomes__average-circle">
                 <span aria-hidden="true">
                   {percentage(metrics.comparisonRate)}
                 </span>
-
-                {/* <small>Sample benchmark</small> */}
-              </div>
+              </div> */}
             </div>
 
             <h3>Male Factor Infertility</h3>

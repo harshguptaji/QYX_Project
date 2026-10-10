@@ -93,7 +93,7 @@
   max-width: 90%;
   margin: 0 0 14px;
   font-size: clamp(0.6rem, 0.8vw, 0.9rem);
-  text-align: justify;
+  text-align: left;
   font-weight: 550;
   line-height: 1.35;
 }
@@ -164,8 +164,8 @@
   }
 
   .your-path-card-content h3 {
-    max-width: 90%;
-    font-size: 1.25rem;
+    max-width: 100%;
+    font-size: 1rem;
   }
 }
 

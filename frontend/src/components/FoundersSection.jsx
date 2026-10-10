@@ -1,5 +1,5 @@
-import founderOne from "../assets/founder_1.png";
-import founderTwo from "../assets/founder_1.png";
+import founderOne from "../assets/founder.png";
+import founderTwo from "../assets/co_founder.png";
 import "../style/FoundersSection.css";
 
 const founders = [
