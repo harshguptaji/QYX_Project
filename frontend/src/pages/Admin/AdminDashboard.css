@@ -1,0 +1,111 @@
+.admin-dashboard {
+  --admin-heading: #243e2e;
+  --admin-green: #557a60;
+  --admin-green-dark: #35583e;
+  --admin-text: #526556;
+  --admin-border: #d6e1d1;
+  --admin-ivory: #fafaf4;
+  --admin-soft: #eaf1e8;
+  --admin-white: #ffffff;
+  --admin-sidebar-width: 260px;
+
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--admin-ivory);
+  color: var(--admin-heading);
+  font-family: Inter, Arial, sans-serif;
+}
+
+.admin-dashboard,
+.admin-dashboard * {
+  box-sizing: border-box;
+}
+
+.admin-dashboard button,
+.admin-dashboard input,
+.admin-dashboard select {
+  font-family: inherit;
+}
+
+.admin-dashboard button:focus-visible,
+.admin-dashboard a:focus-visible {
+  outline: 3px solid var(--admin-green);
+  outline-offset: 4px;
+}
+
+.admin-dashboard__page {
+  min-width: 0;
+  margin-left: var(--admin-sidebar-width);
+}
+
+.admin-dashboard__content {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: clamp(28px, 3.5vw, 48px);
+}
+
+.admin-dashboard__mobile-header {
+  display: none;
+}
+
+.admin-dashboard__logo img {
+  display: block;
+  width: 120px;
+  height: auto;
+  max-height: 46px;
+  object-fit: contain;
+}
+
+.admin-dashboard__menu-button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  background: var(--admin-soft);
+  color: var(--admin-green-dark);
+  cursor: pointer;
+}
+
+.admin-dashboard__menu-button svg {
+  width: 22px;
+  height: 22px;
+}
+
+@media (max-width: 1024px) {
+  .admin-dashboard__page {
+    margin-left: 0;
+  }
+
+  .admin-dashboard__mobile-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    min-height: 72px;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--admin-border);
+    background: var(--admin-ivory);
+  }
+
+  .admin-dashboard__content {
+    padding: 30px 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-dashboard__mobile-header {
+    padding: 12px 16px;
+  }
+
+  .admin-dashboard__content {
+    padding: 26px 16px;
+  }
+}

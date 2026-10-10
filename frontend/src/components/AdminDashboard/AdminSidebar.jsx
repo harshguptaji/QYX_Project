@@ -2,55 +2,44 @@ import { useEffect, useRef } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
   ArrowLeft,
-  CalendarDays,
-  LockKeyhole,
+  LayoutDashboard,
   LogOut,
-  Settings2,
-  UserRound,
+  ShieldCheck,
   X,
 } from "lucide-react";
 
 import logoImg from "../../assets/logo.png";
-import "./SideNavbar.css";
+import "./AdminSidebar.css";
 
-const links = [
-  {
-    to: "/profile",
-    label: "My profile",
-    icon: UserRound,
-  },
-  {
-    to: "/appointments",
-    label: "Appointments",
-    icon: CalendarDays,
-  },
+// Add future sidebar pages here.
+const navigationItems = [
   {
     to: "/admin",
-    label: "Admin Dashboard",
-    icon: Settings2,
+    label: "Overview",
+    icon: LayoutDashboard,
+    end: true,
   },
 ];
 
-export default function SideNavbar({
+export default function AdminSidebar({
   isOpen,
   onClose,
   onLogout,
-  user,
 }) {
   const sidebarRef = useRef(null);
-  const closeButtonRef = useRef(null);
+  const closeRef = useRef(null);
 
   useEffect(() => {
     if (!isOpen) return;
 
+    const media = window.matchMedia("(max-width: 1024px)");
+    if (!media.matches) return;
+
     const previousFocus = document.activeElement;
     const previousOverflow = document.body.style.overflow;
-    const mobileQuery = window.matchMedia("(max-width: 1024px)");
-
-    if (!mobileQuery.matches) return;
 
     document.body.style.overflow = "hidden";
-    closeButtonRef.current?.focus();
+    closeRef.current?.focus();
 
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
@@ -82,16 +71,16 @@ export default function SideNavbar({
     };
 
     const handleResize = () => {
-      if (!mobileQuery.matches) onClose();
+      if (!media.matches) onClose();
     };
 
     document.addEventListener("keydown", handleKeyDown);
-    mobileQuery.addEventListener("change", handleResize);
+    media.addEventListener("change", handleResize);
 
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
-      mobileQuery.removeEventListener("change", handleResize);
+      media.removeEventListener("change", handleResize);
 
       if (
         previousFocus instanceof HTMLElement &&
@@ -102,19 +91,11 @@ export default function SideNavbar({
     };
   }, [isOpen, onClose]);
 
-  const initials = user.name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
-
   return (
     <>
       {isOpen && (
         <div
-          className="user-sidebar-overlay"
+          className="admin-sidebar-overlay"
           onClick={onClose}
           aria-hidden="true"
         />
@@ -122,58 +103,55 @@ export default function SideNavbar({
 
       <aside
         ref={sidebarRef}
-        id="dashboard-sidebar"
-        className={`user-sidebar ${
-          isOpen ? "user-sidebar--open" : ""
+        id="admin-sidebar"
+        className={`admin-sidebar ${
+          isOpen ? "admin-sidebar--open" : ""
         }`}
-        aria-label="User account"
+        aria-label="Admin navigation"
       >
-        <div className="user-sidebar__top">
+        <div className="admin-sidebar__top">
           <Link
             to="/"
-            className="user-sidebar__logo"
+            className="admin-sidebar__logo"
             onClick={onClose}
           >
             <img src={logoImg} alt="QYX MedTech home" />
           </Link>
 
           <button
-            ref={closeButtonRef}
+            ref={closeRef}
             type="button"
-            className="user-sidebar__close"
-            aria-label="Close account menu"
+            className="admin-sidebar__close"
             onClick={onClose}
+            aria-label="Close admin menu"
           >
             <X aria-hidden="true" />
           </button>
         </div>
 
-        <div className="user-sidebar__user">
-          <div className="user-sidebar__avatar" aria-hidden="true">
-            {initials}
+        <div className="admin-sidebar__account">
+          <div className="admin-sidebar__account-icon">
+            <ShieldCheck aria-hidden="true" />
           </div>
 
-          <div className="user-sidebar__identity">
-            <strong>{user.name}</strong>
-            <span>Patient account</span>
+          <div>
+            <strong>QYX Administration</strong>
+            <span>Admin workspace</span>
           </div>
         </div>
 
-        <p className="user-sidebar__eyebrow">MY ACCOUNT</p>
+        <p className="admin-sidebar__label">WORKSPACE</p>
 
-        <nav
-          className="user-sidebar__navigation"
-          aria-label="Account navigation"
-        >
-          {links.map(({ to, label, icon: Icon }) => (
+        <nav className="admin-sidebar__navigation">
+          {navigationItems.map(({ to, label, icon: Icon, end }) => (
             <NavLink
               key={to}
               to={to}
-              end
+              end={end}
               onClick={onClose}
               className={({ isActive }) =>
-                `user-sidebar__link ${
-                  isActive ? "user-sidebar__link--active" : ""
+                `admin-sidebar__link ${
+                  isActive ? "admin-sidebar__link--active" : ""
                 }`
               }
             >
@@ -183,19 +161,10 @@ export default function SideNavbar({
           ))}
         </nav>
 
-        <div className="user-sidebar__bottom">
-          <div className="user-sidebar__privacy">
-            <LockKeyhole aria-hidden="true" />
-            <p>
-              Your space.
-              <br />
-              Your care. Your pace.
-            </p>
-          </div>
-
+        <div className="admin-sidebar__bottom">
           <Link
             to="/"
-            className="user-sidebar__secondary"
+            className="admin-sidebar__secondary"
             onClick={onClose}
           >
             <ArrowLeft aria-hidden="true" />
@@ -204,7 +173,7 @@ export default function SideNavbar({
 
           <button
             type="button"
-            className="user-sidebar__secondary"
+            className="admin-sidebar__secondary"
             onClick={onLogout}
           >
             <LogOut aria-hidden="true" />

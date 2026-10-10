@@ -1,7 +1,12 @@
 import "./App.css";
 
 import { useLayoutEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import {
+  Navigate,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 
 // Public pages
 import FAQPage from "./pages/FAQPage";
@@ -12,11 +17,15 @@ import ContactPage from "./pages/ContactPage";
 import HowItsWorkPage from "./pages/HowItsWorkPage";
 import DoctorPage from "./pages/DoctorPage";
 
-// Dashboard layout and pages
+// User dashboard
 import UserDashboard from "./pages/UserDashboard";
 import UserProfilePage from "./pages/UserProfilePage";
 import UserAppointmentsPage from "./pages/UserAppointmentsPage";
 import AppointmentDetailsPage from "./pages/AppointmentDetailsPage";
+
+// Admin dashboard
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import AdminOverviewPage from "./pages/Admin/AdminOverviewPage";
 
 function App() {
   const { pathname } = useLocation();
@@ -46,24 +55,37 @@ function App() {
       />
       <Route path="/doctors" element={<DoctorPage />} />
 
-      {/* Dashboard pages sharing SideNavbar */}
+      {/* User dashboard */}
       <Route element={<UserDashboard />}>
         <Route
           path="/profile"
           element={<UserProfilePage />}
         />
         <Route
-    path="/appointments"
-    element={<UserAppointmentsPage />}
-  />
-
-  <Route
-    path="/appointments/:appointmentId"
-    element={<AppointmentDetailsPage />}
-  />
+          path="/appointments"
+          element={<UserAppointmentsPage />}
+        />
+        <Route
+          path="/appointments/:appointmentId"
+          element={<AppointmentDetailsPage />}
+        />
       </Route>
 
-      {/* Page not found */}
+      {/* Admin dashboard */}
+      <Route path="/admin" element={<AdminDashboard />}>
+        <Route index element={<AdminOverviewPage />} />
+        <Route
+          path="overview"
+          element={<Navigate to="/admin" replace />}
+        />
+      </Route>
+
+      {/* Previous overview URL */}
+      <Route
+        path="/overview"
+        element={<Navigate to="/admin" replace />}
+      />
+
       <Route path="*" element={<h1>404 Not Found</h1>} />
     </Routes>
   );
