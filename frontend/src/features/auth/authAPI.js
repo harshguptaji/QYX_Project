@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/user";
+const API_URL = "https://qyx-project.onrender.com/api/user";
 
 const api = axios.create({
   baseURL: API_URL,
