@@ -16,7 +16,7 @@ const Navbar = () => {
   const [signupOpen, setSignupOpen] = useState(false);
 
   const profilePath =
-    user?.role === "Admin" ? "/admin" : "/profile";
+    user?.role === "Admin" ? "/profile" : "/profile";
 
   const profileLabel =
     user?.role === "Admin" ? "Admin Dashboard" : "My Profile";
