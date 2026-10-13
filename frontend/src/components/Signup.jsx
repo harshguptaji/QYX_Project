@@ -1,14 +1,58 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Eye, EyeOff, LockKeyhole, X } from "lucide-react";
+
+import {
+  registerUser,
+  clearAuthFeedback,
+} from "../features/auth/authSlice";
+
 import "../style/Signup.css";
 
 export default function Signup({ isOpen, onClose }) {
+  const dispatch = useDispatch();
+
+  const { registerStatus, registerError } = useSelector(
+    (state) => state.auth
+  );
+
   const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState("");
+  const [validationError, setValidationError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const dialogRef = useRef(null);
   const nameRef = useRef(null);
+  const submittingRef = useRef(false);
+  const openRef = useRef(isOpen);
+  const sessionRef = useRef(0);
+
   const id = useId();
+  const loading = registerStatus === "loading";
+  const registered = Boolean(successMessage);
+
+  const today = new Date();
+  const maximumDOB = [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, "0"),
+    String(today.getDate()).padStart(2, "0"),
+  ].join("-");
+
+  useEffect(() => {
+    openRef.current = isOpen;
+    sessionRef.current += 1;
+
+    if (isOpen) {
+      dispatch(clearAuthFeedback());
+      setShowPassword(false);
+      setValidationError("");
+      setSuccessMessage("");
+    }
+
+    return () => {
+      openRef.current = false;
+    };
+  }, [isOpen, dispatch]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -39,7 +83,10 @@ export default function Signup({ isOpen, onClose }) {
       if (event.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
+      } else if (
+        !event.shiftKey &&
+        document.activeElement === last
+      ) {
         event.preventDefault();
         first.focus();
       }
@@ -50,46 +97,70 @@ export default function Signup({ isOpen, onClose }) {
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
-      previousFocus?.focus();
+
+      if (
+        previousFocus instanceof HTMLElement &&
+        previousFocus.isConnected
+      ) {
+        previousFocus.focus();
+      }
     };
   }, [isOpen, onClose]);
 
-  useEffect(() => {
-    if (isOpen) {
-      setMessage("");
-      setShowPassword(false);
-    }
-  }, [isOpen]);
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
+    if (submittingRef.current || loading || registered) return;
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
 
     const signupData = {
-      name: formData.get("name").trim(),
-      email: formData.get("email").trim(),
-      mobile: formData.get("mobile").trim(),
-      password: formData.get("password"),
-      age: Number(formData.get("age")),
-      city: formData.get("city").trim(),
-      gender: formData.get("gender"),
+      userName: String(formData.get("userName") || "").trim(),
+      userEmail: String(formData.get("userEmail") || "")
+        .trim()
+        .toLowerCase(),
+      userMobile: String(formData.get("userMobile") || "").trim(),
+      userPassword: String(formData.get("userPassword") || ""),
+      userCity: String(formData.get("userCity") || "").trim(),
+      userDOB: String(formData.get("userDOB") || ""),
+      userGender: String(formData.get("userGender") || ""),
     };
 
-    if (!signupData.name || !signupData.city) {
-      setMessage("Please enter your name and city.");
+    setValidationError("");
+    setSuccessMessage("");
+
+    if (!signupData.userName || !signupData.userCity) {
+      setValidationError("Please enter your name and city.");
       return;
     }
 
-    // Send signupData to your registration API here.
-    // Do not log the password or store it in localStorage.
+    submittingRef.current = true;
+    const currentSession = sessionRef.current;
 
-    setMessage(
-      "Your form is ready. Connect your registration API to create an account."
-    );
+    try {
+      const result = await dispatch(registerUser(signupData)).unwrap();
+
+      if (
+        openRef.current &&
+        sessionRef.current === currentSession
+      ) {
+        form.reset();
+        setShowPassword(false);
+        setSuccessMessage(
+          `${result.message || "Account created successfully."} Please sign in to continue.`
+        );
+      }
+    } catch {
+      // registerError is supplied by the Redux slice.
+    } finally {
+      submittingRef.current = false;
+    }
   };
 
   if (!isOpen) return null;
+
+  const error = validationError || registerError;
 
   return createPortal(
     <div
@@ -112,23 +183,16 @@ export default function Signup({ isOpen, onClose }) {
           aria-label="Close signup"
           onClick={onClose}
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            aria-hidden="true"
-          >
-            <path d="m6 6 12 12M18 6 6 18" />
-          </svg>
+          <X aria-hidden="true" />
         </button>
 
         <div className="qyx-signup__brand">
           QYX<span>.</span>
         </div>
 
-        <p className="qyx-signup__eyebrow">YOUR NEXT STEP STARTS HERE</p>
+        <p className="qyx-signup__eyebrow">
+          YOUR NEXT STEP STARTS HERE
+        </p>
 
         <h2 id={`${id}-title`}>
           A space for <em>your care.</em>
@@ -142,7 +206,11 @@ export default function Signup({ isOpen, onClose }) {
           appointments in one place.
         </p>
 
-        <form className="qyx-signup__form" onSubmit={handleSubmit}>
+        <form
+          className="qyx-signup__form"
+          onSubmit={handleSubmit}
+          aria-busy={loading}
+        >
           <div className="qyx-signup__grid">
             <div className="qyx-signup__field qyx-signup__field--full">
               <label htmlFor={`${id}-name`}>Full name</label>
@@ -150,11 +218,12 @@ export default function Signup({ isOpen, onClose }) {
               <input
                 ref={nameRef}
                 id={`${id}-name`}
-                name="name"
+                name="userName"
                 type="text"
                 placeholder="Enter your full name"
                 autoComplete="name"
                 maxLength={100}
+                disabled={loading || registered}
                 required
               />
             </div>
@@ -164,11 +233,12 @@ export default function Signup({ isOpen, onClose }) {
 
               <input
                 id={`${id}-email`}
-                name="email"
+                name="userEmail"
                 type="email"
                 placeholder="you@example.com"
                 autoComplete="email"
                 maxLength={254}
+                disabled={loading || registered}
                 required
               />
             </div>
@@ -181,15 +251,16 @@ export default function Signup({ isOpen, onClose }) {
 
                 <input
                   id={`${id}-mobile`}
-                  name="mobile"
+                  name="userMobile"
                   type="tel"
                   placeholder="10-digit number"
                   autoComplete="tel-national"
                   inputMode="numeric"
                   pattern="[6-9][0-9]{9}"
                   maxLength={10}
-                  title="Enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9."
+                  title="Enter a valid 10-digit Indian mobile number."
                   aria-describedby={`${id}-mobile-help`}
+                  disabled={loading || registered}
                   required
                 />
               </div>
@@ -205,12 +276,13 @@ export default function Signup({ isOpen, onClose }) {
               <div className="qyx-signup__password">
                 <input
                   id={`${id}-password`}
-                  name="password"
+                  name="userPassword"
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a password"
                   autoComplete="new-password"
-                  minLength={8}
+                  minLength={6}
                   aria-describedby={`${id}-password-help`}
+                  disabled={loading || registered}
                   required
                 />
 
@@ -221,52 +293,34 @@ export default function Signup({ isOpen, onClose }) {
                     showPassword ? "Hide password" : "Show password"
                   }
                   aria-controls={`${id}-password`}
+                  disabled={loading || registered}
                   onClick={() =>
                     setShowPassword((current) => !current)
                   }
                 >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    {showPassword ? (
-                      <>
-                        <path d="m3 3 18 18" />
-                        <path d="M9.9 5.2A11 11 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-3.1 3.8" />
-                        <path d="M6.2 6.2A18 18 0 0 0 2 12s4 7 10 7a11 11 0 0 0 5.8-1.8" />
-                        <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
-                      </>
-                    ) : (
-                      <>
-                        <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z" />
-                        <circle cx="12" cy="12" r="3" />
-                      </>
-                    )}
-                  </svg>
+                  {showPassword ? (
+                    <EyeOff aria-hidden="true" />
+                  ) : (
+                    <Eye aria-hidden="true" />
+                  )}
                 </button>
               </div>
 
               <small id={`${id}-password-help`}>
-                Use at least 8 characters.
+                Use at least 6 characters.
               </small>
             </div>
 
             <div className="qyx-signup__field">
-              <label htmlFor={`${id}-age`}>Age</label>
+              <label htmlFor={`${id}-dob`}>Date of birth</label>
 
               <input
-                id={`${id}-age`}
-                name="age"
-                type="number"
-                placeholder="Your age"
-                min={1}
-                max={120}
-                step={1}
+                id={`${id}-dob`}
+                name="userDOB"
+                type="date"
+                max={maximumDOB}
+                autoComplete="bday"
+                disabled={loading || registered}
                 required
               />
             </div>
@@ -276,11 +330,12 @@ export default function Signup({ isOpen, onClose }) {
 
               <input
                 id={`${id}-city`}
-                name="city"
+                name="userCity"
                 type="text"
                 placeholder="Enter your city"
                 autoComplete="address-level2"
                 maxLength={100}
+                disabled={loading || registered}
                 required
               />
             </div>
@@ -290,48 +345,59 @@ export default function Signup({ isOpen, onClose }) {
 
               <select
                 id={`${id}-gender`}
-                name="gender"
+                name="userGender"
                 defaultValue=""
+                disabled={loading || registered}
                 required
               >
                 <option value="" disabled>
                   Select your gender
                 </option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="non-binary">Non-binary</option>
-                <option value="self-described">Another identity</option>
-                <option value="prefer-not-to-say">
-                  Prefer not to say
-                </option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
               </select>
             </div>
           </div>
 
-          {message && (
-            <p className="qyx-signup__message" role="status">
-              {message}
+          {!registered && error && (
+            <p
+              className="qyx-signup__message qyx-signup__message--error"
+              role="alert"
+            >
+              {error}
             </p>
           )}
 
-          <button className="qyx-signup__submit" type="submit">
-            Create account
-            <span aria-hidden="true">→</span>
-          </button>
+          {successMessage && (
+            <p className="qyx-signup__message" role="status">
+              {successMessage}
+            </p>
+          )}
+
+          {registered ? (
+            <button
+              className="qyx-signup__submit"
+              type="button"
+              onClick={onClose}
+            >
+              Close and sign in
+              <span aria-hidden="true">→</span>
+            </button>
+          ) : (
+            <button
+              className="qyx-signup__submit"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? "Creating account…" : "Create account"}
+              {!loading && <span aria-hidden="true">→</span>}
+            </button>
+          )}
         </form>
 
         <div className="qyx-signup__note">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.7"
-            aria-hidden="true"
-          >
-            <rect x="5" y="10" width="14" height="11" rx="2" />
-            <path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3" />
-          </svg>
-
+          <LockKeyhole aria-hidden="true" />
           <p>Use your own account to manage your appointments.</p>
         </div>
       </section>

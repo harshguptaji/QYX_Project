@@ -1,19 +1,31 @@
 import { useCallback, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import Login from "./Login";
 import Signup from "./Signup";
 import "../style/Navbar.css";
 
-const Navbar = ({ isLoggedIn = false }) => {
+const Navbar = () => {
+  const { isAuthenticated, user } = useSelector(
+    (state) => state.auth
+  );
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [signupOpen, setSignupOpen] = useState(false);
+
+  const profilePath =
+    user?.role === "Admin" ? "/admin" : "/profile";
+
+  const profileLabel =
+    user?.role === "Admin" ? "Admin Dashboard" : "My Profile";
 
   const closeMenu = () => setMenuOpen(false);
 
   const openLogin = () => {
     closeMenu();
+    setSignupOpen(false);
     setLoginOpen(true);
   };
 
@@ -22,13 +34,14 @@ const Navbar = ({ isLoggedIn = false }) => {
   }, []);
 
   const openSignup = () => {
-  closeMenu();
-  setSignupOpen(true);
-};
+    closeMenu();
+    setLoginOpen(false);
+    setSignupOpen(true);
+  };
 
-const closeSignup = useCallback(() => {
-  setSignupOpen(false);
-}, []);
+  const closeSignup = useCallback(() => {
+    setSignupOpen(false);
+  }, []);
 
   return (
     <>
@@ -88,12 +101,12 @@ const closeSignup = useCallback(() => {
             </div>
 
             <div className="navbar-actions">
-              {isLoggedIn ? (
+              {isAuthenticated ? (
                 <Link
-                  to="/profile"
+                  to={profilePath}
                   className="navbar-profile"
-                  aria-label="My profile"
-                  title="My profile"
+                  aria-label={profileLabel}
+                  title={profileLabel}
                   onClick={closeMenu}
                 >
                   <svg
@@ -109,7 +122,7 @@ const closeSignup = useCallback(() => {
                     <path d="M4.5 21a7.5 7.5 0 0 1 15 0" />
                   </svg>
 
-                  <span>My Profile</span>
+                  <span>{profileLabel}</span>
                 </Link>
               ) : (
                 <>
@@ -124,14 +137,14 @@ const closeSignup = useCallback(() => {
                   </button>
 
                   <button
-  type="button"
-  className="navbar-signup"
-  aria-haspopup="dialog"
-  aria-expanded={signupOpen}
-  onClick={openSignup}
->
-  Sign Up
-</button>
+                    type="button"
+                    className="navbar-signup"
+                    aria-haspopup="dialog"
+                    aria-expanded={signupOpen}
+                    onClick={openSignup}
+                  >
+                    Sign Up
+                  </button>
                 </>
               )}
             </div>

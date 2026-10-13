@@ -1,12 +1,15 @@
 import "./App.css";
 
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
+import { useDispatch } from "react-redux";
 import {
   Navigate,
   Routes,
   Route,
   useLocation,
 } from "react-router-dom";
+
+import { getCurrentUser } from "./features/auth/authSlice";
 
 // Public pages
 import FAQPage from "./pages/FAQPage";
@@ -28,8 +31,15 @@ import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminOverviewPage from "./pages/Admin/AdminOverviewPage";
 
 function App() {
+  const dispatch = useDispatch();
   const { pathname } = useLocation();
 
+  // Restore the authenticated user from the backend cookie.
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [dispatch]);
+
+  // Open each page from the top.
   useLayoutEffect(() => {
     window.scrollTo({
       top: 0,
@@ -43,16 +53,20 @@ function App() {
       {/* Public pages */}
       <Route path="/" element={<HomePage />} />
       <Route path="/faq" element={<FAQPage />} />
+
       <Route
         path="/specialists"
         element={<DoctorSpecialist />}
       />
+
       <Route path="/about" element={<AboutPage />} />
       <Route path="/contact" element={<ContactPage />} />
+
       <Route
         path="/how-it-works"
         element={<HowItsWorkPage />}
       />
+
       <Route path="/doctors" element={<DoctorPage />} />
 
       {/* User dashboard */}
@@ -61,10 +75,12 @@ function App() {
           path="/profile"
           element={<UserProfilePage />}
         />
+
         <Route
           path="/appointments"
           element={<UserAppointmentsPage />}
         />
+
         <Route
           path="/appointments/:appointmentId"
           element={<AppointmentDetailsPage />}
@@ -74,6 +90,7 @@ function App() {
       {/* Admin dashboard */}
       <Route path="/admin" element={<AdminDashboard />}>
         <Route index element={<AdminOverviewPage />} />
+
         <Route
           path="overview"
           element={<Navigate to="/admin" replace />}

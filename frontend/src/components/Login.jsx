@@ -1,14 +1,46 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Eye, EyeOff, LockKeyhole, X } from "lucide-react";
+
+import {
+  loginUser,
+  clearAuthFeedback,
+} from "../features/auth/authSlice";
+
 import "../style/Login.css";
 
 export default function Login({ isOpen, onClose }) {
+  const dispatch = useDispatch();
+
+  const { loginStatus, loginError } = useSelector(
+    (state) => state.auth
+  );
+
   const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState("");
 
   const dialogRef = useRef(null);
   const emailRef = useRef(null);
+  const submittingRef = useRef(false);
+  const openRef = useRef(isOpen);
+  const sessionRef = useRef(0);
+
   const id = useId();
+  const loading = loginStatus === "loading";
+
+  useEffect(() => {
+    openRef.current = isOpen;
+    sessionRef.current += 1;
+
+    if (isOpen) {
+      dispatch(clearAuthFeedback());
+      setShowPassword(false);
+    }
+
+    return () => {
+      openRef.current = false;
+    };
+  }, [isOpen, dispatch]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -35,11 +67,17 @@ export default function Login({ isOpen, onClose }) {
 
       const first = elements[0];
       const last = elements[elements.length - 1];
+      const activeElement = document.activeElement;
 
-      if (event.shiftKey && document.activeElement === first) {
+      if (
+        !Array.from(elements).includes(activeElement)
+      ) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && activeElement === first) {
         event.preventDefault();
         last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
+      } else if (!event.shiftKey && activeElement === last) {
         event.preventDefault();
         first.focus();
       }
@@ -50,27 +88,49 @@ export default function Login({ isOpen, onClose }) {
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
-      previousFocus?.focus();
+
+      if (
+        previousFocus instanceof HTMLElement &&
+        previousFocus.isConnected
+      ) {
+        previousFocus.focus();
+      }
     };
   }, [isOpen, onClose]);
 
-  useEffect(() => {
-    if (isOpen) {
-      setMessage("");
-      setShowPassword(false);
-    }
-  }, [isOpen]);
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Connect your login API here.
-    // Get values using:
-    // const data = new FormData(event.currentTarget);
-    // const email = data.get("email");
-    // const password = data.get("password");
+    if (loading || submittingRef.current) return;
 
-    setMessage("Please connect your login API to enable sign in.");
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const userData = {
+      userEmail: String(formData.get("email") || "")
+        .trim()
+        .toLowerCase(),
+      userPassword: String(formData.get("password") || ""),
+    };
+
+    submittingRef.current = true;
+    const currentSession = sessionRef.current;
+
+    try {
+      await dispatch(loginUser(userData)).unwrap();
+
+      if (
+        openRef.current &&
+        sessionRef.current === currentSession
+      ) {
+        form.reset();
+        onClose();
+      }
+    } catch {
+      // The Redux slice stores the backend error in loginError.
+    } finally {
+      submittingRef.current = false;
+    }
   };
 
   if (!isOpen) return null;
@@ -96,22 +156,16 @@ export default function Login({ isOpen, onClose }) {
           aria-label="Close login"
           onClick={onClose}
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            aria-hidden="true"
-          >
-            <path d="m6 6 12 12M18 6 6 18" />
-          </svg>
+          <X aria-hidden="true" />
         </button>
 
         <div className="qyx-login__brand">
           QYX<span>.</span>
         </div>
 
-        <p className="qyx-login__eyebrow">YOUR PRIVATE SPACE</p>
+        <p className="qyx-login__eyebrow">
+          YOUR PRIVATE SPACE
+        </p>
 
         <h2 id={`${id}-title`}>
           Welcome <em>back.</em>
@@ -125,9 +179,15 @@ export default function Login({ isOpen, onClose }) {
           conversation with a specialist.
         </p>
 
-        <form className="qyx-login__form" onSubmit={handleSubmit}>
+        <form
+          className="qyx-login__form"
+          onSubmit={handleSubmit}
+          aria-busy={loading}
+        >
           <div className="qyx-login__field">
-            <label htmlFor={`${id}-email`}>Email address</label>
+            <label htmlFor={`${id}-email`}>
+              Email address
+            </label>
 
             <input
               ref={emailRef}
@@ -137,12 +197,15 @@ export default function Login({ isOpen, onClose }) {
               placeholder="you@example.com"
               autoComplete="username"
               maxLength={254}
+              disabled={loading}
               required
             />
           </div>
 
           <div className="qyx-login__field">
-            <label htmlFor={`${id}-password`}>Password</label>
+            <label htmlFor={`${id}-password`}>
+              Password
+            </label>
 
             <div className="qyx-login__password">
               <input
@@ -151,6 +214,7 @@ export default function Login({ isOpen, onClose }) {
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 autoComplete="current-password"
+                disabled={loading}
                 required
               />
 
@@ -161,60 +225,44 @@ export default function Login({ isOpen, onClose }) {
                   showPassword ? "Hide password" : "Show password"
                 }
                 aria-controls={`${id}-password`}
-                onClick={() => setShowPassword((current) => !current)}
+                disabled={loading}
+                onClick={() =>
+                  setShowPassword((current) => !current)
+                }
               >
                 {showPassword ? (
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    aria-hidden="true"
-                  >
-                    <path d="m3 3 18 18M10.6 10.6a2 2 0 0 0 2.8 2.8" />
-                    <path d="M9.9 5.2A11 11 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-3.1 3.8M6.2 6.2A18 18 0 0 0 2 12s4 7 10 7a11 11 0 0 0 5.8-1.8" />
-                  </svg>
+                  <EyeOff aria-hidden="true" />
                 ) : (
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    aria-hidden="true"
-                  >
-                    <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
+                  <Eye aria-hidden="true" />
                 )}
               </button>
             </div>
           </div>
 
-          {message && (
-            <p className="qyx-login__message" role="status">
-              {message}
+          {loginError && (
+            <p
+              className="qyx-login__message qyx-login__message--error"
+              role="alert"
+            >
+              {loginError}
             </p>
           )}
 
-          <button className="qyx-login__submit" type="submit">
-            Sign in
-            <span aria-hidden="true">→</span>
+          <button
+            className="qyx-login__submit"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Signing in…" : "Sign in"}
+
+            {!loading && (
+              <span aria-hidden="true">→</span>
+            )}
           </button>
         </form>
 
         <div className="qyx-login__note">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.7"
-            aria-hidden="true"
-          >
-            <rect x="5" y="10" width="14" height="11" rx="2" />
-            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-            <path d="M12 14v3" />
-          </svg>
-
+          <LockKeyhole aria-hidden="true" />
           <p>Your appointments, in your own private space.</p>
         </div>
 
