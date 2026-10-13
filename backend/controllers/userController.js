@@ -251,13 +251,20 @@ export const userLogin = async (req, res) => {
 
     const isProduction = process.env.NODE_ENV === "production";
 
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: isProduction,
+    //   sameSite: isProduction ? "none" : "lax",
+    //   maxAge: 7 * 24 * 60 * 60 * 1000,
+    //   path: "/",
+    // });
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: "/",
-    });
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax",
+  maxAge: 3 * 24 * 60 * 60 * 1000,
+  path: "/",
+});
 
     user.lastLoginAt = new Date();
     await user.save({ validateBeforeSave: false });
