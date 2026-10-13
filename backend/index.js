@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import multer from "multer";
 
 import {connectDB} from "./dbConnect.js";
@@ -25,6 +26,13 @@ app.use(
 );
 
 app.use(cookieParser());
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 /*
  * Connect database
