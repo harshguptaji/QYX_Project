@@ -25,6 +25,11 @@ const links = [
     icon: CalendarDays,
   },
   {
+  to: "/change-password",
+  label: "Change password",
+  icon: LockKeyhole,
+},
+  {
     to: "/admin",
     label: "Admin Dashboard",
     icon: Settings2,

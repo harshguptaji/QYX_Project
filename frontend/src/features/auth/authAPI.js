@@ -96,6 +96,11 @@ export const updateUserProfileAPI = async (userData) => {
   return response.data;
 };
 
+export const changePasswordAPI = async (passwordData) => {
+  const response = await api.patch("/edit/password", passwordData);
+  return response.data;
+};
+
 // Enable when your backend logout route is ready.
 // export const logoutUserAPI = async () => {
 //   const response = await api.post("/logout");

@@ -3,7 +3,7 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 
-import { registerUserAPI, loginUserAPI, getCurrentUserAPI, updateUserProfileAPI } from "./authAPI";
+import { registerUserAPI, loginUserAPI, getCurrentUserAPI, updateUserProfileAPI, changePasswordAPI } from "./authAPI";
 
 const getErrorMessage = (error) =>
   error.response?.data?.message ||
@@ -159,6 +159,34 @@ export const updateUserProfile = createAsyncThunk(
   }
 );
 
+export const changePassword = createAsyncThunk(
+  "auth/changePassword",
+  async (passwordData, { rejectWithValue }) => {
+    try {
+      const response = await changePasswordAPI({
+        userPassword: passwordData.userPassword,
+        updatePassword: passwordData.updatePassword,
+      });
+
+      if (response.success !== true) {
+        throw new Error(
+          response.message || "Unable to change your password."
+        );
+      }
+
+      return {
+        message: response.message || "Password updated successfully.",
+      };
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          error.message ||
+          "Unable to change your password."
+      );
+    }
+  }
+);
+
 const initialState = {
   user: null,
   isAuthenticated: false,
@@ -179,6 +207,11 @@ const initialState = {
   profileUpdateStatus: "idle",
   profileUpdateError: null,
   profileUpdateMessage: null,
+
+  // Password change reads these fields.
+  passwordChangeStatus: "idle",
+  passwordChangeError: null,
+  passwordChangeMessage: null,
 
   // Retained for compatibility with your existing components.
   isLoading: false,
@@ -229,6 +262,14 @@ export const authSlice = createSlice({
 
       if (state.profileUpdateStatus !== "loading") {
         state.profileUpdateStatus = "idle";
+      }
+    },
+    clearPasswordFeedback: (state) => {
+      state.passwordChangeError = null;
+      state.passwordChangeMessage = null;
+
+      if (state.passwordChangeStatus !== "loading") {
+        state.passwordChangeStatus = "idle";
       }
     },
   },
@@ -347,6 +388,27 @@ export const authSlice = createSlice({
             action.payload ||
             action.error.message ||
             "Unable to update your profile.";
+        })
+
+
+        .addCase(changePassword.pending, (state) => {
+          state.passwordChangeStatus = "loading";
+          state.passwordChangeError = null;
+          state.passwordChangeMessage = null;
+        })
+
+        .addCase(changePassword.fulfilled, (state, action) => {
+          state.passwordChangeStatus = "succeeded";
+          state.passwordChangeError = null;
+          state.passwordChangeMessage = action.payload.message;
+        })
+
+        .addCase(changePassword.rejected, (state, action) => {
+          state.passwordChangeStatus = "failed";
+          state.passwordChangeError =
+            action.payload ||
+            action.error.message ||
+            "Unable to change your password.";
         });
   },
 });
@@ -357,6 +419,7 @@ export const {
   clearAuthFeedback,
   updateProfileLocally,
   clearProfileFeedback,
+  clearPasswordFeedback,
 } = authSlice.actions;
 
 export default authSlice.reducer;

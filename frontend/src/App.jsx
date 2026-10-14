@@ -25,6 +25,7 @@ import UserDashboard from "./pages/UserDashboard";
 import UserProfilePage from "./pages/UserProfilePage";
 import UserAppointmentsPage from "./pages/UserAppointmentsPage";
 import AppointmentDetailsPage from "./pages/AppointmentDetailsPage";
+import ChangePasswordPage from "./pages/ChangePasswordPage";
 
 // Admin dashboard
 import AdminDashboard from "./pages/Admin/AdminDashboard";
@@ -75,6 +76,11 @@ function App() {
         <Route
           path="/profile"
           element={<UserProfilePage />}
+        />
+        
+        <Route
+          path="/change-password"
+          element={<ChangePasswordPage />}
         />
 
         <Route
