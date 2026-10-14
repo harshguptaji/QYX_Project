@@ -552,7 +552,6 @@ export const userEditByAdmin = async (req, res) => {
       userStatus,
       emailVerified,
       mobileVerified,
-      userProfile,
       userPhoto,
     } = req.body;
 
@@ -714,21 +713,145 @@ export const userEditByAdmin = async (req, res) => {
 };
 
 // All Users For Admin
-export const allUsers = async (_, res) => {
+const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+export const allUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const {
+      page = "1",
+      limit = "15",
+      search = "",
+      role,
+      verification,
+    } = req.query;
+
+    // Reject array/object query values.
+    const queryValues = [page, limit, search, role, verification];
+
+    if (
+      queryValues.some(
+        (value) => value !== undefined && typeof value !== "string"
+      )
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid query parameters.",
+      });
+    }
+
+    if (!/^[1-9]\d*$/.test(page) || !/^[1-9]\d*$/.test(limit)) {
+      return res.status(400).json({
+        success: false,
+        message: "Page and limit must be positive whole numbers.",
+      });
+    }
+
+    const requestedPage = Number(page);
+    const pageLimit = Number(limit);
+
+    if (
+      !Number.isSafeInteger(requestedPage) ||
+      !Number.isSafeInteger(pageLimit) ||
+      pageLimit > 100
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid pagination. Limit cannot exceed 100.",
+      });
+    }
+
+    const searchText = search.trim();
+
+    if (searchText.length > 100) {
+      return res.status(400).json({
+        success: false,
+        message: "Search cannot exceed 100 characters.",
+      });
+    }
+
+    const filter = {};
+
+    if (role && role !== "all") {
+      const allowedRoles = ["User", "Admin", "Doctor"];
+
+      if (!allowedRoles.includes(role)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid user role.",
+        });
+      }
+
+      filter.userRole = role;
+    }
+
+    if (verification && verification !== "all") {
+      if (!["verified", "unverified"].includes(verification)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid verification filter.",
+        });
+      }
+
+      filter.userVerified = verification === "verified";
+    }
+
+    if (searchText) {
+      const searchRegex = new RegExp(escapeRegex(searchText), "i");
+
+      filter.$or = [
+        { userName: searchRegex },
+        { userEmail: searchRegex },
+        { userMobile: searchRegex },
+      ];
+    }
+
+    // Count matching users before applying pagination.
+    const total = await User.countDocuments(filter);
+
+    const totalPages = Math.max(1, Math.ceil(total / pageLimit));
+
+    // Clamp the page if records have been removed or filters changed.
+    const currentPage = Math.min(requestedPage, totalPages);
+    const skip = (currentPage - 1) * pageLimit;
+
+    const users = await User.find(filter)
+      .select(
+        [
+          "_id",
+          "userName",
+          "userEmail",
+          "userMobile",
+          "userRole",
+          "userCity",
+          "userGender",
+          "userPhoto",
+          "userVerified",
+          "emailVerified",
+          "mobileVerified",
+          "createdAt",
+        ].join(" ")
+      )
+      .sort({ createdAt: -1, _id: -1 })
+      .skip(skip)
+      .limit(pageLimit)
+      .lean();
 
     return res.status(200).json({
-      message: "All Users",
-      users,
       success: true,
+      users,
+      pagination: {
+        page: currentPage,
+        limit: pageLimit,
+        total,
+        totalPages,
+      },
     });
   } catch (error) {
-    console.log(`Controller Error - ${error}`);
+    console.error("Get all users error:", error);
 
     return res.status(500).json({
-      message: "Internal server error",
-      succes: false,
+      success: false,
+      message: "Unable to load users. Please try again.",
     });
   }
 };
