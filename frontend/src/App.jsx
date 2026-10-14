@@ -29,6 +29,7 @@ import AppointmentDetailsPage from "./pages/AppointmentDetailsPage";
 // Admin dashboard
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminOverviewPage from "./pages/Admin/AdminOverviewPage";
+import AdminAllUsersPage from "./pages/Admin/AdminAllUsersPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -95,6 +96,7 @@ function App() {
           path="overview"
           element={<Navigate to="/admin" replace />}
         />
+        <Route path="users" element={<AdminAllUsersPage />} />
       </Route>
 
       {/* Previous overview URL */}

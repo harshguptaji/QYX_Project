@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import {
   ArrowLeft,
   LayoutDashboard,
+  UsersRound,
   LogOut,
   ShieldCheck,
   X,
@@ -19,6 +20,12 @@ const navigationItems = [
     icon: LayoutDashboard,
     end: true,
   },
+  {
+  to: "/admin/users",
+  label: "All users",
+  icon: UsersRound,
+  end: false,
+},
 ];
 
 export default function AdminSidebar({
