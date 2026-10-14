@@ -3,7 +3,7 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 
-import { registerUserAPI, loginUserAPI, getCurrentUserAPI } from "./authAPI";
+import { registerUserAPI, loginUserAPI, getCurrentUserAPI, updateUserProfileAPI } from "./authAPI";
 
 const getErrorMessage = (error) =>
   error.response?.data?.message ||
@@ -99,6 +99,66 @@ export const getCurrentUser = createAsyncThunk(
   }
 );
 
+
+export const updateUserProfile = createAsyncThunk(
+  "auth/updateUserProfile",
+  async (userData, { rejectWithValue }) => {
+    try {
+      // Only send editable profile fields.
+      const allowedFields = [
+        "userName",
+        "userEmail",
+        "userMobile",
+        "userCity",
+        "userDOB",
+        "userGender",
+      ];
+
+      const payload = {};
+
+      allowedFields.forEach((field) => {
+        if (userData[field] !== undefined) {
+          payload[field] = userData[field];
+        }
+      });
+
+      const response = await updateUserProfileAPI(payload);
+
+      if (response.success !== true || !response.user?.id) {
+        throw new Error(
+          response.message || "Unable to update your profile."
+        );
+      }
+
+      const user = response.user;
+
+      return {
+        message: response.message || "Profile updated successfully.",
+
+        user: {
+          id: user.id,
+          name: user.userName,
+          email: user.userEmail,
+          mobile: user.userMobile,
+          city: user.userCity,
+          dob: user.userDOB ? user.userDOB.slice(0, 10) : "",
+          gender: user.userGender,
+          role: user.userRole,
+          emailVerified: user.emailVerified,
+          mobileVerified: user.mobileVerified,
+          photo: user.userPhoto,
+        },
+      };
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          error.message ||
+          "Unable to update your profile."
+      );
+    }
+  }
+);
+
 const initialState = {
   user: null,
   isAuthenticated: false,
@@ -114,6 +174,11 @@ const initialState = {
     // Session reads these fields.
   sessionStatus: "idle",
   sessionError: null,
+
+  // Profile update reads these fields.
+  profileUpdateStatus: "idle",
+  profileUpdateError: null,
+  profileUpdateMessage: null,
 
   // Retained for compatibility with your existing components.
   isLoading: false,
@@ -157,6 +222,14 @@ export const authSlice = createSlice({
             ...action.payload,
             };
         }
+    },
+    clearProfileFeedback: (state) => {
+      state.profileUpdateError = null;
+      state.profileUpdateMessage = null;
+
+      if (state.profileUpdateStatus !== "loading") {
+        state.profileUpdateStatus = "idle";
+      }
     },
   },
 
@@ -247,6 +320,33 @@ export const authSlice = createSlice({
             state.user = null;
             state.isAuthenticated = false;
         }
+        })
+
+
+        .addCase(updateUserProfile.pending, (state) => {
+          state.profileUpdateStatus = "loading";
+          state.profileUpdateError = null;
+          state.profileUpdateMessage = null;
+        })
+
+        .addCase(updateUserProfile.fulfilled, (state, action) => {
+          state.profileUpdateStatus = "succeeded";
+
+          state.user = {
+            ...state.user,
+            ...action.payload.user,
+          };
+
+          state.profileUpdateError = null;
+          state.profileUpdateMessage = action.payload.message;
+        })
+
+        .addCase(updateUserProfile.rejected, (state, action) => {
+          state.profileUpdateStatus = "failed";
+          state.profileUpdateError =
+            action.payload ||
+            action.error.message ||
+            "Unable to update your profile.";
         });
   },
 });
@@ -256,6 +356,7 @@ export const {
   clearAuthMessage,
   clearAuthFeedback,
   updateProfileLocally,
+  clearProfileFeedback,
 } = authSlice.actions;
 
 export default authSlice.reducer;

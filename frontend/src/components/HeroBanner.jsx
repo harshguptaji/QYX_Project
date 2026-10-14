@@ -1,4 +1,5 @@
 import "../style/HeroBanner.css";
+import {Link} from "react-router-dom";
 import FertilityQuiz from "./FertilityQuiz";
 
 const HeroBanner = () => {
@@ -15,9 +16,9 @@ const HeroBanner = () => {
       </div>
       <div className="hero-btn-section">
         <span>
-          <a className="hero-prm-btn" href="#">
+          <Link className="hero-prm-btn" to="/doctors">
             Book Consultation
-          </a>
+          </Link>
         </span>
         <span>
           <FertilityQuiz />

@@ -2,21 +2,33 @@ import { useId, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ArrowRight, Pencil, ShieldCheck } from "lucide-react";
 
-import { updateProfileLocally } from "../../features/auth/authSlice";
+import {
+  updateUserProfile,
+  clearProfileFeedback,
+} from "../../features/auth/authSlice";
+
 import "./UserProfile.css";
 
 export default function UserProfile() {
   const dispatch = useDispatch();
 
-  const { user, sessionStatus, sessionError, isAuthChecked } =
-    useSelector((state) => state.auth);
+  const {
+    user,
+    sessionStatus,
+    sessionError,
+    isAuthChecked,
+    profileUpdateStatus,
+  } = useSelector((state) => state.auth);
 
   const [draft, setDraft] = useState({});
   const [editing, setEditing] = useState(false);
-  const [message, setMessage] = useState("");
+  const [feedback, setFeedback] = useState(null);
 
   const nameRef = useRef(null);
+  const submittingRef = useRef(false);
   const id = useId();
+
+  const saving = profileUpdateStatus === "loading";
 
   const today = new Date();
   const maximumDOB = [
@@ -52,24 +64,32 @@ export default function UserProfile() {
   const values = editing ? draft : user;
 
   const startEditing = () => {
+    if (saving) return;
+
+    dispatch(clearProfileFeedback());
+
     setDraft({
       name: user.name || "",
       email: user.email || "",
       mobile: user.mobile || "",
-      dob: user.dob || "",
+      dob: user.dob ? user.dob.slice(0, 10) : "",
       city: user.city || "",
       gender: user.gender || "",
     });
 
-    setMessage("");
+    setFeedback(null);
     setEditing(true);
+
     requestAnimationFrame(() => nameRef.current?.focus());
   };
 
   const cancelEditing = () => {
+    if (saving || submittingRef.current) return;
+
+    dispatch(clearProfileFeedback());
     setEditing(false);
     setDraft({});
-    setMessage("");
+    setFeedback(null);
   };
 
   const handleChange = (event) => {
@@ -81,31 +101,54 @@ export default function UserProfile() {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (saving || submittingRef.current) return;
+
     if (!draft.name.trim() || !draft.city.trim()) {
-      setMessage("Please enter your name and city.");
+      setFeedback({
+        type: "error",
+        message: "Please enter your name and city.",
+      });
       return;
     }
 
-    const updatedFields = {
-      name: draft.name.trim(),
-      email: draft.email.trim().toLowerCase(),
-      mobile: draft.mobile.trim(),
-      dob: draft.dob,
-      city: draft.city.trim(),
-      gender: draft.gender,
-    };
+    setFeedback(null);
+    submittingRef.current = true;
 
-    // Connect your profile update API here.
-    // Update Redux after the backend confirms successful saving.
-    dispatch(updateProfileLocally(updatedFields));
+    try {
+      const result = await dispatch(
+        updateUserProfile({
+          userName: draft.name.trim(),
+          userEmail: draft.email.trim().toLowerCase(),
+          userMobile: draft.mobile.trim(),
+          userCity: draft.city.trim(),
+          userDOB: draft.dob,
+          userGender: draft.gender,
+        })
+      ).unwrap();
 
-    setEditing(false);
-    setMessage(
-      "Profile updated for this session. Permanent saving requires your profile update API."
-    );
+      setEditing(false);
+      setDraft({});
+
+      setFeedback({
+        type: "success",
+        message: result.message || "Profile updated successfully.",
+      });
+    } catch (error) {
+      setFeedback({
+        type: "error",
+        message:
+          typeof error === "string"
+            ? error
+            : error?.message || "Unable to update your profile.",
+      });
+
+      // Keep editing open so the user can correct or retry.
+    } finally {
+      submittingRef.current = false;
+    }
   };
 
   return (
@@ -152,6 +195,7 @@ export default function UserProfile() {
       <form
         className="user-profile__form"
         onSubmit={handleSubmit}
+        aria-busy={saving}
       >
         <div className="user-profile__form-heading">
           <div>
@@ -164,6 +208,7 @@ export default function UserProfile() {
               type="button"
               className="user-profile__outline-button"
               onClick={startEditing}
+              disabled={saving}
             >
               <Pencil aria-hidden="true" />
               Edit
@@ -182,7 +227,7 @@ export default function UserProfile() {
               onChange={handleChange}
               autoComplete="name"
               maxLength={100}
-              disabled={!editing}
+              disabled={!editing || saving}
               required
             />
           </label>
@@ -197,7 +242,7 @@ export default function UserProfile() {
               onChange={handleChange}
               autoComplete="email"
               maxLength={254}
-              disabled={!editing}
+              disabled={!editing || saving}
               required
             />
           </label>
@@ -215,7 +260,7 @@ export default function UserProfile() {
               pattern="[6-9][0-9]{9}"
               maxLength={10}
               title="Enter a valid 10-digit Indian mobile number."
-              disabled={!editing}
+              disabled={!editing || saving}
               required
             />
           </label>
@@ -226,11 +271,11 @@ export default function UserProfile() {
               id={`${id}-dob`}
               name="dob"
               type="date"
-              value={values.dob || ""}
+              value={values.dob ? values.dob.slice(0, 10) : ""}
               onChange={handleChange}
               max={maximumDOB}
               autoComplete="bday"
-              disabled={!editing}
+              disabled={!editing || saving}
               required
             />
           </label>
@@ -244,7 +289,7 @@ export default function UserProfile() {
               onChange={handleChange}
               autoComplete="address-level2"
               maxLength={100}
-              disabled={!editing}
+              disabled={!editing || saving}
               required
             />
           </label>
@@ -256,7 +301,7 @@ export default function UserProfile() {
               name="gender"
               value={values.gender || ""}
               onChange={handleChange}
-              disabled={!editing}
+              disabled={!editing || saving}
               required
             >
               <option value="" disabled>
@@ -274,24 +319,33 @@ export default function UserProfile() {
             <button
               type="submit"
               className="user-profile__primary-button"
+              disabled={saving}
             >
-              Save changes
-              <ArrowRight aria-hidden="true" />
+              {saving ? "Saving…" : "Save changes"}
+              {!saving && <ArrowRight aria-hidden="true" />}
             </button>
 
             <button
               type="button"
               className="user-profile__outline-button"
               onClick={cancelEditing}
+              disabled={saving}
             >
               Cancel
             </button>
           </div>
         )}
 
-        {message && (
-          <p className="user-profile__message" role="status">
-            {message}
+        {feedback && (
+          <p
+            className={`user-profile__message ${
+              feedback.type === "error"
+                ? "user-profile__message--error"
+                : ""
+            }`}
+            role={feedback.type === "error" ? "alert" : "status"}
+          >
+            {feedback.message}
           </p>
         )}
       </form>
