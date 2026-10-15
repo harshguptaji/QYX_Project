@@ -19,6 +19,7 @@ import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import HowItsWorkPage from "./pages/HowItsWorkPage";
 import DoctorPage from "./pages/DoctorPage";
+import ForgotPassword from "./components/ForgotPassword";
 
 // User dashboard
 import UserDashboard from "./pages/UserDashboard";
@@ -72,6 +73,11 @@ function App() {
 
       <Route path="/doctors" element={<DoctorPage />} />
 
+      <Route
+        path="/forgot-password"
+        element={<ForgotPassword />}
+      />
+
       {/* User dashboard */}
       <Route element={<UserDashboard />}>
         <Route
@@ -103,7 +109,7 @@ function App() {
           path="overview"
           element={<Navigate to="/admin" replace />}
         />
-        
+
         <Route path="users" element={<AdminAllUsersPage />} />
 
         <Route path="users/:userId" element={<AdminUserDetailsPage />}/>

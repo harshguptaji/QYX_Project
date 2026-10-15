@@ -1,21 +1,49 @@
-import { useCallback, useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+import { useDispatch, useSelector } from "react-redux";
 import { Menu } from "lucide-react";
+
 import {
   Link,
+  Navigate,
   Outlet,
   useLocation,
   useNavigate,
 } from "react-router-dom";
 
-import AdminSidebar from "../../components/AdminDashboard/AdminSidebar";
+import { logoutUser } from "../../features/auth/authSlice";
+
+import { resetAdminUsers } from
+  "../../features/admin/users/adminUsersSlice";
+
+import { resetAdminUserDetails } from
+  "../../features/admin/userDetails/adminUserDetailsSlice";
+
+import AdminSidebar from
+  "../../components/AdminDashboard/AdminSidebar";
+
 import logoImg from "../../assets/logo.png";
 import "./AdminDashboard.css";
 
 export default function AdminDashboard() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const { pathname } = useLocation();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const logoutRunningRef = useRef(false);
+
+  const {
+    user,
+    isAuthChecked,
+    sessionStatus,
+    sessionError,
+  } = useSelector((state) => state.auth);
 
   const closeSidebar = useCallback(() => {
     setSidebarOpen(false);
@@ -25,14 +53,46 @@ export default function AdminDashboard() {
     closeSidebar();
   }, [pathname, closeSidebar]);
 
-  const handleLogout = () => {
-    // Call your logout API here when authentication is connected.
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+  const handleLogout = async () => {
+    if (logoutRunningRef.current) return;
 
-    closeSidebar();
-    navigate("/", { replace: true });
+    logoutRunningRef.current = true;
+
+    try {
+      await dispatch(logoutUser()).unwrap();
+
+      dispatch(resetAdminUsers());
+      dispatch(resetAdminUserDetails());
+
+      closeSidebar();
+      navigate("/", { replace: true });
+    } catch {
+      // AdminSidebar displays the logout error from Redux.
+    } finally {
+      logoutRunningRef.current = false;
+    }
   };
+
+  if (!user) {
+    const loading =
+      !isAuthChecked || sessionStatus === "loading";
+
+    return (
+      <main className="admin-dashboard__content">
+        <p role={loading ? "status" : "alert"}>
+          {loading
+            ? "Loading your account…"
+            : sessionError || "Please sign in to access the admin dashboard."}
+        </p>
+
+        {!loading && <Link to="/">Back to home</Link>}
+      </main>
+    );
+  }
+
+  if (user.role !== "Admin") {
+    return <Navigate to="/profile" replace />;
+  }
 
   return (
     <div className="admin-dashboard">
@@ -65,7 +125,7 @@ export default function AdminDashboard() {
         </header>
 
         <main className="admin-dashboard__content">
-          <Outlet />
+          <Outlet context={{ user }} />
         </main>
       </div>
     </div>

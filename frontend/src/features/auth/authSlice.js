@@ -3,7 +3,9 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 
-import { registerUserAPI, loginUserAPI, getCurrentUserAPI, updateUserProfileAPI, changePasswordAPI, sendEmailVerificationOtpAPI, verifyEmailOtpAPI, sendMobileVerificationOtpAPI, verifyMobileOtpAPI } from "./authAPI";
+import { registerUserAPI, loginUserAPI, getCurrentUserAPI, updateUserProfileAPI, changePasswordAPI, sendEmailVerificationOtpAPI, verifyEmailOtpAPI, sendMobileVerificationOtpAPI, verifyMobileOtpAPI, logoutUserAPI } from "./authAPI";
+
+import { resetPassword } from "./passwordResetSlice";
 
 const getErrorMessage = (error) =>
   error.response?.data?.message ||
@@ -322,6 +324,21 @@ export const verifyMobileOtp = createAsyncThunk(
   }
 );
 
+export const logoutUser = createAsyncThunk(
+  "auth/logoutUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      return await logoutUserAPI();
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          error.message ||
+          "Unable to log out. Please try again."
+      );
+    }
+  }
+);
+
 const initialState = {
   user: null,
   isAuthenticated: false,
@@ -368,11 +385,16 @@ const initialState = {
   mobileOtpVerifyError: null,
   mobileOtpVerifyRequestId: null,
 
+  // Logout reads these fields.
+  logoutStatus: "idle",
+  logoutError: null,
+
   // Retained for compatibility with your existing components.
   isLoading: false,
   error: null,
   successMessage: null,
 };
+
 
 export const authSlice = createSlice({
   name: "auth",
@@ -436,6 +458,9 @@ export const authSlice = createSlice({
     clearMobileVerificationFeedback: (state) => {
       state.mobileOtpSendError = null;
       state.mobileOtpVerifyError = null;
+    },
+    clearLogoutError: (state) => {
+      state.logoutError = null;
     },
   },
 
@@ -677,7 +702,36 @@ export const authSlice = createSlice({
             action.payload?.message ||
             action.error.message ||
             "Unable to verify OTP.";
-        });
+        })
+
+
+        .addCase(logoutUser.pending, (state) => {
+          state.logoutStatus = "loading";
+          state.logoutError = null;
+        })
+
+        .addCase(logoutUser.fulfilled, () => ({
+          ...initialState,
+          user: null,
+          isAuthenticated: false,
+          isAuthChecked: true,
+          logoutStatus: "succeeded",
+        }))
+
+        .addCase(logoutUser.rejected, (state, action) => {
+          state.logoutStatus = "failed";
+          state.logoutError =
+            action.payload ||
+            action.error.message ||
+            "Unable to log out. Please try again.";
+        })
+
+        .addCase(resetPassword.fulfilled, () => ({
+          ...initialState,
+          user: null,
+          isAuthenticated: false,
+          isAuthChecked: true,
+        }));
   },
 });
 
@@ -690,6 +744,7 @@ export const {
   clearPasswordFeedback,
   clearEmailVerificationFeedback,
   clearMobileVerificationFeedback,
+  clearLogoutError,
 } = authSlice.actions;
 
 export default authSlice.reducer;

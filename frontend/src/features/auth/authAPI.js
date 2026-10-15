@@ -121,10 +121,50 @@ export const verifyMobileOtpAPI = async (otp) => {
   return response.data;
 };
 
-// Enable when your backend logout route is ready.
-// export const logoutUserAPI = async () => {
-//   const response = await api.post("/logout");
-//   return response.data;
-// };
+export const logoutUserAPI = async () => {
+  const response = await api.post("/logout");
+
+  if (!response.data?.success) {
+    throw new Error(
+      response.data?.message || "Unable to log out."
+    );
+  }
+
+  return response.data;
+};
+
+export const forgotPasswordAPI = async (userEmail) => {
+  const response = await api.post("/forgot", {
+    userEmail,
+  });
+
+  if (!response.data?.success) {
+    throw new Error(
+      response.data?.message || "Unable to send OTP."
+    );
+  }
+
+  return response.data;
+};
+
+export const resetPasswordAPI = async ({
+  userEmail,
+  otp,
+  newPassword,
+}) => {
+  const response = await api.post("/forgot/password", {
+    userEmail,
+    otp,
+    newPassword,
+  });
+
+  if (!response.data?.success) {
+    throw new Error(
+      response.data?.message || "Unable to reset password."
+    );
+  }
+
+  return response.data;
+};
 
 export default api;

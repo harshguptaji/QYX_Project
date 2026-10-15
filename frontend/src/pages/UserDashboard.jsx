@@ -1,5 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+import { useDispatch, useSelector } from "react-redux";
 import { Menu } from "lucide-react";
+
 import {
   Link,
   Outlet,
@@ -7,27 +15,27 @@ import {
   useNavigate,
 } from "react-router-dom";
 
+import { logoutUser } from "../features/auth/authSlice";
+
 import SideNavbar from "../components/UserDashboard/SideNavabr";
 import logoImg from "../assets/logo.png";
+
 import "./UserDashboard.css";
 
 export default function UserDashboard() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  // Replace with authenticated user data later.
-  const [user, setUser] = useState({
-    name: "Rahul Sharma",
-    email: "rahul@example.com",
-    mobile: "9876543210",
-    age: 29,
-    city: "Jaipur",
-    gender: "male",
-    role: "user",
-    id: "USER-001",
-  });
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const logoutRunningRef = useRef(false);
+
+  const {
+    user,
+    isAuthChecked,
+    sessionStatus,
+    sessionError,
+  } = useSelector((state) => state.auth);
 
   const closeSidebar = useCallback(() => {
     setSidebarOpen(false);
@@ -37,14 +45,45 @@ export default function UserDashboard() {
     closeSidebar();
   }, [pathname, closeSidebar]);
 
-  const handleLogout = () => {
-    // For cookie-based authentication, call your logout API here.
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+  const handleLogout = async () => {
+    if (logoutRunningRef.current) return;
 
-    closeSidebar();
-    navigate("/", { replace: true });
+    logoutRunningRef.current = true;
+
+    try {
+      await dispatch(logoutUser()).unwrap();
+
+      closeSidebar();
+      navigate("/", { replace: true });
+    } catch {
+      // SideNavbar displays logoutError from Redux.
+    } finally {
+      logoutRunningRef.current = false;
+    }
   };
+
+  if (!user) {
+    const loading =
+      !isAuthChecked || sessionStatus === "loading";
+
+    return (
+      <main className="user-dashboard__content">
+        <section className="user-profile__form">
+          <p role={loading ? "status" : "alert"}>
+            {loading
+              ? "Loading your account…"
+              : sessionError || "Please sign in to access your account."}
+          </p>
+
+          {!loading && (
+            <Link to="/">
+              Back to home
+            </Link>
+          )}
+        </section>
+      </main>
+    );
+  }
 
   return (
     <div className="user-dashboard">
@@ -62,7 +101,10 @@ export default function UserDashboard() {
             className="user-dashboard__logo"
             aria-label="QYX MedTech home"
           >
-            <img src={logoImg} alt="QYX MedTech" />
+            <img
+              src={logoImg}
+              alt="QYX MedTech"
+            />
           </Link>
 
           <button
@@ -78,7 +120,7 @@ export default function UserDashboard() {
         </header>
 
         <main className="user-dashboard__content">
-          <Outlet context={{ user, setUser }} />
+          <Outlet context={{ user }} />
         </main>
       </div>
     </div>

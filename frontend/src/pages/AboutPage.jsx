@@ -7,6 +7,7 @@ import DeviceDevelopment from '../components/DeviceDevelopment';
 import AboutTeam from '../components/AboutTeam';
 import AboutPrinciples from '../components/AboutPrinciples';
 import Footer from '../components/Footer';
+import FoundersSection from '../components/FoundersSection';
 const AboutPage = () => {
   return (
     <>
@@ -16,6 +17,7 @@ const AboutPage = () => {
             <AboutStory/>
             <DeviceDevelopment/>
             <AboutTeam/>
+            <FoundersSection/>
             <AboutPrinciples/>
         </main>
         <Footer/>

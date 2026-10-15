@@ -321,3 +321,13 @@
     transition: none;
   }
 }
+
+.qyx-login__forgot {
+  display: inline-block;
+  justify-self: end;
+  color: #35583e;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

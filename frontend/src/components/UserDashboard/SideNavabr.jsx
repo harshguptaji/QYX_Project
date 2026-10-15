@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
+
 import {
   ArrowLeft,
   CalendarDays,
@@ -13,26 +15,24 @@ import {
 import logoImg from "../../assets/logo.png";
 import "./SideNavbar.css";
 
-const links = [
+const accountLinks = [
   {
     to: "/profile",
     label: "My profile",
     icon: UserRound,
+    end: true,
   },
   {
     to: "/appointments",
     label: "Appointments",
     icon: CalendarDays,
+    end: false,
   },
   {
-  to: "/change-password",
-  label: "Change password",
-  icon: LockKeyhole,
-},
-  {
-    to: "/admin",
-    label: "Admin Dashboard",
-    icon: Settings2,
+    to: "/change-password",
+    label: "Change password",
+    icon: LockKeyhole,
+    end: true,
   },
 ];
 
@@ -45,14 +45,56 @@ export default function SideNavbar({
   const sidebarRef = useRef(null);
   const closeButtonRef = useRef(null);
 
+  const { logoutStatus, logoutError } = useSelector(
+    (state) => state.auth
+  );
+
+  const loggingOut = logoutStatus === "loading";
+
+  const name = user?.name || "Your account";
+  const role = user?.role || "User";
+
+  const initials =
+    name
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase() || "Q";
+
+  const accountLabel =
+    role === "Admin"
+      ? "Admin account"
+      : role === "Doctor"
+      ? "Doctor account"
+      : "Patient account";
+
+  const links =
+    role === "Admin"
+      ? [
+          ...accountLinks,
+          {
+            to: "/admin",
+            label: "Admin Dashboard",
+            icon: Settings2,
+            end: false,
+          },
+        ]
+      : accountLinks;
+
   useEffect(() => {
     if (!isOpen) return;
 
-    const previousFocus = document.activeElement;
-    const previousOverflow = document.body.style.overflow;
-    const mobileQuery = window.matchMedia("(max-width: 1024px)");
+    const mobileQuery = window.matchMedia(
+      "(max-width: 1024px)"
+    );
 
     if (!mobileQuery.matches) return;
+
+    const previousFocus = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
 
     document.body.style.overflow = "hidden";
     closeButtonRef.current?.focus();
@@ -65,21 +107,29 @@ export default function SideNavbar({
 
       if (event.key !== "Tab") return;
 
-      const elements = sidebarRef.current?.querySelectorAll(
-        'a[href], button:not([disabled])'
-      );
+      const elements = Array.from(
+        sidebarRef.current?.querySelectorAll(
+          'a[href], button:not([disabled])'
+        ) || []
+      ).filter((element) => element.getClientRects().length > 0);
 
-      if (!elements?.length) return;
+      if (!elements.length) return;
 
       const first = elements[0];
       const last = elements[elements.length - 1];
+      const focusInside = sidebarRef.current?.contains(
+        document.activeElement
+      );
 
-      if (event.shiftKey && document.activeElement === first) {
+      if (
+        event.shiftKey &&
+        (document.activeElement === first || !focusInside)
+      ) {
         event.preventDefault();
         last.focus();
       } else if (
         !event.shiftKey &&
-        document.activeElement === last
+        (document.activeElement === last || !focusInside)
       ) {
         event.preventDefault();
         first.focus();
@@ -95,6 +145,7 @@ export default function SideNavbar({
 
     return () => {
       document.body.style.overflow = previousOverflow;
+
       document.removeEventListener("keydown", handleKeyDown);
       mobileQuery.removeEventListener("change", handleResize);
 
@@ -106,14 +157,6 @@ export default function SideNavbar({
       }
     };
   }, [isOpen, onClose]);
-
-  const initials = user.name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
 
   return (
     <>
@@ -154,13 +197,16 @@ export default function SideNavbar({
         </div>
 
         <div className="user-sidebar__user">
-          <div className="user-sidebar__avatar" aria-hidden="true">
+          <div
+            className="user-sidebar__avatar"
+            aria-hidden="true"
+          >
             {initials}
           </div>
 
           <div className="user-sidebar__identity">
-            <strong>{user.name}</strong>
-            <span>Patient account</span>
+            <strong>{name}</strong>
+            <span>{accountLabel}</span>
           </div>
         </div>
 
@@ -170,11 +216,11 @@ export default function SideNavbar({
           className="user-sidebar__navigation"
           aria-label="Account navigation"
         >
-          {links.map(({ to, label, icon: Icon }) => (
+          {links.map(({ to, label, icon: Icon, end }) => (
             <NavLink
               key={to}
               to={to}
-              end
+              end={end}
               onClick={onClose}
               className={({ isActive }) =>
                 `user-sidebar__link ${
@@ -191,6 +237,7 @@ export default function SideNavbar({
         <div className="user-sidebar__bottom">
           <div className="user-sidebar__privacy">
             <LockKeyhole aria-hidden="true" />
+
             <p>
               Your space.
               <br />
@@ -211,10 +258,21 @@ export default function SideNavbar({
             type="button"
             className="user-sidebar__secondary"
             onClick={onLogout}
+            disabled={loggingOut}
+            aria-busy={loggingOut}
           >
             <LogOut aria-hidden="true" />
-            Log out
+            {loggingOut ? "Logging out…" : "Log out"}
           </button>
+
+          {logoutError && (
+            <p
+              className="user-sidebar__logout-error"
+              role="alert"
+            >
+              {logoutError}
+            </p>
+          )}
         </div>
       </aside>
     </>

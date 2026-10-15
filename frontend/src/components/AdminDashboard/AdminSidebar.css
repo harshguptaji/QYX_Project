@@ -186,3 +186,20 @@
     height: 21px;
   }
 }
+
+.admin-sidebar__secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-sidebar__logout-error {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border: 1px solid #e8cdc5;
+  border-radius: 10px;
+  background: #fcf0ec;
+  color: #873f30;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}

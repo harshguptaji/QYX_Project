@@ -1004,10 +1004,7 @@ export const allUsers = async (req, res) => {
 
 
 // Forgot Password
-export const forgotPassword = async (
-  req,
-  res
-) => {
+export const forgotPassword = async(req,res) => {
   try {
     const { userEmail } = req.body;
 
@@ -1287,8 +1284,7 @@ Do not share this OTP with anyone.
 };
 
 // Reset Password And Verify OTP
-export const resetPasswordAndVerifyOtp =
-  async (req, res) => {
+export const resetPasswordAndVerifyOtp = async (req, res) => {
     try {
       const {
         userEmail,
@@ -1353,6 +1349,7 @@ export const resetPasswordAndVerifyOtp =
        * password and sets passwordChangedAt.
        */
       user.userPassword = newPassword;
+      user.passwordChangedAt = new Date();
 
       await user.save();
 
@@ -1390,7 +1387,7 @@ export const resetPasswordAndVerifyOtp =
           success: false,
         });
     }
-  };
+};
 
 
 

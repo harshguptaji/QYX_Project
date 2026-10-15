@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Eye, EyeOff, LockKeyhole, X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import {
   loginUser,
@@ -238,6 +239,14 @@ export default function Login({ isOpen, onClose }) {
               </button>
             </div>
           </div>
+
+          <Link
+            to="/forgot-password"
+            onClick={onClose}
+            className="qyx-login__forgot"
+          >
+            Forgot password?
+          </Link>
 
           {loginError && (
             <p

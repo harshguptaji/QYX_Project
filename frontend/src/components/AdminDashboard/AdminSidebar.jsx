@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
+
 import {
   ArrowLeft,
   LayoutDashboard,
@@ -12,7 +14,6 @@ import {
 import logoImg from "../../assets/logo.png";
 import "./AdminSidebar.css";
 
-// Add future sidebar pages here.
 const navigationItems = [
   {
     to: "/admin",
@@ -21,11 +22,11 @@ const navigationItems = [
     end: true,
   },
   {
-  to: "/admin/users",
-  label: "All users",
-  icon: UsersRound,
-  end: false,
-},
+    to: "/admin/users",
+    label: "All users",
+    icon: UsersRound,
+    end: false,
+  },
 ];
 
 export default function AdminSidebar({
@@ -36,10 +37,17 @@ export default function AdminSidebar({
   const sidebarRef = useRef(null);
   const closeRef = useRef(null);
 
+  const { logoutStatus, logoutError } = useSelector(
+    (state) => state.auth
+  );
+
+  const loggingOut = logoutStatus === "loading";
+
   useEffect(() => {
     if (!isOpen) return;
 
     const media = window.matchMedia("(max-width: 1024px)");
+
     if (!media.matches) return;
 
     const previousFocus = document.activeElement;
@@ -56,21 +64,30 @@ export default function AdminSidebar({
 
       if (event.key !== "Tab") return;
 
-      const elements = sidebarRef.current?.querySelectorAll(
-        'a[href], button:not([disabled])'
-      );
+      const elements = Array.from(
+        sidebarRef.current?.querySelectorAll(
+          'a[href], button:not([disabled])'
+        ) || []
+      ).filter((element) => element.getClientRects().length > 0);
 
-      if (!elements?.length) return;
+      if (!elements.length) return;
 
       const first = elements[0];
       const last = elements[elements.length - 1];
 
-      if (event.shiftKey && document.activeElement === first) {
+      const focusInside = sidebarRef.current?.contains(
+        document.activeElement
+      );
+
+      if (
+        event.shiftKey &&
+        (document.activeElement === first || !focusInside)
+      ) {
         event.preventDefault();
         last.focus();
       } else if (
         !event.shiftKey &&
-        document.activeElement === last
+        (document.activeElement === last || !focusInside)
       ) {
         event.preventDefault();
         first.focus();
@@ -86,6 +103,7 @@ export default function AdminSidebar({
 
     return () => {
       document.body.style.overflow = previousOverflow;
+
       document.removeEventListener("keydown", handleKeyDown);
       media.removeEventListener("change", handleResize);
 
@@ -149,43 +167,59 @@ export default function AdminSidebar({
 
         <p className="admin-sidebar__label">WORKSPACE</p>
 
-        <nav className="admin-sidebar__navigation">
-          {navigationItems.map(({ to, label, icon: Icon, end }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              onClick={onClose}
-              className={({ isActive }) =>
-                `admin-sidebar__link ${
-                  isActive ? "admin-sidebar__link--active" : ""
-                }`
-              }
-            >
-              <Icon aria-hidden="true" />
-              <span>{label}</span>
-            </NavLink>
-          ))}
+        <nav
+          className="admin-sidebar__navigation"
+          aria-label="Admin workspace navigation"
+        >
+          {navigationItems.map(
+            ({ to, label, icon: Icon, end }) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={end}
+                onClick={onClose}
+                className={({ isActive }) =>
+                  `admin-sidebar__link ${
+                    isActive ? "admin-sidebar__link--active" : ""
+                  }`
+                }
+              >
+                <Icon aria-hidden="true" />
+                <span>{label}</span>
+              </NavLink>
+            )
+          )}
         </nav>
 
         <div className="admin-sidebar__bottom">
           <Link
-            to="/"
+            to="/profile"
             className="admin-sidebar__secondary"
             onClick={onClose}
           >
             <ArrowLeft aria-hidden="true" />
-            Back to website
+            Back to Profile
           </Link>
 
           <button
             type="button"
             className="admin-sidebar__secondary"
             onClick={onLogout}
+            disabled={loggingOut}
+            aria-busy={loggingOut}
           >
             <LogOut aria-hidden="true" />
-            Log out
+            {loggingOut ? "Logging out…" : "Log out"}
           </button>
+
+          {logoutError && (
+            <p
+              className="admin-sidebar__logout-error"
+              role="alert"
+            >
+              {logoutError}
+            </p>
+          )}
         </div>
       </aside>
     </>
