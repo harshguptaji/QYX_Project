@@ -101,6 +101,26 @@ export const changePasswordAPI = async (passwordData) => {
   return response.data;
 };
 
+export const sendEmailVerificationOtpAPI = async () => {
+  const response = await api.post("/email");
+  return response.data;
+};
+
+export const verifyEmailOtpAPI = async (otp) => {
+  const response = await api.post("/email/verified", { otp });
+  return response.data;
+};
+
+export const sendMobileVerificationOtpAPI = async () => {
+  const response = await api.post("/mobile");
+  return response.data;
+};
+
+export const verifyMobileOtpAPI = async (otp) => {
+  const response = await api.post("/mobile/verified", { otp });
+  return response.data;
+};
+
 // Enable when your backend logout route is ready.
 // export const logoutUserAPI = async () => {
 //   const response = await api.post("/logout");

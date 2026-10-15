@@ -8,6 +8,8 @@ import {
 } from "../../features/auth/authSlice";
 
 import "./UserProfile.css";
+import EmailVerification from "./EmailVerification";
+import MobileVerification from "./MobileVerification";
 
 export default function UserProfile() {
   const dispatch = useDispatch();
@@ -349,6 +351,9 @@ export default function UserProfile() {
           </p>
         )}
       </form>
+
+      <EmailVerification />
+      <MobileVerification />
 
       <div className="user-profile__reassurance">
         <ShieldCheck aria-hidden="true" />

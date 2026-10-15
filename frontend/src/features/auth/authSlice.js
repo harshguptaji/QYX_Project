@@ -3,7 +3,7 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 
-import { registerUserAPI, loginUserAPI, getCurrentUserAPI, updateUserProfileAPI, changePasswordAPI } from "./authAPI";
+import { registerUserAPI, loginUserAPI, getCurrentUserAPI, updateUserProfileAPI, changePasswordAPI, sendEmailVerificationOtpAPI, verifyEmailOtpAPI, sendMobileVerificationOtpAPI, verifyMobileOtpAPI } from "./authAPI";
 
 const getErrorMessage = (error) =>
   error.response?.data?.message ||
@@ -187,6 +187,141 @@ export const changePassword = createAsyncThunk(
   }
 );
 
+export const sendEmailVerificationOtp = createAsyncThunk(
+  "auth/sendEmailVerificationOtp",
+  async (_, { rejectWithValue, getState }) => {
+    const email = getState().auth.user?.email;
+
+    if (!email) {
+      return rejectWithValue("Please sign in again.");
+    }
+
+    try {
+      const response = await sendEmailVerificationOtpAPI();
+
+      if (response.success !== true) {
+        throw new Error(response.message || "Unable to send OTP.");
+      }
+
+      return {
+        email,
+        message: response.message || "OTP sent successfully.",
+      };
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          error.message ||
+          "Unable to send OTP."
+      );
+    }
+  }
+);
+
+export const verifyEmailOtp = createAsyncThunk(
+  "auth/verifyEmailOtp",
+  async (otp, { rejectWithValue, getState }) => {
+    const email = getState().auth.user?.email;
+
+    if (!email) {
+      return rejectWithValue("Please sign in again.");
+    }
+
+    try {
+      const response = await verifyEmailOtpAPI(otp);
+
+      if (response.success !== true) {
+        throw new Error(response.message || "Unable to verify email.");
+      }
+
+      return {
+        email,
+        message: response.message || "Email verified successfully.",
+      };
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          error.message ||
+          "Unable to verify email."
+      );
+    }
+  }
+);
+
+const mobileVerificationError = (error) => ({
+  message:
+    error.response?.data?.message ||
+    error.message ||
+    "Something went wrong.",
+  retryAfterSeconds:
+    Number(error.response?.data?.retryAfterSeconds) || 0,
+});
+
+export const sendMobileVerificationOtp = createAsyncThunk(
+  "auth/sendMobileVerificationOtp",
+  async (_, { getState, rejectWithValue }) => {
+    const user = getState().auth.user;
+
+    if (!user?.mobile) {
+      return rejectWithValue({
+        message: "Please sign in and add your mobile number.",
+        retryAfterSeconds: 0,
+      });
+    }
+
+    try {
+      const response = await sendMobileVerificationOtpAPI();
+
+      if (!response.success) {
+        return rejectWithValue({
+          message: response.message || "Unable to send OTP.",
+          retryAfterSeconds: response.retryAfterSeconds || 0,
+        });
+      }
+
+      return {
+        ...response,
+        userId: user.id,
+        mobile: user.mobile,
+      };
+    } catch (error) {
+      return rejectWithValue(mobileVerificationError(error));
+    }
+  }
+);
+
+export const verifyMobileOtp = createAsyncThunk(
+  "auth/verifyMobileOtp",
+  async (otp, { getState, rejectWithValue }) => {
+    const user = getState().auth.user;
+
+    if (!user?.mobile) {
+      return rejectWithValue({
+        message: "Please sign in again.",
+        retryAfterSeconds: 0,
+      });
+    }
+
+    try {
+      const response = await verifyMobileOtpAPI(String(otp).trim());
+
+      if (!response.success || response.mobileVerified !== true) {
+        return rejectWithValue({
+          message: response.message || "Unable to verify OTP.",
+          retryAfterSeconds: response.retryAfterSeconds || 0,
+        });
+      }
+
+      return {
+        ...response,
+        userId: user.id,
+        mobile: user.mobile,
+      };
+    } catch (error) {
+      return rejectWithValue(mobileVerificationError(error));
+    }
+  }
+);
+
 const initialState = {
   user: null,
   isAuthenticated: false,
@@ -212,6 +347,26 @@ const initialState = {
   passwordChangeStatus: "idle",
   passwordChangeError: null,
   passwordChangeMessage: null,
+
+  // Email verification reads these fields.
+  emailOtpSendStatus: "idle",
+  emailOtpSendError: null,
+  emailOtpSendMessage: null,
+
+  // Email verification reads these fields.
+  emailOtpVerifyStatus: "idle",
+  emailOtpVerifyError: null,
+  emailOtpVerifyMessage: null,
+
+  // Mobile verification reads these fields.
+  mobileOtpSendStatus: "idle",
+  mobileOtpSendError: null,
+  mobileOtpSendRequestId: null,
+
+  // Mobile verification reads these fields.
+  mobileOtpVerifyStatus: "idle",
+  mobileOtpVerifyError: null,
+  mobileOtpVerifyRequestId: null,
 
   // Retained for compatibility with your existing components.
   isLoading: false,
@@ -271,6 +426,16 @@ export const authSlice = createSlice({
       if (state.passwordChangeStatus !== "loading") {
         state.passwordChangeStatus = "idle";
       }
+    },
+    clearEmailVerificationFeedback: (state) => {
+      state.emailOtpSendError = null;
+      state.emailOtpSendMessage = null;
+      state.emailOtpVerifyError = null;
+      state.emailOtpVerifyMessage = null;
+    },
+    clearMobileVerificationFeedback: (state) => {
+      state.mobileOtpSendError = null;
+      state.mobileOtpVerifyError = null;
     },
   },
 
@@ -409,6 +574,109 @@ export const authSlice = createSlice({
             action.payload ||
             action.error.message ||
             "Unable to change your password.";
+        })
+
+        .addCase(sendEmailVerificationOtp.pending, (state) => {
+          state.emailOtpSendStatus = "loading";
+          state.emailOtpSendError = null;
+          state.emailOtpSendMessage = null;
+        })
+
+        .addCase(sendEmailVerificationOtp.fulfilled, (state, action) => {
+          state.emailOtpSendStatus = "succeeded";
+          state.emailOtpSendMessage = action.payload.message;
+        })
+
+        .addCase(sendEmailVerificationOtp.rejected, (state, action) => {
+          state.emailOtpSendStatus = "failed";
+          state.emailOtpSendError =
+            action.payload || "Unable to send OTP.";
+        })
+
+        .addCase(verifyEmailOtp.pending, (state) => {
+          state.emailOtpVerifyStatus = "loading";
+          state.emailOtpVerifyError = null;
+          state.emailOtpVerifyMessage = null;
+        })
+
+        .addCase(verifyEmailOtp.fulfilled, (state, action) => {
+          state.emailOtpVerifyStatus = "succeeded";
+          state.emailOtpVerifyMessage = action.payload.message;
+
+          // Do not mark a different email as verified if it changed
+          // while the request was running.
+          if (state.user?.email === action.payload.email) {
+            state.user.emailVerified = true;
+          }
+        })
+
+        .addCase(verifyEmailOtp.rejected, (state, action) => {
+          state.emailOtpVerifyStatus = "failed";
+          state.emailOtpVerifyError =
+            action.payload || "Unable to verify email.";
+        })
+
+        .addCase(sendMobileVerificationOtp.pending, (state, action) => {
+          state.mobileOtpSendStatus = "loading";
+          state.mobileOtpSendError = null;
+          state.mobileOtpSendRequestId = action.meta.requestId;
+        })
+
+        .addCase(sendMobileVerificationOtp.fulfilled, (state, action) => {
+          if (state.mobileOtpSendRequestId !== action.meta.requestId) return;
+
+          state.mobileOtpSendStatus = "succeeded";
+          state.mobileOtpSendRequestId = null;
+
+          if (
+            action.payload.mobileVerified === true &&
+            state.user?.id === action.payload.userId &&
+            state.user?.mobile === action.payload.mobile
+          ) {
+            state.user.mobileVerified = true;
+          }
+        })
+
+        .addCase(sendMobileVerificationOtp.rejected, (state, action) => {
+          if (state.mobileOtpSendRequestId !== action.meta.requestId) return;
+
+          state.mobileOtpSendStatus = "failed";
+          state.mobileOtpSendRequestId = null;
+          state.mobileOtpSendError =
+            action.payload?.message ||
+            action.error.message ||
+            "Unable to send OTP.";
+        })
+
+        .addCase(verifyMobileOtp.pending, (state, action) => {
+          state.mobileOtpVerifyStatus = "loading";
+          state.mobileOtpVerifyError = null;
+          state.mobileOtpVerifyRequestId = action.meta.requestId;
+        })
+
+        .addCase(verifyMobileOtp.fulfilled, (state, action) => {
+          if (state.mobileOtpVerifyRequestId !== action.meta.requestId) return;
+
+          state.mobileOtpVerifyStatus = "succeeded";
+          state.mobileOtpVerifyRequestId = null;
+
+          if (
+            state.user?.id === action.payload.userId &&
+            state.user?.mobile === action.payload.mobile
+          ) {
+            state.user.mobileVerified = true;
+          }
+        })
+
+        .addCase(verifyMobileOtp.rejected, (state, action) => {
+          if (state.mobileOtpVerifyRequestId !== action.meta.requestId) return;
+
+          state.mobileOtpVerifyStatus = "failed";
+          state.mobileOtpVerifyRequestId = null;
+          state.mobileOtpVerifyError =
+            action.payload?.message ||
+            action.error.message ||
+            "Unable to verify OTP.";
         });
   },
 });
@@ -420,6 +688,8 @@ export const {
   updateProfileLocally,
   clearProfileFeedback,
   clearPasswordFeedback,
+  clearEmailVerificationFeedback,
+  clearMobileVerificationFeedback,
 } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1284,204 +1284,256 @@ export const resetPasswordAndVerifyOtp =
 
 
 
-export const emailVerified = async(req,res) => {
-    try {
-        const user = await User.findById(req.user._id);
+export const emailVerified = async (req, res) => {
+  try {
+    const userId = req.user?._id;
 
-        if(!user){
-            return res.status(400).json({
-                message: "No user found, Please refresh",
-                success: false
-            })
-        }
-
-        const purpose = "EMAIL_VERIFICATION";
-        const currentTime = new Date();
-
-        const existingOtp = await OTP.findOne({userId: user._id,purpose}).sort({createdAt: -1}).select("+otpHash");
-
-        if(existingOtp){
-            if(existingOtp.lockedUntil && existingOtp.lockedUntil > currentTime){
-                const remainingSeconds = Math.ceil(
-                    (existingOtp.lockedUntil.getTime() - currentTime.getTime()) / 1000
-                );
-
-                const remainingMinutes = Math.ceil(
-                    remainingSeconds / 60
-                );
-
-                return res.status(429).json({
-                    message:    `Maximum OTP attempts exceeded. ` +
-                                `Please try again after ${remainingMinutes} minute(s).`,
-                    success: false,
-                });
-            }
-
-            if ( existingOtp.attempts >= MAX_OTP_ATTEMPTS && !existingOtp.lockedUntil ){
-
-                const lockedUntil = new Date( currentTime.getTime() + OTP_LOCK_MINUTES * 60 * 1000 );
-
-                existingOtp.lockedUntil = lockedUntil;
-
-                /*
-                * Keep the record until the lock ends.
-                * The TTL index will then delete it.
-                */
-
-                existingOtp.expiresAt = lockedUntil;
-
-                await existingOtp.save();
-
-                return res.status(429).json({
-                    message: "Maximum OTP attempts exceeded. Please try again after 15 minutes.",
-                    success: false,
-                });
-            }
-
-            const nextResendTime = existingOtp.requestedAt.getTime() + OTP_RESEND_SECONDS * 1000;
-
-            const otpStillValid = existingOtp.expiresAt > currentTime;
-
-            if (otpStillValid && nextResendTime > currentTime.getTime()){
-
-                const remainingSeconds = Math.ceil( (nextResendTime - currentTime.getTime()) / 1000);
-
-                return res.status(429).json({
-                    message:
-                        `Please wait ${remainingSeconds} second(s) ` +
-                        `before requesting another OTP.`,
-                    success: false,
-                });
-            }
-        }
-
-        // Generate a new OTP on every accepted request
-        const generatedOTP = generateOTP();
-
-        const otpHash = await bcrypt.hash(generatedOTP,10);
-
-        const expiresAt = new Date( currentTime.getTime() + OTP_EXPIRY_MINUTES * 60 * 1000);
-
-        if (existingOtp) {
-            /*
-            * Second or later request:
-            * update the existing record with a new OTP.
-            */
-            existingOtp.otpHash = otpHash;
-            existingOtp.destination = user.userEmail;
-            existingOtp.channel = "EMAIL";
-            existingOtp.requestedAt = currentTime;
-            existingOtp.expiresAt = expiresAt;
-
-            await otpRecord.save();
-        } else {
-        // First request: create the OTP record
-            const existingOtp = await OTP.create({
-                userId: user._id,
-                purpose,
-                channel: "EMAIL",
-                destination: user.userEmail,
-                otpHash,
-                attempts: 0,
-                requestedAt: currentTime,
-                expiresAt,
-            });
-        }
-        try {
-            await sendEmail({
-                to: user.userEmail,
-
-                subject: "Password Reset OTP",
-
-                subject: "Email Verification OTP",
-
-                text: `
-        Your email verification OTP is ${generatedOTP}.
-
-        This OTP expires in 10 minutes.
-        You have a maximum of five attempts.
-
-        Do not share this OTP with anyone.
-                `.trim(),
-
-                html: `
-                    <div
-                    style="
-                        max-width: 560px;
-                        margin: auto;
-                        padding: 30px;
-                        font-family: Arial, sans-serif;
-                        border: 1px solid #e5e7eb;
-                        border-radius: 12px;
-                    "
-                    >
-                    <h2>Email Verification</h2>
-
-                    <p>Hello ${user.userName},</p>
-
-                    <p>
-                        Use the following OTP to verify
-                        your email address:
-                    </p>
-
-                    <div
-                        style="
-                        margin: 24px 0;
-                        padding: 18px;
-                        background: #f3f4f6;
-                        border-radius: 8px;
-                        text-align: center;
-                        "
-                    >
-                        <span
-                        style="
-                            font-size: 32px;
-                            font-weight: 700;
-                            letter-spacing: 8px;
-                        "
-                        >
-                        ${generatedOTP}
-                        </span>
-                    </div>
-
-                    <p>
-                        This OTP expires in
-                        <strong>10 minutes</strong>.
-                    </p>
-
-                    <p>
-                        You have a maximum of five attempts.
-                    </p>
-
-                    <p>
-                        Do not share this OTP with anyone.
-                    </p>
-                    </div>
-                `,
-            });
-
-        } catch (emailError) {
-
-            console.error("OTP email delivery error:",emailError);
-
-            return res.status(500).json({
-                message: "OTP email could not be delivered. Please try again.",
-                success: false,
-            });
-        }
-
-        return res.status(200).json({
-            message: "OTP sent successfully.",
-            success: true,
-        });
-        
-    } catch (error) {
-        console.log(`Error - ${error}`);
-        return res.status(500).json({
-            message: "Internal Server Error",
-            success: false
-        })
+    if (!userId) {
+      return res.status(401).json({
+        message: "Please sign in again.",
+        success: false,
+      });
     }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found. Please sign in again.",
+        success: false,
+      });
+    }
+
+    if (user.emailVerified) {
+      return res.status(200).json({
+        message: "Your email address is already verified.",
+        success: true,
+        emailVerified: true,
+      });
+    }
+
+    const purpose = "EMAIL_VERIFICATION";
+    const currentTime = new Date();
+
+    let otpRecord = await OTP.findOne({
+      userId: user._id,
+      purpose,
+    })
+      .sort({ createdAt: -1 })
+      .select("+otpHash");
+
+    if (otpRecord) {
+      const lockExpiresAt = otpRecord.lockedUntil
+        ? new Date(otpRecord.lockedUntil).getTime()
+        : null;
+
+      // An active lock blocks new OTP requests.
+      if (lockExpiresAt && lockExpiresAt > currentTime.getTime()) {
+        const retryAfterSeconds = Math.ceil(
+          (lockExpiresAt - currentTime.getTime()) / 1000
+        );
+
+        res.set("Retry-After", String(retryAfterSeconds));
+
+        return res.status(429).json({
+          message: `Maximum OTP attempts exceeded. Please try again after ${Math.ceil(
+            retryAfterSeconds / 60
+          )} minute(s).`,
+          success: false,
+          retryAfterSeconds,
+        });
+      }
+
+      /*
+       * TTL cleanup is asynchronous. An expired lock may still
+       * exist in the database, so explicitly clear it.
+       */
+      if (lockExpiresAt && lockExpiresAt <= currentTime.getTime()) {
+        otpRecord.lockedUntil = null;
+        otpRecord.attempts = 0;
+      } else if (otpRecord.attempts >= MAX_OTP_ATTEMPTS) {
+        const lockedUntil = new Date(
+          currentTime.getTime() + OTP_LOCK_MINUTES * 60 * 1000
+        );
+
+        otpRecord.lockedUntil = lockedUntil;
+        otpRecord.expiresAt = lockedUntil;
+
+        await otpRecord.save();
+
+        const retryAfterSeconds = OTP_LOCK_MINUTES * 60;
+
+        res.set("Retry-After", String(retryAfterSeconds));
+
+        return res.status(429).json({
+          message: `Maximum OTP attempts exceeded. Please try again after ${OTP_LOCK_MINUTES} minute(s).`,
+          success: false,
+          retryAfterSeconds,
+        });
+      }
+
+      const nextResendTime =
+        new Date(otpRecord.requestedAt).getTime() +
+        OTP_RESEND_SECONDS * 1000;
+
+      // Apply the resend cooldown even if the previous email failed.
+      if (nextResendTime > currentTime.getTime()) {
+        const retryAfterSeconds = Math.ceil(
+          (nextResendTime - currentTime.getTime()) / 1000
+        );
+
+        res.set("Retry-After", String(retryAfterSeconds));
+
+        return res.status(429).json({
+          message: `Please wait ${retryAfterSeconds} second(s) before requesting another OTP.`,
+          success: false,
+          retryAfterSeconds,
+        });
+      }
+    }
+
+    // Convert to a string because bcrypt expects a string or buffer.
+    const generatedOTP = String(generateOTP());
+    const otpHash = await bcrypt.hash(generatedOTP, 10);
+
+    const expiresAt = new Date(
+      currentTime.getTime() + OTP_EXPIRY_MINUTES * 60 * 1000
+    );
+
+    if (otpRecord) {
+      otpRecord.otpHash = otpHash;
+      otpRecord.destination = user.userEmail;
+      otpRecord.channel = "EMAIL";
+      otpRecord.requestedAt = currentTime;
+      otpRecord.expiresAt = expiresAt;
+      otpRecord.lockedUntil = null;
+
+      /*
+       * Preserve failed attempts when resending.
+       * Requesting another OTP must not bypass the attempt limit.
+       */
+      await otpRecord.save();
+    } else {
+      otpRecord = await OTP.create({
+        userId: user._id,
+        purpose,
+        channel: "EMAIL",
+        destination: user.userEmail,
+        otpHash,
+        attempts: 0,
+        lockedUntil: null,
+        requestedAt: currentTime,
+        expiresAt,
+      });
+    }
+
+    // Escape user-provided text before inserting it into HTML.
+    const safeName = String(user.userName || "there").replace(
+      /[&<>"']/g,
+      (character) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[character]
+    );
+
+    try {
+      await sendEmail({
+        to: user.userEmail,
+        subject: "Email Verification OTP",
+
+        text: `
+Hello ${user.userName || "there"},
+
+Your email verification OTP is ${generatedOTP}.
+
+This OTP expires in ${OTP_EXPIRY_MINUTES} minute(s).
+You can make up to ${MAX_OTP_ATTEMPTS} incorrect verification attempts before a temporary lock.
+
+Only the latest OTP is valid.
+Do not share this OTP with anyone.
+        `.trim(),
+
+        html: `
+          <div style="
+            max-width: 560px;
+            margin: auto;
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            color: #243e2e;
+            border: 1px solid #d6e1d1;
+            border-radius: 12px;
+            background: #fafaf4;
+          ">
+            <h2>Email Verification</h2>
+
+            <p>Hello ${safeName},</p>
+
+            <p>Use the following OTP to verify your email address:</p>
+
+            <div style="
+              margin: 24px 0;
+              padding: 18px;
+              background: #eaf1e8;
+              border-radius: 8px;
+              text-align: center;
+            ">
+              <span style="
+                font-size: 32px;
+                font-weight: 700;
+                letter-spacing: 8px;
+              ">
+                ${generatedOTP}
+              </span>
+            </div>
+
+            <p>
+              This OTP expires in
+              <strong>${OTP_EXPIRY_MINUTES} minute(s)</strong>.
+            </p>
+
+            <p>
+              You can make up to ${MAX_OTP_ATTEMPTS} incorrect
+              verification attempts before a temporary lock.
+            </p>
+
+            <p>Only the latest OTP is valid.</p>
+            <p>Do not share this OTP with anyone.</p>
+          </div>
+        `,
+      });
+    } catch (emailError) {
+      console.error("OTP email delivery error:", emailError);
+
+      /*
+       * Retain the record so repeated delivery failures cannot
+       * bypass the resend cooldown.
+       */
+      return res.status(502).json({
+        message:
+          "OTP email could not be delivered. Please wait before requesting another OTP.",
+        success: false,
+        retryAfterSeconds: OTP_RESEND_SECONDS,
+      });
+    }
+
+    return res.status(200).json({
+      message: "OTP sent successfully.",
+      success: true,
+      expiresInSeconds: OTP_EXPIRY_MINUTES * 60,
+      resendAfterSeconds: OTP_RESEND_SECONDS,
+    });
+  } catch (error) {
+    console.error("Email verification OTP error:", error);
+
+    return res.status(500).json({
+      message: "Internal server error.",
+      success: false,
+    });
+  }
 };
 
 
@@ -1545,240 +1597,283 @@ export const userEmailVerified = async (req,res) => {
 
 
 
-// Sending SMS For Mobile Verification
-export const mobileVerified = async(req,res) => {
-    try {
-        const user = await User.findById(req.user._id);
+// Accepts a 10-digit Indian number or a number prefixed with 91/+91.
+const normalizeIndianMobile = (mobile) => {
+  const digits = String(mobile ?? "").replace(/\D/g, "");
 
-        if(!user){
-            return res.status(400).json({
-                message: "No user found, Please refresh",
-                success: false
-            })
-        }
+  const nationalNumber =
+    digits.length === 12 && digits.startsWith("91")
+      ? digits.slice(2)
+      : digits;
 
-        const purpose = "MOBILE_VERIFICATION";
-        const currentTime = new Date();
-
-        const existingOtp = await OTP.findOne({userId: user._id,purpose}).sort({createdAt: -1}).select("+otpHash");
-
-        if(existingOtp){
-            if(existingOtp.lockedUntil && existingOtp.lockedUntil > currentTime){
-                const remainingSeconds = Math.ceil(
-                    (existingOtp.lockedUntil.getTime() - currentTime.getTime()) / 1000
-                );
-
-                const remainingMinutes = Math.ceil(
-                    remainingSeconds / 60
-                );
-
-                return res.status(429).json({
-                    message:    `Maximum OTP attempts exceeded. ` +
-                                `Please try again after ${remainingMinutes} minute(s).`,
-                    success: false,
-                });
-            }
-
-            if ( existingOtp.attempts >= MAX_OTP_ATTEMPTS && !existingOtp.lockedUntil ){
-
-                const lockedUntil = new Date( currentTime.getTime() + OTP_LOCK_MINUTES * 60 * 1000 );
-
-                existingOtp.lockedUntil = lockedUntil;
-
-                /*
-                * Keep the record until the lock ends.
-                * The TTL index will then delete it.
-                */
-
-                existingOtp.expiresAt = lockedUntil;
-
-                await existingOtp.save();
-
-                return res.status(429).json({
-                    message: "Maximum OTP attempts exceeded. Please try again after 15 minutes.",
-                    success: false,
-                });
-            }
-
-            const nextResendTime = existingOtp.requestedAt.getTime() + OTP_RESEND_SECONDS * 1000;
-
-            const otpStillValid = existingOtp.expiresAt > currentTime;
-
-            if (otpStillValid && nextResendTime > currentTime.getTime()){
-
-                const remainingSeconds = Math.ceil( (nextResendTime - currentTime.getTime()) / 1000);
-
-                return res.status(429).json({
-                    message:
-                        `Please wait ${remainingSeconds} second(s) ` +
-                        `before requesting another OTP.`,
-                    success: false,
-                });
-            }
-        }
-
-        // Generate a new OTP on every accepted request
-        const generatedOTP = generateOTP();
-
-        const otpHash = await bcrypt.hash(generatedOTP,10);
-
-        const expiresAt = new Date( currentTime.getTime() + OTP_EXPIRY_MINUTES * 60 * 1000);
-
-        const mobileNumber = "+91" + user.userMobile;
-        console.log(`Number - ${mobileNumber}`);
-
-        if (existingOtp) {
-            /*
-            * Second or later request:
-            * update the existing record with a new OTP.
-            */
-            existingOtp.otpHash = otpHash;
-            existingOtp.destination = mobileNumber;
-            existingOtp.channel = "MOBILE";
-            existingOtp.requestedAt = currentTime;
-            existingOtp.expiresAt = expiresAt;
-
-            await existingOtp.save();
-        } else {
-        // First request: create the OTP record
-            existingOtp = await OTP.create({
-                userId: user._id,
-                purpose,
-                channel: "MOBILE",
-                destination: mobileNumber,
-                otpHash,
-                attempts: 0,
-                requestedAt: currentTime,
-                expiresAt,
-            });
-        }
-        try {
-            await sendSMS({
-                mobile: mobileNumber,
-
-                message:
-                    `${generatedOTP} is your mobile verification OTP. ` +
-                    `It expires in 10 minutes. ` +
-                    `Do not share this OTP with anyone.`,
-            });
-
-        } catch (mobileError) {
-
-            console.error("OTP Mobile delivery error:",mobileError);
-
-            return res.status(500).json({
-                message: "OTP Mobile could not be delivered. Please try again.",
-                success: false,
-            });
-        }
-
-        return res.status(200).json({
-            message: "OTP sent successfully.",
-            success: true,
-        });
-        
-    } catch (error) {
-        console.log(`Error - ${error}`);
-        return res.status(500).json({
-            message: "Internal Server Error",
-            success: false
-        })
-    }
-};
-
-// User Mobile Verified
-const normalizeIndianMobile = (
-  mobile
-) => {
-  const digits = String(mobile).replace(
-    /\D/g,
-    ""
-  );
-
-  if (digits.length === 10) {
-    return `+91${digits}`;
+  if (!/^[6-9]\d{9}$/.test(nationalNumber)) {
+    const error = new Error("Invalid Indian mobile number.");
+    error.statusCode = 400;
+    throw error;
   }
 
-  if (
-    digits.length === 12 &&
-    digits.startsWith("91")
-  ) {
-    return `+${digits}`;
-  }
-
-  throw new Error(
-    "Invalid Indian mobile number."
-  );
+  return `+91${nationalNumber}`;
 };
 
-export const userMobileVerified =
-  async (req, res) => {
-    try {
-      const { otp } = req.body;
+// Send mobile verification OTP
+export const mobileVerified = async (req, res) => {
+  try {
+    const userId = req.user?._id;
 
-      if (!otp) {
-        return res.status(400).json({
-          message: "OTP is required.",
-          success: false,
-        });
-      }
-
-      const user = await User.findById(
-        req.user?._id
-      );
-
-      if (!user) {
-        return res.status(404).json({
-          message: "User not found.",
-          success: false,
-        });
-      }
-
-      if (user.mobileVerified) {
-        return res.status(200).json({
-          message:
-            "Mobile number is already verified.",
-          success: true,
-          mobileVerified: true,
-        });
-      }
-
-      const mobile =
-        normalizeIndianMobile(
-          user.userMobile
-        );
-
-      await verifyAndConsumeOtp({
-        userId: user._id,
-        purpose: "MOBILE_VERIFICATION",
-        destination: mobile,
-        submittedOtp: otp,
+    if (!userId) {
+      return res.status(401).json({
+        message: "Please sign in again.",
+        success: false,
       });
+    }
 
-      user.mobileVerified = true;
+    const user = await User.findById(userId);
 
-      await user.save();
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
 
+    if (user.mobileVerified) {
       return res.status(200).json({
-        message:
-          "Mobile number verified successfully.",
+        message: "Mobile number is already verified.",
         success: true,
         mobileVerified: true,
       });
-    } catch (error) {
-      console.error(
-        "Mobile Verification Controller Error:",
-        error
-      );
-
-      return res
-        .status(error.statusCode || 500)
-        .json({
-          message:
-            error.statusCode
-              ? error.message
-              : "Internal server error.",
-          success: false,
-        });
     }
-  };
+
+    const mobileNumber = normalizeIndianMobile(user.userMobile);
+    const purpose = "MOBILE_VERIFICATION";
+    const currentTime = new Date();
+    const now = currentTime.getTime();
+
+    let otpRecord = await OTP.findOne({
+      userId: user._id,
+      purpose,
+    })
+      .sort({ createdAt: -1 })
+      .select("+otpHash");
+
+    if (otpRecord) {
+      const lockedUntil = otpRecord.lockedUntil
+        ? new Date(otpRecord.lockedUntil).getTime()
+        : null;
+
+      if (lockedUntil && lockedUntil > now) {
+        const retryAfterSeconds = Math.ceil(
+          (lockedUntil - now) / 1000
+        );
+
+        res.set("Retry-After", String(retryAfterSeconds));
+
+        return res.status(429).json({
+          message: `Maximum OTP attempts exceeded. Please try again after ${Math.ceil(
+            retryAfterSeconds / 60
+          )} minute(s).`,
+          success: false,
+          retryAfterSeconds,
+        });
+      }
+
+      // Expired records may remain until MongoDB TTL cleanup runs.
+      if (lockedUntil && lockedUntil <= now) {
+        otpRecord.lockedUntil = null;
+        otpRecord.attempts = 0;
+      } else if (otpRecord.attempts >= MAX_OTP_ATTEMPTS) {
+        const lockExpiry = new Date(
+          now + OTP_LOCK_MINUTES * 60 * 1000
+        );
+
+        otpRecord.lockedUntil = lockExpiry;
+        otpRecord.expiresAt = lockExpiry;
+
+        await otpRecord.save();
+
+        const retryAfterSeconds = OTP_LOCK_MINUTES * 60;
+
+        res.set("Retry-After", String(retryAfterSeconds));
+
+        return res.status(429).json({
+          message: `Maximum OTP attempts exceeded. Please try again after ${OTP_LOCK_MINUTES} minute(s).`,
+          success: false,
+          retryAfterSeconds,
+        });
+      }
+
+      const nextResendTime =
+        new Date(otpRecord.requestedAt).getTime() +
+        OTP_RESEND_SECONDS * 1000;
+
+      if (nextResendTime > now) {
+        const retryAfterSeconds = Math.ceil(
+          (nextResendTime - now) / 1000
+        );
+
+        res.set("Retry-After", String(retryAfterSeconds));
+
+        return res.status(429).json({
+          message: `Please wait ${retryAfterSeconds} second(s) before requesting another OTP.`,
+          success: false,
+          retryAfterSeconds,
+        });
+      }
+    }
+
+    const generatedOTP = String(generateOTP());
+    const otpHash = await bcrypt.hash(generatedOTP, 10);
+
+    const expiresAt = new Date(
+      now + OTP_EXPIRY_MINUTES * 60 * 1000
+    );
+
+    if (otpRecord) {
+      otpRecord.otpHash = otpHash;
+      otpRecord.destination = mobileNumber;
+      otpRecord.channel = "MOBILE";
+      otpRecord.requestedAt = currentTime;
+      otpRecord.expiresAt = expiresAt;
+      otpRecord.lockedUntil = null;
+
+      // Preserve failed attempts when resending.
+      await otpRecord.save();
+    } else {
+      otpRecord = await OTP.create({
+        userId: user._id,
+        purpose,
+        channel: "MOBILE",
+        destination: mobileNumber,
+        otpHash,
+        attempts: 0,
+        lockedUntil: null,
+        requestedAt: currentTime,
+        expiresAt,
+      });
+    }
+
+    try {
+      await sendSMS({
+        mobile: mobileNumber,
+        message:
+          `${generatedOTP} is your QYX mobile verification OTP. ` +
+          `It expires in ${OTP_EXPIRY_MINUTES} minute(s). ` +
+          `Do not share this OTP with anyone.`,
+      });
+    } catch (smsError) {
+      console.error("OTP SMS delivery error:", smsError);
+
+      // Retain the record to enforce the resend cooldown.
+      return res.status(502).json({
+        message:
+          "OTP SMS could not be delivered. Please wait before requesting another OTP.",
+        success: false,
+        retryAfterSeconds: OTP_RESEND_SECONDS,
+      });
+    }
+
+    return res.status(200).json({
+      message: "OTP sent successfully.",
+      success: true,
+      expiresInSeconds: OTP_EXPIRY_MINUTES * 60,
+      resendAfterSeconds: OTP_RESEND_SECONDS,
+    });
+  } catch (error) {
+    console.error("Send mobile verification OTP error:", error);
+
+    return res.status(error.statusCode || 500).json({
+      message: error.statusCode
+        ? error.message
+        : "Internal server error.",
+      success: false,
+    });
+  }
+};
+
+// Verify mobile OTP
+export const userMobileVerified = async (req, res) => {
+  try {
+    const userId = req.user?._id;
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Please sign in again.",
+        success: false,
+      });
+    }
+
+    const { otp } = req.body ?? {};
+
+    // Accept OTPs as strings to preserve any leading zero.
+    if (typeof otp !== "string" || !/^\d+$/.test(otp.trim())) {
+      return res.status(400).json({
+        message: "Please enter a valid OTP as a string.",
+        success: false,
+      });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    if (user.mobileVerified) {
+      return res.status(200).json({
+        message: "Mobile number is already verified.",
+        success: true,
+        mobileVerified: true,
+      });
+    }
+
+    const mobileNumber = normalizeIndianMobile(user.userMobile);
+
+    await verifyAndConsumeOtp({
+      userId: user._id,
+      purpose: "MOBILE_VERIFICATION",
+      destination: mobileNumber,
+      submittedOtp: otp.trim(),
+    });
+
+    /*
+     * Only mark the verified number as verified.
+     * If the number changed during verification, this update fails.
+     */
+    const result = await User.updateOne(
+      {
+        _id: user._id,
+        userMobile: user.userMobile,
+      },
+      {
+        $set: { mobileVerified: true },
+      },
+      { runValidators: true }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(409).json({
+        message:
+          "Your mobile number changed. Please request a new OTP.",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Mobile number verified successfully.",
+      success: true,
+      mobileVerified: true,
+    });
+  } catch (error) {
+    console.error("Mobile verification error:", error);
+
+    return res.status(error.statusCode || 500).json({
+      message: error.statusCode
+        ? error.message
+        : "Internal server error.",
+      success: false,
+    });
+  }
+};
