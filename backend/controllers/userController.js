@@ -259,12 +259,12 @@ export const userLogin = async (req, res) => {
     //   path: "/",
     // });
     res.cookie("token", token, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "lax",
-  maxAge: 3 * 24 * 60 * 60 * 1000,
-  path: "/",
-});
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 3 * 24 * 60 * 60 * 1000,
+      path: "/",
+    });
 
     user.lastLoginAt = new Date();
     await user.save({ validateBeforeSave: false });
@@ -278,7 +278,9 @@ export const userLogin = async (req, res) => {
         email: user.userEmail,
         mobile: user.userMobile,
         role: user.userRole,
-        coinBalance: user.coinBalance,
+        dob: user.userDOB ? user.userDOB.toISOString().slice(0, 10) : null,
+        gender: user.userGender,
+        city: user.userCity,
         status: user.userStatus,
       },
     });
@@ -520,6 +522,7 @@ export const changePasswordByUser = async (req, res) => {
     }
 
     user.userPassword = updatePassword;
+    user.passwordChangedAt = new Date();
 
     await user.save();
 
