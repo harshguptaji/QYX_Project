@@ -614,6 +614,13 @@ export const userEditByAdmin = async (req, res) => {
       });
     }
 
+    if(existingUser._id.toString() === "6aab9ba6fa624964dfa9047c") {
+      return res.status(403).json({
+        message: "You are not authorized to edit this Admin.",
+        success: false,
+      });
+    }
+
     const updateData = {};
 
     const textFields = {
