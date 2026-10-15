@@ -1,6 +1,9 @@
 import { useEffect, useId, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+
 import {
+  ArrowUpRight,
   ChevronLeft,
   ChevronRight,
   RefreshCw,
@@ -15,7 +18,7 @@ import "./AllUsers.css";
 const PAGE_SIZE = 15;
 
 const getInitials = (name = "") =>
-  name
+  String(name || "")
     .trim()
     .split(/\s+/)
     .filter(Boolean)
@@ -187,7 +190,6 @@ export default function AllUsers() {
         aria-label="User directory"
         aria-busy={loading}
       >
-        {/* Backend search and filters */}
         <form
           className="admin-users__filters"
           onSubmit={handleSearch}
@@ -275,7 +277,6 @@ export default function AllUsers() {
             : `Showing ${firstResult}–${lastResult} of ${total} users`}
         </p>
 
-        {/* Request error */}
         {failed ? (
           <div className="admin-users__request-state">
             <p role="alert">
@@ -307,6 +308,7 @@ export default function AllUsers() {
                   <th scope="col">Gender</th>
                   <th scope="col">Verification</th>
                   <th scope="col">Joined</th>
+                  <th scope="col">Actions</th>
                 </tr>
               </thead>
 
@@ -314,7 +316,7 @@ export default function AllUsers() {
                 {loading ? (
                   <tr>
                     <td
-                      colSpan={7}
+                      colSpan={8}
                       className="admin-users__empty"
                     >
                       Loading account information…
@@ -323,7 +325,7 @@ export default function AllUsers() {
                 ) : users.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={7}
+                      colSpan={8}
                       className="admin-users__empty"
                     >
                       No users found. Try changing your filters.
@@ -345,6 +347,7 @@ export default function AllUsers() {
                             <strong>
                               {user.userName || "Unnamed user"}
                             </strong>
+
                             <span>{user._id}</span>
                           </div>
                         </div>
@@ -407,6 +410,24 @@ export default function AllUsers() {
                       <td className="admin-users__date">
                         {formatDate(user.createdAt)}
                       </td>
+
+                      <td>
+                        <Link
+                          to={`/admin/users/${encodeURIComponent(
+                            user._id
+                          )}`}
+                          className="admin-users__details-link"
+                          aria-label={`View details for ${
+                            user.userName || "user"
+                          }`}
+                        >
+                          View details
+                          <ArrowUpRight
+                            size={16}
+                            aria-hidden="true"
+                          />
+                        </Link>
+                      </td>
                     </tr>
                   ))
                 )}
@@ -415,13 +436,12 @@ export default function AllUsers() {
           </div>
         )}
 
-        {/* Backend pagination */}
         {succeeded && total > 0 && (
           <div className="admin-users__pagination">
             <p>
               Page {currentPage} of {totalPages}
               {" · "}
-              {PAGE_SIZE} users per page
+              {pagination.limit} users per page
             </p>
 
             <nav

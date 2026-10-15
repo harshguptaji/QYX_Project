@@ -539,26 +539,66 @@ export const changePasswordByUser = async (req, res) => {
   }
 };
 
-// Edit User By Admin
-export const userEditByAdmin = async (req, res) => {
+const ADMIN_USER_FIELDS = [
+  "_id",
+  "userName",
+  "userEmail",
+  "userMobile",
+  "userCity",
+  "userDOB",
+  "userGender",
+  "userRole",
+  "userVerified",
+  "emailVerified",
+  "mobileVerified",
+  "userPhoto",
+  "createdAt",
+  "updatedAt",
+].join(" ");
+
+export const userById = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const {
-      userName,
-      userEmail,
-      userMobile,
-      userCity,
-      userDOB,
-      userGender,
-      userRole,
-      userStatus,
-      emailVerified,
-      mobileVerified,
-      userPhoto,
-    } = req.body;
+    if (!/^[a-fA-F0-9]{24}$/.test(userId)) {
+      return res.status(400).json({
+        message: "Invalid user ID.",
+        success: false,
+      });
+    }
 
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+    const user = await User.findById(userId)
+      .select(ADMIN_USER_FIELDS)
+      .lean();
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "User details fetched successfully.",
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error("Admin get user error:", error);
+
+    return res.status(500).json({
+      message: "Internal server error.",
+      success: false,
+    });
+  }
+};
+
+export const userEditByAdmin = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const body = req.body ?? {};
+
+    if (!/^[a-fA-F0-9]{24}$/.test(userId)) {
       return res.status(400).json({
         message: "Invalid user ID.",
         success: false,
@@ -576,99 +616,194 @@ export const userEditByAdmin = async (req, res) => {
 
     const updateData = {};
 
-    if (userName !== undefined) {
-      updateData.userName = userName.trim();
-    }
+    const textFields = {
+      userName: { label: "Name", max: 100 },
+      userEmail: { label: "Email", max: 254 },
+      userMobile: { label: "Mobile number", max: 10 },
+      userCity: { label: "City", max: 100 },
+    };
 
-    if (userCity !== undefined) {
-      updateData.userCity = userCity.trim();
-    }
+    for (const [field, rules] of Object.entries(textFields)) {
+      if (body[field] === undefined) continue;
 
-    if (userDOB !== undefined) {
-      updateData.userDOB = userDOB;
-    }
-
-    if (userGender !== undefined) {
-      updateData.userGender = userGender;
-    }
-
-    if (userPhoto !== undefined) {
-      updateData.userPhoto = userPhoto;
-    }
-
-    if (userRole !== undefined) {
-      updateData.userRole = userRole;
-    }
-
-    if (userStatus !== undefined) {
-      updateData.userStatus = userStatus;
-    }
-
-    if (emailVerified !== undefined) {
-      updateData.emailVerified = emailVerified;
-    }
-
-    if (mobileVerified !== undefined) {
-      updateData.mobileVerified = mobileVerified;
-    }
-
-    // Update email
-    if (userEmail !== undefined) {
-      const normalizedEmail = userEmail.trim().toLowerCase();
-
-      const emailChanged = normalizedEmail !== existingUser.userEmail;
-
-      if (emailChanged) {
-        const emailExists = await User.exists({
-          userEmail: normalizedEmail,
-          _id: { $ne: userId },
+      if (
+        typeof body[field] !== "string" ||
+        !body[field].trim() ||
+        body[field].trim().length > rules.max
+      ) {
+        return res.status(400).json({
+          message: `Enter a valid ${rules.label.toLowerCase()}.`,
+          success: false,
         });
+      }
 
-        if (emailExists) {
-          return res.status(409).json({
-            message: "Email address is already registered.",
-            success: false,
-          });
-        }
+      updateData[field] = body[field].trim();
+    }
 
-        updateData.userEmail = normalizedEmail;
+    if (updateData.userEmail !== undefined) {
+      updateData.userEmail = updateData.userEmail.toLowerCase();
 
-        // Reset only when admin has not explicitly set verification
-        if (emailVerified === undefined) {
-          updateData.emailVerified = false;
-        }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(updateData.userEmail)) {
+        return res.status(400).json({
+          message: "Enter a valid email address.",
+          success: false,
+        });
       }
     }
 
-    // Update mobile number
-    if (userMobile !== undefined) {
-      const normalizedMobile = userMobile.trim();
+    if (
+      updateData.userMobile !== undefined &&
+      !/^[6-9]\d{9}$/.test(updateData.userMobile)
+    ) {
+      return res.status(400).json({
+        message: "Enter a valid 10-digit Indian mobile number.",
+        success: false,
+      });
+    }
 
-      const mobileChanged = normalizedMobile !== existingUser.userMobile;
-
-      if (mobileChanged) {
-        const mobileExists = await User.exists({
-          userMobile: normalizedMobile,
-          _id: { $ne: userId },
+    if (body.userRole !== undefined) {
+      if (!["User", "Admin", "Doctor"].includes(body.userRole)) {
+        return res.status(400).json({
+          message: "Invalid user role.",
+          success: false,
         });
+      }
 
-        if (mobileExists) {
-          return res.status(409).json({
-            message: "Mobile number is already registered.",
+      updateData.userRole = body.userRole;
+    }
+
+    if (body.userGender !== undefined) {
+      if (!["Male", "Female", "Other"].includes(body.userGender)) {
+        return res.status(400).json({
+          message: "Invalid gender.",
+          success: false,
+        });
+      }
+
+      updateData.userGender = body.userGender;
+    }
+
+    for (const field of [
+      "userVerified",
+      "emailVerified",
+      "mobileVerified",
+    ]) {
+      if (body[field] === undefined) continue;
+
+      if (typeof body[field] !== "boolean") {
+        return res.status(400).json({
+          message: `${field} must be true or false.`,
+          success: false,
+        });
+      }
+
+      updateData[field] = body[field];
+    }
+
+    if (body.userDOB !== undefined) {
+      const value = body.userDOB;
+
+      if (
+        typeof value !== "string" ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(value)
+      ) {
+        return res.status(400).json({
+          message: "Date of birth must use YYYY-MM-DD.",
+          success: false,
+        });
+      }
+
+      const dob = new Date(`${value}T00:00:00.000Z`);
+
+      if (
+        Number.isNaN(dob.getTime()) ||
+        dob.toISOString().slice(0, 10) !== value ||
+        dob > new Date()
+      ) {
+        return res.status(400).json({
+          message: "Enter a valid date of birth.",
+          success: false,
+        });
+      }
+
+      updateData.userDOB = dob;
+    }
+
+    if (body.userPhoto !== undefined) {
+      if (typeof body.userPhoto !== "string") {
+        return res.status(400).json({
+          message: "Profile photo must be a URL string.",
+          success: false,
+        });
+      }
+
+      const photo = body.userPhoto.trim();
+
+      if (photo) {
+        let validPhoto = false;
+
+        try {
+          const url = new URL(photo);
+          validPhoto = ["https:", "http:"].includes(url.protocol);
+        } catch {
+          validPhoto = false;
+        }
+
+        if (!validPhoto) {
+          return res.status(400).json({
+            message: "Enter a valid HTTP or HTTPS photo URL.",
             success: false,
           });
         }
+      }
 
-        updateData.userMobile = normalizedMobile;
+      // Empty string removes the existing photo URL.
+      updateData.userPhoto = photo;
+    }
 
-        // Reset only when admin has not explicitly set verification
-        if (mobileVerified === undefined) {
-          updateData.mobileVerified = false;
-        }
+    if (
+      updateData.userEmail !== undefined &&
+      updateData.userEmail !== existingUser.userEmail
+    ) {
+      const emailExists = await User.exists({
+        userEmail: updateData.userEmail,
+        _id: { $ne: userId },
+      });
+
+      if (emailExists) {
+        return res.status(409).json({
+          message: "Email address is already registered.",
+          success: false,
+        });
+      }
+
+      if (body.emailVerified === undefined) {
+        updateData.emailVerified = false;
       }
     }
 
-    if (Object.keys(updateData).length === 0) {
+    if (
+      updateData.userMobile !== undefined &&
+      updateData.userMobile !== existingUser.userMobile
+    ) {
+      const mobileExists = await User.exists({
+        userMobile: updateData.userMobile,
+        _id: { $ne: userId },
+      });
+
+      if (mobileExists) {
+        return res.status(409).json({
+          message: "Mobile number is already registered.",
+          success: false,
+        });
+      }
+
+      if (body.mobileVerified === undefined) {
+        updateData.mobileVerified = false;
+      }
+    }
+
+    if (!Object.keys(updateData).length) {
       return res.status(400).json({
         message: "Please provide information to update.",
         success: false,
@@ -681,8 +816,15 @@ export const userEditByAdmin = async (req, res) => {
       {
         new: true,
         runValidators: true,
-      },
-    ).select("-userPassword");
+      }
+    ).select(ADMIN_USER_FIELDS);
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
 
     return res.status(200).json({
       message: "User updated successfully.",
@@ -690,7 +832,7 @@ export const userEditByAdmin = async (req, res) => {
       user: updatedUser,
     });
   } catch (error) {
-    console.error("Admin Edit User Controller Error:", error);
+    console.error("Admin edit user error:", error);
 
     if (error.code === 11000) {
       return res.status(409).json({
@@ -709,7 +851,7 @@ export const userEditByAdmin = async (req, res) => {
     }
 
     return res.status(500).json({
-      message: "Server error.",
+      message: "Internal server error.",
       success: false,
     });
   }
@@ -859,39 +1001,7 @@ export const allUsers = async (req, res) => {
   }
 };
 
-// Users By Id - Admin
-export const userById = async (req, res) => {
-  try {
-    const userId = req.params.userId;
 
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({
-        message: "Please refresh your, Page - Id format incorrect",
-        success: false,
-      });
-    }
-
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(400).json({
-        message: "This User is not exist nay more.",
-        success: false,
-      });
-    }
-
-    return res.status(200).json({
-      message: "User Details Fetch",
-      user,
-      success: true,
-    });
-  } catch (error) {
-    console.log(`Controller Error - ${error}`);
-    return res.status(500).json({
-      message: "Server Error",
-      success: false,
-    });
-  }
-};
 
 // Forgot Password
 export const forgotPassword = async (

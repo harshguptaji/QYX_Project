@@ -31,6 +31,7 @@ import ChangePasswordPage from "./pages/ChangePasswordPage";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminOverviewPage from "./pages/Admin/AdminOverviewPage";
 import AdminAllUsersPage from "./pages/Admin/AdminAllUsersPage";
+import AdminUserDetailsPage from "./pages/Admin/AdminUserDetailsPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -102,7 +103,11 @@ function App() {
           path="overview"
           element={<Navigate to="/admin" replace />}
         />
+        
         <Route path="users" element={<AdminAllUsersPage />} />
+
+        <Route path="users/:userId" element={<AdminUserDetailsPage />}/>
+
       </Route>
 
       {/* Previous overview URL */}
