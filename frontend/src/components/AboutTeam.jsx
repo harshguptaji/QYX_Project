@@ -1,27 +1,27 @@
 const teamFunctions = [
   {
     number: "01",
-    name: "Name - 1",
-    title: "Product & Research",
+    name: "Kamal A. Rachuri",
+    title: "ML & CV Engineer",
     description:
-      "Translates user needs, scientific questions and development constraints into a focused product roadmap.",
-    skills: ["Product strategy", "Research planning"],
+      "VIT, IIT Madras, Owns the CV Pipeline and modeling tarining.",
+    skills: ["ML", "Model Training"],
   },
   {
     number: "02",
-    name: "Name - 2",
-    title: "Clinical Advisory",
+    name: "Abhishek Dixit",
+    title: "Product Lead",
     description:
-      "Guides medical content, patient questions and the boundaries between education and clinical care.",
-    skills: ["Clinical review", "Care standards"],
+      "AI/Technical and business engagement strategy.",
+    skills: ["Artificial Intelligence"],
   },
   {
     number: "03",
-    name: "Name - 3",
-    title: "Engineering & Data",
+    name: "Harsh Gupta",
+    title: "Full Stack Engineer",
     description:
-      "Builds the digital experience, appointment tools and secure foundations needed for responsible growth.",
-    skills: ["Platform design", "Data protection"],
+      "B.Tech in CS, expertees in MERN Stack, and developing consultation platform.",
+    skills: ["MERN", "JavaScript"],
   },
   {
     number: "04",

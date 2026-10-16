@@ -28,7 +28,7 @@ const HomePage = () => {
       <HowQYXWorks/>
       <PrivateCareFeature/>
       <QYXCarousel/>
-      <FoundersSection/>
+      {/* <FoundersSection/> */}
       <Footer/>
     </>
   )

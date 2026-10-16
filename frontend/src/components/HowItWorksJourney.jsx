@@ -143,8 +143,8 @@ const HowItWorksJourney = () => {
             </span>
 
             <h2 id={headingId}>
-              Five steps.
-              <span>One thoughtful beginning.</span>
+              Five steps, One thoughtful beginning. 
+              {/* <span>One thoughtful beginning.</span> */}
             </h2>
           </div>
 

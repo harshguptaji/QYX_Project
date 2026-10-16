@@ -340,8 +340,8 @@
 .qyx-outcomes__card > p {
   margin: 0;
   color: rgba(250, 248, 240, 0.78);
-  font-size: 0.9rem;
-  line-height: 1.8;
+  font-size: 1rem;
+  line-height: 1.4;
 }
 
 .qyx-outcomes__sr-only {

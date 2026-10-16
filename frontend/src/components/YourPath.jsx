@@ -18,7 +18,7 @@ const paths = [
     href: "/consultation",
   },
   {
-    title: "Consult on video or chat, from your phone at a time that works for you.",
+    title: "Consult on video or chat, from your phone at a time that works for you, in complete privacy.",
     image: mensHealth,
     alt: "A man outdoors",
     href: "/consultation",

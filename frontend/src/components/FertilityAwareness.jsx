@@ -26,8 +26,7 @@ const FertilityAwareness = () => {
           </h2>
 
           <p>
-            Infertility cases in India involves a male factor, per clinical research -
-            yet men are raerely consulted first.
+            Infertility cases in India can involve a male factor, according to clinical research. Including both partners in fertility assessments can help identify contributing factors and guide the next steps in care.
           </p>
         </div>
         <div className="fertility-awareness-image">

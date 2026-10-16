@@ -4,13 +4,13 @@ import "../style/FoundersSection.css";
 
 const founders = [
   {
-    name: "Founder Name",
-    role: "Co-founder & CEO",
+    name: "Arun Kumar",
+    role: "Founder & CEO",
     image: founderOne,
   },
   {
-    name: "Founder Name",
-    role: "Co-founder",
+    name: "Munish Chauhan",
+    role: "Co-founder & COO",
     image: founderTwo,
   },
 ];

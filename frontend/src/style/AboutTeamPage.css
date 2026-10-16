@@ -323,14 +323,18 @@
 }
 
 .qyx-about-device__header {
-  display: grid;
+  /* display: grid; */
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   align-items: end;
   gap: clamp(34px, 7vw, 90px);
 }
 
+.qyx-about-device__title{
+  font-size: clamp(1.5rem, 2.5vw, 4rem);
+}
+
 .qyx-about-device__header > p {
-  margin: 0;
+  margin: 10px;
   color: #d3dfcc;
   font-size: 1rem;
   line-height: 1.8;
@@ -340,7 +344,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
   gap: 22px;
-  margin-top: clamp(38px, 6vw, 68px);
+  margin-top: clamp(38px, 2vw, 68px);
 }
 
 .qyx-about-device__workflow {

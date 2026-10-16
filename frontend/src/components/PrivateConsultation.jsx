@@ -27,10 +27,9 @@ const PrivateConsultation = () => {
           </h2>
 
           <p>
-            How much longer men wait then women, on average, before their first fertility consultation.
-          </p>
+              How much longer men wait than women, on average, before their first fertility consultation. This delay can leave male fertility concerns unexplored and postpone a fuller understanding of a couple’s fertility.          </p>
 
-          <a href="/consultation" className="private-consultation-button">
+          <a href="/doctors" className="private-consultation-button">
             Book a Consultation
             <span aria-hidden="true">→</span>
           </a>

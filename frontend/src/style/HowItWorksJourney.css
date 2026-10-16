@@ -28,7 +28,7 @@
 }
 
 .qyx-how-journey__header {
-  display: flex;
+  /* display: flex; */
   align-items: flex-end;
   justify-content: space-between;
   gap: 40px;
@@ -64,8 +64,8 @@
 }
 
 .qyx-how-journey__header > p {
-  max-width: 340px;
-  margin: 0 0 4px;
+  /* max-width: 340px; */
+  margin-top: 8px;
   color: var(--journey-text);
   font-size: 0.94rem;
   line-height: 1.8;
@@ -90,7 +90,7 @@
   align-items: center;
   gap: 18px;
   width: 100%;
-  min-height: 88px;
+  min-height: 95px;
   padding: 17px;
   border: 1px solid transparent;
   border-radius: 14px;

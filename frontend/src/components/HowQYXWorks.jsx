@@ -58,7 +58,7 @@ const HowQYXWorks = () => {
           ))}
         </ol>
 
-        <a href="/consultation" className="how-qyx-button">
+        <a href="/doctors" className="how-qyx-button">
           Start a Private Conversation
           <span aria-hidden="true">→</span>
         </a>

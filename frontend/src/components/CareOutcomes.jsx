@@ -135,7 +135,7 @@ export default function CareOutcomes() {
                 className="qyx-outcomes__large-number"
                 aria-hidden="true"
               >
-                {percentage(metrics.headline)}
+                {/* {percentage(metrics.headline)} */}
               </span>
 
               <span className="qyx-outcomes__sr-only">
@@ -265,7 +265,8 @@ export default function CareOutcomes() {
                 className="qyx-outcomes__bar-number"
                 aria-hidden="true"
               >
-                {percentage(metrics.outcomeRate)}
+                {/* {percentage(metrics.outcomeRate)} */}
+                3 - 5 years
               </span>
 
               <div className="qyx-outcomes__bar">

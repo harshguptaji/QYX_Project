@@ -63,9 +63,9 @@ export default function DeviceDevelopment() {
         <header className="qyx-about-device__header">
           <div>
             <span className="qyx-about-section-label">DEVICE IN DEVELOPMENT</span>
-            <h2 id="qyx-device-title">
+            <h3 className="qyx-about-device__title" id="qyx-device-title">
               From a private sample to a clearer conversation.
-            </h2>
+            </h3>
           </div>
           <p>
             QYX is developing a guided male-fertility device concept intended

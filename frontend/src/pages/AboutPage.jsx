@@ -14,10 +14,10 @@ const AboutPage = () => {
         <Navbar/>
         <main className="qyx-about-page">
             <AboutHero/>
+            <FoundersSection/>
+            <AboutTeam/>
             <AboutStory/>
             <DeviceDevelopment/>
-            <AboutTeam/>
-            <FoundersSection/>
             <AboutPrinciples/>
         </main>
         <Footer/>
