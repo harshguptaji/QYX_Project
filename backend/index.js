@@ -63,7 +63,7 @@ connectDB();
 
 app.use("/api/user", userRoutes);
 app.use("/api/doctor", doctorRoutes);
-app.use("/api/admin", adminRoutes);
+app.use("/api/accios", adminRoutes);
 
 /*
  * Serve React in production

@@ -22,7 +22,7 @@ const navigationItems = [
     end: true,
   },
   {
-    to: "/admin/users",
+    to: "/accios/users",
     label: "All users",
     icon: UsersRound,
     end: false,

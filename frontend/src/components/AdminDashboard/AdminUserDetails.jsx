@@ -27,7 +27,7 @@ const getDraft = (user) => ({
   userCity: user.userCity || "",
   userDOB: user.userDOB?.slice(0, 10) || "",
   userGender: user.userGender || "",
-  userRole: user.userRole || "User",
+  // userRole: user.userRole || "User",
   userPhoto: user.userPhoto || "",
   userVerified: Boolean(user.userVerified),
   emailVerified: Boolean(user.emailVerified),
@@ -393,7 +393,7 @@ function UserDetailsEditor({ user }) {
               </select>
             </label>
 
-            <label htmlFor={`${id}-role`}>
+            {/* <label htmlFor={`${id}-role`}>
               Account role
               <select
                 id={`${id}-role`}
@@ -407,7 +407,7 @@ function UserDetailsEditor({ user }) {
                 <option value="Doctor">Doctor</option>
                 <option value="Admin">Admin</option>
               </select>
-            </label>
+            </label> */}
 
             <label htmlFor={`${id}-photo`}>
               Profile photo URL

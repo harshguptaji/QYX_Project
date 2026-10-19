@@ -413,7 +413,7 @@ export default function AllUsers() {
 
                       <td>
                         <Link
-                          to={`/admin/users/${encodeURIComponent(
+                          to={`/accios/users/${encodeURIComponent(
                             user._id
                           )}`}
                           className="admin-users__details-link"

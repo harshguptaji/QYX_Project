@@ -29,6 +29,7 @@ import AppointmentDetailsPage from "./pages/AppointmentDetailsPage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
 
 // Admin dashboard
+import AdminLogin from "./components/AdminDashboard/AdminLogin";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminOverviewPage from "./pages/Admin/AdminOverviewPage";
 import AdminAllUsersPage from "./pages/Admin/AdminAllUsersPage";
@@ -102,12 +103,14 @@ function App() {
       </Route>
 
       {/* Admin dashboard */}
-      <Route path="/admin" element={<AdminDashboard />}>
+        <Route path="/accios/login" element={<AdminLogin />} />
+
+      <Route path="/accios" element={<AdminDashboard />}>
         <Route index element={<AdminOverviewPage />} />
 
         <Route
           path="overview"
-          element={<Navigate to="/admin" replace />}
+          element={<Navigate to="/accios" replace />}
         />
 
         <Route path="users" element={<AdminAllUsersPage />} />
@@ -119,7 +122,7 @@ function App() {
       {/* Previous overview URL */}
       <Route
         path="/overview"
-        element={<Navigate to="/admin" replace />}
+        element={<Navigate to="/accios" replace />}
       />
 
       <Route path="*" element={<h1>404 Not Found</h1>} />

@@ -1,0 +1,278 @@
+.qyx-admin-login,
+.qyx-admin-login * {
+  box-sizing: border-box;
+}
+
+.qyx-admin-login {
+  --al-heading: #243e2e;
+  --al-primary: #557a60;
+  --al-dark: #35583e;
+  --al-text: #526556;
+  --al-border: #d6e1d1;
+  --al-soft: #eaf1e8;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: clamp(24px, 6vw, 72px) 20px;
+  background:
+    radial-gradient(
+      circle at 15% 15%,
+      rgb(114 140 105 / 15%),
+      transparent 40%
+    ),
+    #fafaf4;
+  color: var(--al-heading);
+}
+
+.qyx-admin-login__container {
+  width: min(100%, 520px);
+  margin: 0 auto;
+}
+
+.qyx-admin-login__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  color: var(--al-dark);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.qyx-admin-login__back svg {
+  width: 18px;
+  height: 18px;
+}
+
+.qyx-admin-login__card {
+  padding: clamp(24px, 5vw, 42px);
+  border: 1px solid var(--al-border);
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 20px 70px rgb(36 62 46 / 7%);
+}
+
+.qyx-admin-login__logo {
+  display: inline-flex;
+  max-width: 160px;
+  margin-bottom: 30px;
+}
+
+.qyx-admin-login__logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.qyx-admin-login__icon {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 22px;
+  place-items: center;
+  border: 1px solid var(--al-border);
+  border-radius: 16px;
+  background: var(--al-soft);
+  color: var(--al-dark);
+}
+
+.qyx-admin-login__icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.qyx-admin-login__eyebrow {
+  margin: 0 0 12px;
+  color: var(--al-dark);
+  font-size: 0.69rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.qyx-admin-login h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 6vw, 2.7rem);
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.qyx-admin-login__description {
+  margin: 16px 0 28px;
+  color: var(--al-text);
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+
+.qyx-admin-login__form {
+  display: grid;
+  gap: 21px;
+}
+
+.qyx-admin-login__field {
+  min-width: 0;
+}
+
+.qyx-admin-login__field label {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 0.83rem;
+  font-weight: 700;
+}
+
+.qyx-admin-login__field input {
+  width: 100%;
+  min-width: 0;
+  min-height: 52px;
+  padding: 13px 15px;
+  border: 1px solid var(--al-border);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--al-heading);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.qyx-admin-login__field input::placeholder {
+  color: #6a786d;
+  font-size: 0.86rem;
+}
+
+.qyx-admin-login__field input:focus {
+  outline: none;
+  border-color: var(--al-primary);
+  box-shadow: 0 0 0 4px rgb(85 122 96 / 12%);
+}
+
+.qyx-admin-login__field input:disabled {
+  background: #f5f7f1;
+}
+
+.qyx-admin-login__password {
+  position: relative;
+}
+
+.qyx-admin-login__password input {
+  padding-right: 54px;
+}
+
+.qyx-admin-login__password button {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  place-items: center;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--al-dark);
+  cursor: pointer;
+}
+
+.qyx-admin-login__password svg {
+  width: 20px;
+  height: 20px;
+}
+
+.qyx-admin-login__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 50px;
+  padding: 13px 20px;
+  border: 1px solid var(--al-primary);
+  border-radius: 999px;
+  background: var(--al-primary);
+  color: #fff;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.qyx-admin-login__submit:hover:not(:disabled) {
+  border-color: var(--al-dark);
+  background: var(--al-dark);
+}
+
+.qyx-admin-login__submit svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.qyx-admin-login__error,
+.qyx-admin-login__message {
+  margin: 0;
+  padding: 13px 15px;
+  border: 1px solid var(--al-border);
+  border-radius: 12px;
+  background: var(--al-soft);
+  color: var(--al-dark);
+  font-size: 0.84rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.qyx-admin-login__error {
+  border-color: #e8cdc5;
+  background: #fcf0ec;
+  color: #873f30;
+}
+
+.qyx-admin-login__card > .qyx-admin-login__error {
+  margin-bottom: 20px;
+}
+
+.qyx-admin-login__note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--al-border);
+  color: var(--al-text);
+}
+
+.qyx-admin-login__note svg {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+}
+
+.qyx-admin-login__note p {
+  margin: 0;
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
+.qyx-admin-login button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.qyx-admin-login button:focus-visible,
+.qyx-admin-login a:focus-visible {
+  outline: 3px solid rgb(85 122 96 / 45%);
+  outline-offset: 4px;
+}
+
+@media (max-width: 480px) {
+  .qyx-admin-login {
+    padding: 24px 14px;
+  }
+
+  .qyx-admin-login__card {
+    padding: 26px 20px;
+    border-radius: 18px;
+  }
+}

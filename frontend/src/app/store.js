@@ -3,6 +3,7 @@ import authReducer from "../features/auth/authSlice";
 import adminUsersReducer from "../features/admin/users/adminUsersSlice";
 import adminUserDetailsReducer from "../features/admin/userDetails/adminUserDetailsSlice";
 import passwordResetReducer from "../features/auth/passwordResetSlice";
+import adminAuthReducer from "../features/admin/auth/adminAuthSlice"
 
 
 export const store = configureStore({
@@ -11,5 +12,6 @@ export const store = configureStore({
         adminUsers: adminUsersReducer,
         adminUserDetails: adminUserDetailsReducer,
         passwordReset: passwordResetReducer,
+        adminAuth: adminAuthReducer,
     },
 });

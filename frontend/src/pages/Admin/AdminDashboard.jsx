@@ -16,7 +16,10 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-import { logoutUser } from "../../features/auth/authSlice";
+import {
+  getCurrentAdmin,
+  logoutAdmin,
+} from "../../features/admin/auth/adminAuthSlice";
 
 import { resetAdminUsers } from
   "../../features/admin/users/adminUsersSlice";
@@ -36,62 +39,98 @@ export default function AdminDashboard() {
   const { pathname } = useLocation();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+
   const logoutRunningRef = useRef(false);
 
   const {
-    user,
+    admin,
     isAuthChecked,
     sessionStatus,
     sessionError,
-  } = useSelector((state) => state.auth);
+    logoutStatus,
+  } = useSelector((state) => state.adminAuth);
 
   const closeSidebar = useCallback(() => {
     setSidebarOpen(false);
   }, []);
+
+  // Restore or validate the separate admin cookie session.
+  useEffect(() => {
+    const request = dispatch(getCurrentAdmin());
+
+    return () => {
+      request.abort();
+    };
+  }, [dispatch, retryCount]);
 
   useEffect(() => {
     closeSidebar();
   }, [pathname, closeSidebar]);
 
   const handleLogout = async () => {
-    if (logoutRunningRef.current) return;
+    if (
+      logoutRunningRef.current ||
+      logoutStatus === "loading"
+    ) {
+      return;
+    }
 
     logoutRunningRef.current = true;
 
     try {
-      await dispatch(logoutUser()).unwrap();
+      await dispatch(logoutAdmin()).unwrap();
 
       dispatch(resetAdminUsers());
       dispatch(resetAdminUserDetails());
 
       closeSidebar();
-      navigate("/", { replace: true });
+      navigate("/accios/login", { replace: true });
     } catch {
-      // AdminSidebar displays the logout error from Redux.
+      // AdminSidebar displays logoutError from adminAuth.
     } finally {
       logoutRunningRef.current = false;
     }
   };
 
-  if (!user) {
+  const retrySession = () => {
+    setRetryCount((current) => current + 1);
+  };
+
+  if (!admin) {
     const loading =
       !isAuthChecked || sessionStatus === "loading";
 
-    return (
-      <main className="admin-dashboard__content">
-        <p role={loading ? "status" : "alert"}>
-          {loading
-            ? "Loading your account…"
-            : sessionError || "Please sign in to access the admin dashboard."}
-        </p>
+    if (loading) {
+      return (
+        <main className="admin-dashboard__content">
+          <p role="status">Checking your admin session…</p>
+        </main>
+      );
+    }
 
-        {!loading && <Link to="/">Back to home</Link>}
-      </main>
-    );
-  }
+    if (sessionError) {
+      return (
+        <main className="admin-dashboard__content">
+          <p role="alert">{sessionError}</p>
 
-  if (user.role !== "Admin") {
-    return <Navigate to="/profile" replace />;
+          <button
+            type="button"
+            onClick={retrySession}
+          >
+            Try again
+          </button>
+
+          <p>
+            <Link to="/accios/login">
+              Go to admin login
+            </Link>
+          </p>
+        </main>
+      );
+    }
+
+    return <Navigate to="/accios/login" replace />;
   }
 
   return (
@@ -109,7 +148,10 @@ export default function AdminDashboard() {
             className="admin-dashboard__logo"
             aria-label="QYX MedTech home"
           >
-            <img src={logoImg} alt="QYX MedTech" />
+            <img
+              src={logoImg}
+              alt="QYX MedTech"
+            />
           </Link>
 
           <button
@@ -125,7 +167,7 @@ export default function AdminDashboard() {
         </header>
 
         <main className="admin-dashboard__content">
-          <Outlet context={{ user }} />
+          <Outlet context={{ admin }} />
         </main>
       </div>
     </div>

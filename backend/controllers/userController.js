@@ -613,9 +613,19 @@ export const userEditByAdmin = async (req, res) => {
       });
     }
 
-    if(existingUser._id.toString() === "6aab9ba6fa624964dfa9047c") {
+    if (
+      existingUser._id.toString() === "6aab9ba6fa624964dfa9047c"
+    ) {
       return res.status(403).json({
-        message: "You are not authorized to edit this Admin.",
+        message: "You are not authorized to edit this account.",
+        success: false,
+      });
+    }
+
+    // Role changes are not supported by this endpoint.
+    if (body.userRole !== undefined) {
+      return res.status(400).json({
+        message: "User role cannot be changed.",
         success: false,
       });
     }
@@ -623,10 +633,10 @@ export const userEditByAdmin = async (req, res) => {
     const updateData = {};
 
     const textFields = {
-      userName: { label: "Name", max: 100 },
-      userEmail: { label: "Email", max: 254 },
-      userMobile: { label: "Mobile number", max: 10 },
-      userCity: { label: "City", max: 100 },
+      userName: { label: "name", max: 100 },
+      userEmail: { label: "email address", max: 254 },
+      userMobile: { label: "mobile number", max: 10 },
+      userCity: { label: "city", max: 100 },
     };
 
     for (const [field, rules] of Object.entries(textFields)) {
@@ -638,7 +648,7 @@ export const userEditByAdmin = async (req, res) => {
         body[field].trim().length > rules.max
       ) {
         return res.status(400).json({
-          message: `Enter a valid ${rules.label.toLowerCase()}.`,
+          message: `Enter a valid ${rules.label}.`,
           success: false,
         });
       }
@@ -649,7 +659,9 @@ export const userEditByAdmin = async (req, res) => {
     if (updateData.userEmail !== undefined) {
       updateData.userEmail = updateData.userEmail.toLowerCase();
 
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(updateData.userEmail)) {
+      if (
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(updateData.userEmail)
+      ) {
         return res.status(400).json({
           message: "Enter a valid email address.",
           success: false,
@@ -665,17 +677,6 @@ export const userEditByAdmin = async (req, res) => {
         message: "Enter a valid 10-digit Indian mobile number.",
         success: false,
       });
-    }
-
-    if (body.userRole !== undefined) {
-      if (!["User", "Admin", "Doctor"].includes(body.userRole)) {
-        return res.status(400).json({
-          message: "Invalid user role.",
-          success: false,
-        });
-      }
-
-      updateData.userRole = body.userRole;
     }
 
     if (body.userGender !== undefined) {
@@ -750,7 +751,7 @@ export const userEditByAdmin = async (req, res) => {
 
         try {
           const url = new URL(photo);
-          validPhoto = ["https:", "http:"].includes(url.protocol);
+          validPhoto = ["http:", "https:"].includes(url.protocol);
         } catch {
           validPhoto = false;
         }
@@ -763,7 +764,7 @@ export const userEditByAdmin = async (req, res) => {
         }
       }
 
-      // Empty string removes the existing photo URL.
+      // An empty string removes the existing photo URL.
       updateData.userPhoto = photo;
     }
 
@@ -783,6 +784,7 @@ export const userEditByAdmin = async (req, res) => {
         });
       }
 
+      // Preserve an explicit verification choice made by the admin.
       if (body.emailVerified === undefined) {
         updateData.emailVerified = false;
       }
@@ -823,7 +825,11 @@ export const userEditByAdmin = async (req, res) => {
         new: true,
         runValidators: true,
       }
-    ).select(ADMIN_USER_FIELDS);
+    ).select(
+      "_id userName userEmail userMobile userCity userDOB " +
+      "userGender userRole userPhoto userVerified " +
+      "emailVerified mobileVerified createdAt updatedAt"
+    );
 
     if (!updatedUser) {
       return res.status(404).json({
