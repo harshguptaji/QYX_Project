@@ -2,7 +2,6 @@ import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
 
 import sendEmail from "../utils/sendEmail.js";
 import sendSMS from "../utils/sendSMS.js"
@@ -249,7 +248,7 @@ export const userLogin = async (req, res) => {
       },
     );
 
-    const isProduction = process.env.NODE_ENV === "production";
+    // const isProduction = process.env.NODE_ENV === "production";
 
     // res.cookie("token", token, {
     //   httpOnly: true,
