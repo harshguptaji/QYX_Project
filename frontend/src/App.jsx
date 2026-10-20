@@ -34,6 +34,7 @@ import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminOverviewPage from "./pages/Admin/AdminOverviewPage";
 import AdminAllUsersPage from "./pages/Admin/AdminAllUsersPage";
 import AdminUserDetailsPage from "./pages/Admin/AdminUserDetailsPage";
+import AdminContactsPage from "./pages/Admin/AdminContactsPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -116,6 +117,8 @@ function App() {
         <Route path="users" element={<AdminAllUsersPage />} />
 
         <Route path="users/:userId" element={<AdminUserDetailsPage />}/>
+
+        <Route path="contacts" element={<AdminContactsPage />} />
 
       </Route>
 

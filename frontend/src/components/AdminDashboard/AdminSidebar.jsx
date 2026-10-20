@@ -8,6 +8,7 @@ import {
   UsersRound,
   LogOut,
   ShieldCheck,
+  Mail,
   X,
 } from "lucide-react";
 
@@ -16,7 +17,7 @@ import "./AdminSidebar.css";
 
 const navigationItems = [
   {
-    to: "/admin",
+    to: "/accios",
     label: "Overview",
     icon: LayoutDashboard,
     end: true,
@@ -25,6 +26,12 @@ const navigationItems = [
     to: "/accios/users",
     label: "All users",
     icon: UsersRound,
+    end: false,
+  },
+  {
+    to: "/accios/contacts",
+    label: "Contact enquiries",
+    icon: Mail,
     end: false,
   },
 ];

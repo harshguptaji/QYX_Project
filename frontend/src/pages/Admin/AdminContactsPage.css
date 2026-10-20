@@ -1,0 +1,35 @@
+.admin-contacts-page {
+  width: 100%;
+  max-width: 1440px;
+  min-width: 0;
+  margin: 0 auto;
+}
+
+.admin-contacts-page__heading {
+  margin-bottom: 28px;
+}
+
+.admin-contacts-page__heading > p {
+  margin: 0 0 12px;
+  color: #35583e;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.admin-contacts-page__heading h1 {
+  margin: 0;
+  color: #243e2e;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 4vw, 3.3rem);
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.admin-contacts-page__heading > span {
+  display: block;
+  margin-top: 13px;
+  color: #526556;
+  font-size: 0.93rem;
+  line-height: 1.7;
+}
