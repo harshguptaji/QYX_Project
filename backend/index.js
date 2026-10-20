@@ -11,6 +11,7 @@ import { connectDB } from "./dbConnect.js";
 import userRoutes from "./routes/userRoute.js";
 import doctorRoutes from "./routes/doctorRoute.js";
 import adminRoutes from "./routes/adminRoute.js"
+import contactRoutes from "./routes/contactRoute.js";
 
 dotenv.config({ quiet: true });
 
@@ -64,6 +65,7 @@ connectDB();
 app.use("/api/user", userRoutes);
 app.use("/api/doctor", doctorRoutes);
 app.use("/api/accios", adminRoutes);
+app.use("/api/contact", contactRoutes);
 
 /*
  * Serve React in production

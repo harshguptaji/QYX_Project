@@ -1,14 +1,37 @@
-import { useState } from "react";
+import { useId, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  clearContactSubmitFeedback,
+  submitContact,
+} from "../features/contact/contactSlice";
+
 import "../style/ContactForm.css";
 
+const getEmptyForm = () => ({
+  name: "",
+  email: "",
+  phone: "",
+  purpose: "",
+  message: "",
+});
+
 const ContactForm = () => {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    purpose: "",
-    message: "",
-  });
+  const dispatch = useDispatch();
+  const id = useId();
+  const submittingRef = useRef(false);
+
+  const [form, setForm] = useState(getEmptyForm);
+  const [localError, setLocalError] = useState("");
+
+  const {
+    submitStatus,
+    submitError,
+    submitMessage,
+  } = useSelector((state) => state.contact);
+
+  const loading = submitStatus === "loading";
+  const errorMessage = localError || submitError;
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -17,34 +40,63 @@ const ContactForm = () => {
       ...previous,
       [name]: value,
     }));
+
+    setLocalError("");
+
+    if (submitError || submitMessage) {
+      dispatch(clearContactSubmitFeedback());
+    }
   };
 
-  const whatsappMessage = [
-    "Hello QYX team, I would like to make an enquiry.",
-    "",
-    `Name: ${form.name.trim()}`,
-    `Email: ${form.email.trim()}`,
-    `Phone: ${form.phone.trim()}`,
-    `Purpose: ${form.purpose}`,
-    "",
-    `Message: ${form.message.trim()}`,
-  ].join("\n");
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    window.location.assign(
-      `https://wa.me/917453898747?text=${encodeURIComponent(
-        whatsappMessage
-      )}`
-    );
+    if (loading || submittingRef.current) return;
+
+    dispatch(clearContactSubmitFeedback());
+    setLocalError("");
+
+    const fields = {
+      name: form.name.trim(),
+      email: form.email.trim().toLowerCase(),
+      mobile: form.phone.trim(),
+      purpose: form.purpose,
+      message: form.message.trim(),
+    };
+
+    if (
+      !fields.name ||
+      !fields.email ||
+      !fields.mobile ||
+      !fields.purpose ||
+      !fields.message
+    ) {
+      setLocalError("Please complete all required fields.");
+      return;
+    }
+
+    if (!/^[6-9]\d{9}$/.test(fields.mobile)) {
+      setLocalError("Enter a valid 10-digit Indian mobile number.");
+      return;
+    }
+
+    submittingRef.current = true;
+
+    try {
+      await dispatch(submitContact(fields)).unwrap();
+      setForm(getEmptyForm());
+    } catch {
+      // The Redux slice displays the backend error.
+    } finally {
+      submittingRef.current = false;
+    }
   };
 
   return (
     <section
       className="qyx-contact-form"
       id="qyx-contact-form"
-      aria-labelledby="qyx-contact-form-title"
+      aria-labelledby={`${id}-title`}
     >
       <div className="qyx-contact-form__container">
         <div className="qyx-contact-form__content">
@@ -52,7 +104,7 @@ const ContactForm = () => {
             TELL US WHAT YOU NEED
           </span>
 
-          <h2 id="qyx-contact-form-title">
+          <h2 id={`${id}-title`}>
             We’re here for the
             <span>questions that matter.</span>
           </h2>
@@ -89,6 +141,7 @@ const ContactForm = () => {
         <form
           className="qyx-contact-form__panel"
           onSubmit={handleSubmit}
+          aria-busy={loading}
         >
           <h3>How can we help?</h3>
 
@@ -97,9 +150,13 @@ const ContactForm = () => {
           </p>
 
           <div className="qyx-contact-form__fields">
-            <label className="qyx-contact-form__full">
+            <label
+              className="qyx-contact-form__full"
+              htmlFor={`${id}-name`}
+            >
               Full name
               <input
+                id={`${id}-name`}
                 type="text"
                 name="name"
                 value={form.name}
@@ -107,13 +164,15 @@ const ContactForm = () => {
                 placeholder="Your full name"
                 autoComplete="name"
                 maxLength={100}
+                disabled={loading}
                 required
               />
             </label>
 
-            <label>
+            <label htmlFor={`${id}-email`}>
               Email address
               <input
+                id={`${id}-email`}
                 type="email"
                 name="email"
                 value={form.email}
@@ -121,32 +180,42 @@ const ContactForm = () => {
                 placeholder="you@example.com"
                 autoComplete="email"
                 maxLength={254}
+                disabled={loading}
                 required
               />
             </label>
 
-            <label>
-              Phone number
+            <label htmlFor={`${id}-phone`}>
+              Mobile number (+91)
               <input
+                id={`${id}-phone`}
                 type="tel"
                 name="phone"
                 value={form.phone}
                 onChange={handleChange}
-                placeholder="+91 98765 43210"
-                autoComplete="tel"
-                inputMode="tel"
-                minLength={7}
-                maxLength={25}
+                placeholder="9876543210"
+                autoComplete="tel-national"
+                inputMode="numeric"
+                pattern="[6-9][0-9]{9}"
+                minLength={10}
+                maxLength={10}
+                title="Enter a 10-digit Indian mobile number without +91."
+                disabled={loading}
                 required
               />
             </label>
 
-            <label className="qyx-contact-form__full">
+            <label
+              className="qyx-contact-form__full"
+              htmlFor={`${id}-purpose`}
+            >
               Purpose of visiting
               <select
+                id={`${id}-purpose`}
                 name="purpose"
                 value={form.purpose}
                 onChange={handleChange}
+                disabled={loading}
                 required
               >
                 <option value="">Choose your reason</option>
@@ -168,15 +237,20 @@ const ContactForm = () => {
               </select>
             </label>
 
-            <label className="qyx-contact-form__full">
+            <label
+              className="qyx-contact-form__full"
+              htmlFor={`${id}-message`}
+            >
               Your message
               <textarea
+                id={`${id}-message`}
                 name="message"
                 value={form.message}
                 onChange={handleChange}
                 placeholder="What would you like help with?"
                 rows={4}
                 maxLength={1000}
+                disabled={loading}
                 required
               />
             </label>
@@ -184,19 +258,37 @@ const ContactForm = () => {
 
           <p
             className="qyx-contact-form__notice"
-            id="qyx-contact-form-notice"
+            id={`${id}-notice`}
           >
-            Your details will be included in a WhatsApp message to our
-            admin team. You can review it before sending.
+            Your enquiry will be sent to the QYX team for review.
           </p>
+
+          {errorMessage && (
+            <p
+              className="qyx-contact-form__feedback qyx-contact-form__feedback--error"
+              role="alert"
+            >
+              {errorMessage}
+            </p>
+          )}
+
+          {submitMessage && !errorMessage && (
+            <p
+              className="qyx-contact-form__feedback qyx-contact-form__feedback--success"
+              role="status"
+            >
+              {submitMessage}
+            </p>
+          )}
 
           <button
             className="qyx-contact-form__submit"
             type="submit"
-            aria-describedby="qyx-contact-form-notice"
+            aria-describedby={`${id}-notice`}
+            disabled={loading}
           >
-            Continue on WhatsApp
-            <span aria-hidden="true">↗</span>
+            {loading ? "Sending enquiry…" : "Send enquiry"}
+            {!loading && <span aria-hidden="true">→</span>}
           </button>
         </form>
       </div>
