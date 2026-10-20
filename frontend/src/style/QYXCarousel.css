@@ -50,7 +50,7 @@
 .qyx-carousel-card {
   position: absolute;
   top: 24px;
-  left: calc(50% + var(--slot) * 22%);
+  left: calc(50% + var(--relative) * 22%);
   width: min(400px, 56%);
   height: 420px;
   display: flex;
@@ -212,7 +212,7 @@
 
   .qyx-carousel-card {
     width: min(360px, 62%);
-    left: calc(50% + var(--slot) * 18%);
+    left: calc(50% + var(--relative) * 18%);
   }
 }
 

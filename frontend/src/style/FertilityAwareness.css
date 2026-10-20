@@ -32,7 +32,7 @@
   display: inline-block;
   margin-bottom: 18px;
   color: #587b60;
-  font-size: 0.78rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.13em;
 }
@@ -74,6 +74,11 @@
 
   .fertility-awareness-image img {
     border-radius: 16px;
+  }
+
+  .fertility-awareness-label {
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
   }
 
   .fertility-awareness-container {

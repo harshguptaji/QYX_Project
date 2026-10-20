@@ -20,7 +20,7 @@
   display: inline-block;
   margin-bottom: 18px;
   color: #587b60;
-  font-size: 0.78rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.13em;
 }
@@ -54,7 +54,9 @@
   font-size: 0.98rem;
   font-weight: 600;
   text-decoration: none;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .private-consultation-button:hover {
@@ -109,6 +111,10 @@
 
   .private-consultation-image img {
     border-radius: 16px;
+  }
+  .private-consultation-label {
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
   }
 
   .private-consultation-content p {

@@ -28,7 +28,7 @@ const QYXCarousel = () => {
 
   const changeSlide = (direction) => {
     setActiveIndex(
-      (current) => (current + direction + cards.length) % cards.length
+      (current) => (current + direction + cards.length) % cards.length,
     );
   };
 
@@ -39,10 +39,7 @@ const QYXCarousel = () => {
     const distanceX = touchStart.current.x - touch.clientX;
     const distanceY = touchStart.current.y - touch.clientY;
 
-    if (
-      Math.abs(distanceX) > 50 &&
-      Math.abs(distanceX) > Math.abs(distanceY)
-    ) {
+    if (Math.abs(distanceX) > 50 && Math.abs(distanceX) > Math.abs(distanceY)) {
       changeSlide(distanceX > 0 ? 1 : -1);
     }
 
@@ -64,8 +61,7 @@ const QYXCarousel = () => {
           event.preventDefault();
           changeSlide(1);
         }
-      }}
-    >
+      }}>
       <div className="qyx-carousel-container">
         <div className="qyx-carousel-heading">
           <span>CARE ON YOUR TERMS</span>
@@ -79,8 +75,7 @@ const QYXCarousel = () => {
             type="button"
             className="qyx-carousel-arrow qyx-carousel-previous"
             aria-label="Previous card"
-            onClick={() => changeSlide(-1)}
-          >
+            onClick={() => changeSlide(-1)}>
             <span aria-hidden="true">←</span>
           </button>
 
@@ -97,26 +92,29 @@ const QYXCarousel = () => {
             onTouchEnd={handleTouchEnd}
             onTouchCancel={() => {
               touchStart.current = null;
-            }}
-          >
+            }}>
             {cards.map((card, index) => {
               const isActive = index === activeIndex;
+
+              // Active card: 0, next card: 1, previous card: -1
+              let relativePosition =
+                (index - activeIndex + cards.length) % cards.length;
+
+              if (relativePosition > Math.floor(cards.length / 2)) {
+                relativePosition -= cards.length;
+              }
 
               return (
                 <article
                   key={card.title}
-                  className={`qyx-carousel-card ${
-                    isActive ? "is-active" : ""
-                  }`}
+                  className={`qyx-carousel-card ${isActive ? "is-active" : ""}`}
                   style={{
-                    "--slot": index - (cards.length - 1) / 2,
-                    "--relative": index - activeIndex,
+                    "--relative": relativePosition,
                     zIndex: isActive ? 3 : 1,
                   }}
                   aria-hidden={!isActive}
                   aria-roledescription="slide"
-                  aria-label={`${index + 1} of ${cards.length}`}
-                >
+                  aria-label={`${index + 1} of ${cards.length}`}>
                   <div className="qyx-carousel-card-header">
                     <h3>{card.title}</h3>
                   </div>
@@ -137,8 +135,7 @@ const QYXCarousel = () => {
             type="button"
             className="qyx-carousel-arrow qyx-carousel-next"
             aria-label="Next card"
-            onClick={() => changeSlide(1)}
-          >
+            onClick={() => changeSlide(1)}>
             <span aria-hidden="true">→</span>
           </button>
         </div>
@@ -159,8 +156,7 @@ const QYXCarousel = () => {
         </div>
 
         <span className="qyx-carousel-sr-only" aria-live="polite">
-          Card {activeIndex + 1} of {cards.length}:{" "}
-          {cards[activeIndex].title}
+          Card {activeIndex + 1} of {cards.length}: {cards[activeIndex].title}
         </span>
       </div>
     </section>
