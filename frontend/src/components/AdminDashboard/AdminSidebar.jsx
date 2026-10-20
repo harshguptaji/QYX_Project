@@ -29,6 +29,12 @@ const navigationItems = [
     end: false,
   },
   {
+    to: "/accios/admins",
+    label: "All admins",
+    icon: UsersRound,
+    end: false,
+  },
+  {
     to: "/accios/contacts",
     label: "Contact enquiries",
     icon: Mail,
@@ -200,12 +206,12 @@ export default function AdminSidebar({
 
         <div className="admin-sidebar__bottom">
           <Link
-            to="/profile"
+            to="/"
             className="admin-sidebar__secondary"
             onClick={onClose}
           >
             <ArrowLeft aria-hidden="true" />
-            Back to Profile
+            Back to Website
           </Link>
 
           <button

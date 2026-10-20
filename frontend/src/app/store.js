@@ -4,6 +4,7 @@ import adminUsersReducer from "../features/admin/users/adminUsersSlice";
 import adminUserDetailsReducer from "../features/admin/userDetails/adminUserDetailsSlice";
 import passwordResetReducer from "../features/auth/passwordResetSlice";
 import adminAuthReducer from "../features/admin/auth/adminAuthSlice";
+import adminAccountsReducer from "../features/admin/accounts/adminAccountsSlice";
 import contactReducer from "../features/contact/contactSlice";
 
 
@@ -14,6 +15,7 @@ export const store = configureStore({
         adminUserDetails: adminUserDetailsReducer,
         passwordReset: passwordResetReducer,
         adminAuth: adminAuthReducer,
+        adminAccounts: adminAccountsReducer,
         contact: contactReducer,
     },
 });
