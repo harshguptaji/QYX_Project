@@ -2,7 +2,7 @@ import axios from "axios";
 
 const adminApi = axios.create({
   baseURL: import.meta.env.PROD
-    ? "/api/admin/"
+    ? "/api/accios/"
     : "http://localhost:5000/api/accios/",
 
   withCredentials: true,
