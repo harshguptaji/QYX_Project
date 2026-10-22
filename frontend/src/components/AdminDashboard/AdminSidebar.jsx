@@ -40,6 +40,12 @@ const navigationItems = [
     icon: Mail,
     end: false,
   },
+  {
+    to: "/accios/quiz",
+    label: "Quiz",
+    icon: Mail,
+    end: false,
+  },
 ];
 
 export default function AdminSidebar({

@@ -37,6 +37,8 @@ import AdminUserDetailsPage from "./pages/Admin/AdminUserDetailsPage";
 import AdminContactsPage from "./pages/Admin/AdminContactsPage";
 import AdminAllAdminsPage from "./pages/Admin/AdminAllAdminsPage";
 import AdminDetailsPage from "./pages/Admin/AdminDetailsPage";
+import AdminQuizPage from "./pages/Admin/AdminQuizPage";
+import AdminQuizResponsesPage from "./pages/Admin/AdminQuizResponsesPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -123,8 +125,12 @@ function App() {
         <Route path="contacts" element={<AdminContactsPage />} />
 
         <Route path="admins" element={<AdminAllAdminsPage />} />
-        
+
         <Route path="admins/:adminId" element={<AdminDetailsPage />} />
+
+        <Route path="quiz" element={<AdminQuizPage />} />
+
+        <Route path="quiz/responses" element={<AdminQuizResponsesPage />}/>
 
       </Route>
 

@@ -30,6 +30,21 @@ import {
   getContactStats,
 } from "../controllers/contactController.js";
 
+import {
+  createQuiz,
+  getAdminQuiz,
+  updateQuiz,
+  addQuestion,
+  updateQuestion,
+  deleteQuestion,
+  reorderQuestions,
+} from "../controllers/quizController.js";
+
+import {
+  getAllQuizResponses,
+  getQuizResponseById,
+} from "../controllers/quizResponseController.js";
+
 const router = express.Router();
 
 // Existing authentication routes
@@ -113,6 +128,68 @@ router.delete(
   authorizeAdminRoles("Root"),
   adminDelete
 );
+
+// Quiz management: Root and Admin only.
+// isAdminAuthenticated already runs above these routes.
+
+router.get(
+  "/quiz",
+  authorizeAdminRoles("Root", "Admin"),
+  getAdminQuiz
+);
+
+router.post(
+  "/quiz",
+  authorizeAdminRoles("Root", "Admin"),
+  createQuiz
+);
+
+router.patch(
+  "/quiz",
+  authorizeAdminRoles("Root", "Admin"),
+  updateQuiz
+);
+
+router.post(
+  "/quiz/questions",
+  authorizeAdminRoles("Root", "Admin"),
+  addQuestion
+);
+
+// Keep reorder before /:questionId.
+router.patch(
+  "/quiz/questions/reorder",
+  authorizeAdminRoles("Root", "Admin"),
+  reorderQuestions
+);
+
+router.patch(
+  "/quiz/questions/:questionId",
+  authorizeAdminRoles("Root", "Admin"),
+  updateQuestion
+);
+
+router.delete(
+  "/quiz/questions/:questionId",
+  authorizeAdminRoles("Root", "Admin"),
+  deleteQuestion
+);
+
+
+// List, search and filter quiz responses.
+router.get(
+  "/quiz/responses",
+  authorizeAdminRoles("Root", "Admin"),
+  getAllQuizResponses
+);
+
+// View one response with original questions and selected answers.
+router.get(
+  "/quiz/responses/:responseId",
+  authorizeAdminRoles("Root", "Admin"),
+  getQuizResponseById
+);
+
 
 // Existing admin details path — keep last.
 router.get(

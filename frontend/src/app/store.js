@@ -6,6 +6,9 @@ import passwordResetReducer from "../features/auth/passwordResetSlice";
 import adminAuthReducer from "../features/admin/auth/adminAuthSlice";
 import adminAccountsReducer from "../features/admin/accounts/adminAccountsSlice";
 import contactReducer from "../features/contact/contactSlice";
+import adminQuizReducer from "../features/admin/quiz/adminQuizSlice";
+import quizReducer from "../features/quiz/quizSlice";
+import adminQuizResponseReducer from "../features/admin/response/adminQuizResponseSlice";
 
 
 export const store = configureStore({
@@ -17,5 +20,8 @@ export const store = configureStore({
         adminAuth: adminAuthReducer,
         adminAccounts: adminAccountsReducer,
         contact: contactReducer,
+        adminQuiz: adminQuizReducer,
+        quiz: quizReducer,
+        adminQuizResponses: adminQuizResponseReducer,
     },
 });

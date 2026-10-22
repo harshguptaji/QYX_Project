@@ -1,116 +1,85 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+
+import {
+  fetchPublicQuiz,
+  submitPublicQuiz,
+  clearQuizError,
+  resetQuiz,
+} from "../features/quiz/quizSlice.js";
+
 import "../style/FertilityQuiz.css";
 
-const questions = [
-  {
-    title: "What brings you here today?",
-    subtitle: "Choose the option that feels closest to your situation.",
-    options: [
-      "Understand my fertility",
-      "Plan for a pregnancy",
-      "Discuss a fertility concern",
-      "Get a second opinion",
-    ],
-  },
-  {
-    title: "Where are you in your journey?",
-    subtitle: "There is no right or wrong answer.",
-    options: [
-      "Just exploring",
-      "Planning to start trying",
-      "Currently trying for a pregnancy",
-      "Already receiving fertility care",
-    ],
-  },
-  {
-    title: "Have you had a semen analysis?",
-    subtitle: "This helps us understand what you would like to discuss.",
-    options: [
-      "Not yet",
-      "Yes, and I understand the report",
-      "Yes, but I need help understanding it",
-      "Prefer not to say",
-    ],
-  },
-  {
-    title: "What would you like support with?",
-    subtitle: "Select your main priority.",
-    options: [
-      "Understanding tests and reports",
-      "Discussing lifestyle questions",
-      "Exploring care options",
-      "Knowing where to start",
-    ],
-  },
-  {
-    title: "How would you prefer to meet a doctor?",
-    subtitle: "Choose the consultation format you prefer.",
-    options: [
-      "Video consultation",
-      "In-person appointment",
-      "Either works for me",
-      "I would like to learn more first",
-    ],
-  },
+const createEmptyContact = () => ({
+  email: "",
+  mobile: "",
+  purposeOfVisiting: "",
+  otherPurpose: "",
+  contactConsent: false,
+});
+
+const PURPOSE_OPTIONS = [
+  ["book_consultation", "Book a specialist consultation"],
+  ["fertility_testing", "Understand fertility testing options"],
+  ["general_information", "Get general information"],
+  ["follow_up_support", "Seek follow-up support"],
+  ["other", "Other"],
 ];
 
-const emptyContact = {
-  email: "",
-  phone: "",
-  purpose: "",
-};
-
-function getResult(answers) {
-  if (answers[2] === 2) {
-    return [
-      "Your next step could be a guided review of your semen analysis.",
-      "A male fertility specialist can explain your report and discuss your questions.",
-    ];
-  }
-
-  if (answers[0] === 3) {
-    return [
-      "You’re looking for another perspective on your fertility care.",
-      "A specialist can review your history and help you understand your options.",
-    ];
-  }
-
-  if (answers[3] === 1) {
-    return [
-      "You’re interested in how lifestyle relates to your fertility journey.",
-      "A specialist can discuss your habits, concerns, and appropriate next steps.",
-    ];
-  }
-
-  return [
-    "You’re ready to understand your fertility journey more clearly.",
-    "A male fertility specialist can discuss your goals and help you plan your next step.",
-  ];
-}
-
 export default function FertilityQuiz() {
+  const dispatch = useDispatch();
+  const uniqueId = useId();
+
   const dialogRef = useRef(null);
   const headingRef = useRef(null);
   const triggerRef = useRef(null);
-  const phoneRef = useRef(null);
-  const purposeRef = useRef(null);
+  const fetchRef = useRef(null);
+  const submitLock = useRef(false);
 
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState([]);
-  const [contact, setContact] = useState({ ...emptyContact });
-  const [error, setError] = useState({
-    field: "",
-    message: "",
-  });
+  const [answers, setAnswers] = useState({});
+  const [contact, setContact] = useState(createEmptyContact);
+  const [localError, setLocalError] = useState("");
+
+  const {
+    quiz,
+    loading,
+    submitting,
+    responseId,
+    error,
+    validationErrors,
+    needsRestart,
+  } = useSelector((state) => state.quiz);
+
+  const questions = [...(quiz?.questions ?? [])].sort(
+    (a, b) => a.order - b.order
+  );
 
   const totalSteps = questions.length + 1;
-  const isQuestion = step < questions.length;
-  const isContact = step === questions.length;
-  const isResult = step === totalSteps;
+  const isResult = Boolean(responseId);
+  const isQuestion =
+    !isResult && step < questions.length;
+  const isContact =
+    !isResult && step === questions.length;
 
   const question = questions[step];
-  const result = getResult(answers);
+  const currentAnswer = question
+    ? answers[question._id]
+    : null;
+
+  const ready = Boolean(
+    quiz && questions.length > 0 && !loading
+  );
+
+  const titleId = `${uniqueId}-title`;
+  const errorId = `${uniqueId}-error`;
 
   useEffect(() => {
     if (!open) return;
@@ -127,17 +96,33 @@ export default function FertilityQuiz() {
     if (open) {
       headingRef.current?.focus();
     }
-  }, [open, step]);
+  }, [open, step, ready, isResult]);
 
-  const clearError = () => {
-    setError({ field: "", message: "" });
+  useEffect(() => {
+    return () => {
+      fetchRef.current?.abort();
+    };
+  }, []);
+
+  const clearErrors = () => {
+    setLocalError("");
+    dispatch(clearQuizError());
+  };
+
+  const loadQuiz = () => {
+    fetchRef.current?.abort();
+
+    dispatch(resetQuiz());
+    setStep(0);
+    setAnswers({});
+    setContact(createEmptyContact());
+    setLocalError("");
+
+    fetchRef.current = dispatch(fetchPublicQuiz());
   };
 
   const startQuiz = () => {
-    setStep(0);
-    setAnswers([]);
-    setContact({ ...emptyContact });
-    clearError();
+    loadQuiz();
     setOpen(true);
 
     if (!dialogRef.current?.open) {
@@ -146,91 +131,173 @@ export default function FertilityQuiz() {
   };
 
   const closeQuiz = () => {
+    if (submitLock.current) return;
+
     dialogRef.current?.close();
   };
 
   const handleClosed = () => {
+    fetchRef.current?.abort();
     setOpen(false);
     triggerRef.current?.focus();
   };
 
-  const selectOption = (optionIndex) => {
-    setAnswers((previous) => {
-      const updated = previous.slice(0, step);
-      updated[step] = optionIndex;
-      return updated;
-    });
+  const selectOption = (optionId) => {
+    clearErrors();
 
+    setAnswers((previous) => {
+      const selected =
+        previous[question._id]?.selectedOptionIds ?? [];
+
+      const selectedOptionIds =
+        question.questionType === "multipleChoice"
+          ? selected.includes(optionId)
+            ? selected.filter((id) => id !== optionId)
+            : [...selected, optionId]
+          : [optionId];
+
+      return {
+        ...previous,
+        [question._id]: {
+          selectedOptionIds,
+          textAnswer: "",
+        },
+      };
+    });
+  };
+
+  const updateTextAnswer = (value) => {
+    clearErrors();
+
+    setAnswers((previous) => ({
+      ...previous,
+      [question._id]: {
+        selectedOptionIds: [],
+        textAnswer: value,
+      },
+    }));
+  };
+
+  const goNext = () => {
+    const hasAnswer =
+      question.questionType === "text"
+        ? Boolean(currentAnswer?.textAnswer?.trim())
+        : Boolean(currentAnswer?.selectedOptionIds?.length);
+
+    if (question.isRequired && !hasAnswer) {
+      setLocalError("Please answer this question to continue.");
+      return;
+    }
+
+    clearErrors();
     setStep((previous) => previous + 1);
-    clearError();
   };
 
   const goBack = () => {
+    if (submitting) return;
+
+    clearErrors();
     setStep((previous) => Math.max(0, previous - 1));
-    clearError();
   };
 
   const updateContact = (event) => {
-    const { name, value } = event.target;
+    const { name, value, type, checked } = event.target;
 
     setContact((previous) => ({
       ...previous,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
 
-    clearError();
+    clearErrors();
   };
 
-  const submitContact = (event) => {
+  const submitContact = async (event) => {
     event.preventDefault();
 
+    if (submitLock.current || submitting || needsRestart) {
+      return;
+    }
+
+    clearErrors();
+
     const email = contact.email.trim();
-    const phone = contact.phone.trim();
-    const purpose = contact.purpose.trim();
-    const digits = phone.replace(/\D/g, "");
+
+    // Accept spaces, brackets and hyphens, then normalize.
+    const rawMobile = contact.mobile.trim();
+    const mobile = rawMobile.replace(/[\s()-]/g, "");
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setLocalError("Please enter a valid email address.");
+      return;
+    }
 
     if (
-      !/^[+]?[\d\s()-]+$/.test(phone) ||
-      digits.length < 10 ||
-      digits.length > 15
+      !/^\+[\d\s()-]+$/.test(rawMobile) ||
+      !/^\+[1-9]\d{7,14}$/.test(mobile)
     ) {
-      setError({
-        field: "phone",
-        message:
-          "Please enter a valid phone number with country code if needed.",
-      });
-
-      phoneRef.current?.focus();
+      setLocalError(
+        "Enter your phone number with country code, for example +919876543210."
+      );
       return;
     }
 
-    if (!purpose) {
-      setError({
-        field: "purpose",
-        message: "Please enter your purpose of visiting.",
-      });
-
-      purposeRef.current?.focus();
+    if (!contact.purposeOfVisiting) {
+      setLocalError("Please select your purpose of visiting.");
       return;
     }
 
-    const submission = {
-      email,
-      phone,
-      purpose,
-      answers,
-    };
+    if (
+      contact.purposeOfVisiting === "other" &&
+      !contact.otherPurpose.trim()
+    ) {
+      setLocalError("Please describe your purpose of visiting.");
+      return;
+    }
 
-    setContact({ email, phone, purpose });
-    clearError();
+    const submittedAnswers = questions
+      .map((item) => ({
+        questionId: item._id,
+        selectedOptionIds:
+          answers[item._id]?.selectedOptionIds ?? [],
+        textAnswer:
+          answers[item._id]?.textAnswer?.trim() ?? "",
+      }))
+      .filter(
+        (answer) =>
+          answer.selectedOptionIds.length > 0 ||
+          answer.textAnswer.length > 0
+      );
 
-    // Connect your backend here to save `submission`.
-    // These details currently remain in component state.
-    // Example payload:
-    // { email, phone, purpose, answers }
+    if (submittedAnswers.length === 0) {
+      setLocalError("Please answer at least one quiz question.");
+      return;
+    }
 
-    setStep(totalSteps);
+    submitLock.current = true;
+
+    try {
+      await dispatch(
+        submitPublicQuiz({
+          quizVersion: quiz.version,
+          answers: submittedAnswers,
+          email,
+          mobile,
+          purposeOfVisiting: contact.purposeOfVisiting,
+          otherPurpose:
+            contact.purposeOfVisiting === "other"
+              ? contact.otherPurpose.trim()
+              : "",
+          contactConsent: contact.contactConsent,
+        })
+      ).unwrap();
+    } catch {
+      // Server errors are rendered from Redux.
+    } finally {
+      submitLock.current = false;
+    }
   };
+
+  const displayedError = localError || error;
 
   return (
     <>
@@ -246,12 +313,18 @@ export default function FertilityQuiz() {
       <dialog
         ref={dialogRef}
         className="qyx-quiz-dialog"
-        aria-labelledby="qyx-quiz-title"
+        aria-labelledby={titleId}
         onClose={handleClosed}
+        onCancel={(event) => {
+          if (submitLock.current) {
+            event.preventDefault();
+          }
+        }}
         onClick={(event) => {
           if (event.target !== event.currentTarget) return;
 
-          const bounds = event.currentTarget.getBoundingClientRect();
+          const bounds =
+            event.currentTarget.getBoundingClientRect();
 
           const clickedOutside =
             event.clientX < bounds.left ||
@@ -263,7 +336,7 @@ export default function FertilityQuiz() {
         }}
       >
         {open && (
-          <div className="qyx-quiz">
+          <div className="qyx-quiz" aria-busy={loading || submitting}>
             <header className="qyx-quiz__header">
               <span className="qyx-quiz__logo">
                 QYX<span>.</span>
@@ -273,6 +346,7 @@ export default function FertilityQuiz() {
                 type="button"
                 className="qyx-quiz__close"
                 onClick={closeQuiz}
+                disabled={submitting}
                 aria-label="Close quiz"
               >
                 <svg
@@ -286,7 +360,7 @@ export default function FertilityQuiz() {
               </button>
             </header>
 
-            {!isResult && (
+            {ready && !isResult && (
               <div className="qyx-quiz__progress-section">
                 <div className="qyx-quiz__progress-label">
                   <span>
@@ -294,7 +368,6 @@ export default function FertilityQuiz() {
                       ? `Question ${step + 1} of ${questions.length}`
                       : "One last step"}
                   </span>
-
                   <span>YOUR NEXT STEP</span>
                 </div>
 
@@ -315,52 +388,123 @@ export default function FertilityQuiz() {
               </div>
             )}
 
-            <div className="qyx-quiz__body" key={step}>
-              {isQuestion && (
+            <div className="qyx-quiz__body">
+              {loading && (
+                <>
+                  <h2 id={titleId} ref={headingRef} tabIndex={-1}>
+                    Loading your quiz…
+                  </h2>
+                  <p role="status" className="qyx-quiz__subtitle">
+                    Please wait a moment.
+                  </p>
+                </>
+              )}
+
+              {!loading && !ready && (
+                <>
+                  <h2 id={titleId} ref={headingRef} tabIndex={-1}>
+                    Quiz unavailable
+                  </h2>
+
+                  <p className="qyx-quiz__subtitle">
+                    Please try loading the quiz again.
+                  </p>
+
+                  <button
+                    type="button"
+                    className="qyx-quiz__primary"
+                    onClick={loadQuiz}
+                  >
+                    Try again
+                  </button>
+                </>
+              )}
+
+              {ready && isQuestion && (
                 <>
                   <span className="qyx-quiz__eyebrow">
                     A LITTLE ABOUT YOU
                   </span>
 
-                  <h2
-                    id="qyx-quiz-title"
-                    ref={headingRef}
-                    tabIndex={-1}
-                  >
-                    {question.title}
+                  <h2 id={titleId} ref={headingRef} tabIndex={-1}>
+                    {question.questionText}
                   </h2>
 
                   <p className="qyx-quiz__subtitle">
-                    {question.subtitle}
+                    {question.questionType === "multipleChoice"
+                      ? "Select all options that apply."
+                      : question.questionType === "text"
+                        ? "Share what you would like us to know."
+                        : "Choose one option."}
+                    {!question.isRequired && " This question is optional."}
                   </p>
 
-                  <div className="qyx-quiz__options">
-                    {question.options.map((option, index) => (
-                      <button
-                        key={option}
-                        type="button"
-                        className={`qyx-quiz__option ${
-                          answers[step] === index
-                            ? "qyx-quiz__option--selected"
-                            : ""
-                        }`}
-                        onClick={() => selectOption(index)}
-                      >
-                        <span className="qyx-quiz__option-letter">
-                          {String.fromCharCode(65 + index)}
-                        </span>
+                  {question.questionType === "text" ? (
+                    <div className="qyx-quiz__form">
+                      <label htmlFor={`${uniqueId}-answer`}>
+                        Your answer
+                      </label>
 
-                        <span>{option}</span>
+                      <textarea
+                        id={`${uniqueId}-answer`}
+                        rows={4}
+                        maxLength={5000}
+                        value={currentAnswer?.textAnswer ?? ""}
+                        onChange={(event) =>
+                          updateTextAnswer(event.target.value)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className="qyx-quiz__options"
+                      role="group"
+                      aria-labelledby={titleId}
+                    >
+                      {question.options.map((option, index) => {
+                        const selected =
+                          currentAnswer?.selectedOptionIds?.includes(
+                            option._id
+                          ) ?? false;
 
-                        <span
-                          className="qyx-quiz__option-arrow"
-                          aria-hidden="true"
-                        >
-                          →
-                        </span>
-                      </button>
-                    ))}
-                  </div>
+                        return (
+                          <button
+                            key={option._id}
+                            type="button"
+                            className={`qyx-quiz__option ${
+                              selected
+                                ? "qyx-quiz__option--selected"
+                                : ""
+                            }`}
+                            aria-pressed={selected}
+                            onClick={() => selectOption(option._id)}
+                          >
+                            <span className="qyx-quiz__option-letter">
+                              {index + 1}
+                            </span>
+
+                            <span>{option.label}</span>
+
+                            <span
+                              className="qyx-quiz__option-arrow"
+                              aria-hidden="true"
+                            >
+                              {selected ? "✓" : "→"}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  <button
+                    type="button"
+                    className="qyx-quiz__primary qyx-quiz__continue"
+                    onClick={goNext}
+                  >
+                    Continue
+                    <span aria-hidden="true">→</span>
+                  </button>
 
                   {step > 0 && (
                     <button
@@ -374,117 +518,156 @@ export default function FertilityQuiz() {
                 </>
               )}
 
-              {isContact && (
+              {ready && isContact && (
                 <>
                   <span className="qyx-quiz__eyebrow">
                     YOUR JOURNEY, YOUR NEXT STEP
                   </span>
 
-                  <h2
-                    id="qyx-quiz-title"
-                    ref={headingRef}
-                    tabIndex={-1}
-                  >
+                  <h2 id={titleId} ref={headingRef} tabIndex={-1}>
                     Almost there.
                   </h2>
 
                   <p className="qyx-quiz__subtitle">
-                    Enter your email, phone number, and purpose of
-                    visiting to view your personalized summary.
+                    Enter your contact details and purpose of visiting
+                    to complete the quiz.
                   </p>
 
                   <form
                     className="qyx-quiz__form"
                     onSubmit={submitContact}
                   >
-                    <label htmlFor="qyx-quiz-email">
-                      Email address
-                    </label>
-
-                    <input
-                      id="qyx-quiz-email"
-                      type="email"
-                      name="email"
-                      autoComplete="email"
-                      placeholder="you@example.com"
-                      maxLength={254}
-                      required
-                      value={contact.email}
-                      onChange={updateContact}
-                    />
-
-                    <label htmlFor="qyx-quiz-phone">
-                      Phone number
-                    </label>
-
-                    <input
-                      ref={phoneRef}
-                      id="qyx-quiz-phone"
-                      type="tel"
-                      name="phone"
-                      autoComplete="tel"
-                      placeholder="+91 98765 43210"
-                      maxLength={25}
-                      required
-                      value={contact.phone}
-                      onChange={updateContact}
-                      aria-invalid={error.field === "phone"}
-                      aria-describedby={
-                        error.field === "phone"
-                          ? "qyx-quiz-error"
-                          : undefined
-                      }
-                    />
-
-                    <label htmlFor="qyx-quiz-purpose">
-                      Purpose of visiting
-                    </label>
-
-                    <textarea
-                      ref={purposeRef}
-                      id="qyx-quiz-purpose"
-                      name="purpose"
-                      placeholder="Tell us what you would like help with."
-                      rows={3}
-                      maxLength={500}
-                      required
-                      value={contact.purpose}
-                      onChange={updateContact}
-                      aria-invalid={error.field === "purpose"}
-                      aria-describedby={
-                        error.field === "purpose"
-                          ? "qyx-quiz-error"
-                          : undefined
-                      }
-                    />
-
-                    {error.message && (
-                      <p
-                        id="qyx-quiz-error"
-                        className="qyx-quiz__error"
-                        role="alert"
-                      >
-                        {error.message}
-                      </p>
-                    )}
-
-                    <button
-                      type="submit"
-                      className="qyx-quiz__primary"
+                    <fieldset
+                      className="qyx-quiz__fieldset"
+                      disabled={submitting || needsRestart}
                     >
-                      View my summary
-                      <span aria-hidden="true">→</span>
-                    </button>
+                      <label htmlFor={`${uniqueId}-email`}>
+                        Email address
+                      </label>
+                      <input
+                        id={`${uniqueId}-email`}
+                        type="email"
+                        name="email"
+                        autoComplete="email"
+                        placeholder="you@example.com"
+                        maxLength={254}
+                        required
+                        value={contact.email}
+                        onChange={updateContact}
+                      />
+
+                      <label htmlFor={`${uniqueId}-mobile`}>
+                        Phone number with country code
+                      </label>
+                      <input
+                        id={`${uniqueId}-mobile`}
+                        type="tel"
+                        name="mobile"
+                        autoComplete="tel"
+                        placeholder="+91 98765 43210"
+                        maxLength={25}
+                        required
+                        value={contact.mobile}
+                        onChange={updateContact}
+                      />
+
+                      <label htmlFor={`${uniqueId}-purpose`}>
+                        Purpose of visiting
+                      </label>
+                      <select
+                        id={`${uniqueId}-purpose`}
+                        name="purposeOfVisiting"
+                        required
+                        value={contact.purposeOfVisiting}
+                        onChange={updateContact}
+                      >
+                        <option value="">Select your purpose</option>
+                        {PURPOSE_OPTIONS.map(([value, label]) => (
+                          <option key={value} value={value}>
+                            {label}
+                          </option>
+                        ))}
+                      </select>
+
+                      {contact.purposeOfVisiting === "other" && (
+                        <>
+                          <label htmlFor={`${uniqueId}-other`}>
+                            Tell us more
+                          </label>
+                          <textarea
+                            id={`${uniqueId}-other`}
+                            name="otherPurpose"
+                            rows={3}
+                            maxLength={1000}
+                            required
+                            value={contact.otherPurpose}
+                            onChange={updateContact}
+                          />
+                        </>
+                      )}
+
+                      <label className="qyx-quiz__consent">
+                        <input
+                          type="checkbox"
+                          name="contactConsent"
+                          checked={contact.contactConsent}
+                          onChange={updateContact}
+                        />
+                        <span>
+                          I agree to be contacted by QYX about my enquiry.
+                          This is optional.
+                        </span>
+                      </label>
+
+                      <button
+                        type="submit"
+                        className="qyx-quiz__primary"
+                      >
+                        {submitting ? "Submitting..." : "Submit my answers"}
+                        <span aria-hidden="true">→</span>
+                      </button>
+                    </fieldset>
                   </form>
 
                   <button
                     type="button"
                     className="qyx-quiz__back"
+                    disabled={submitting}
                     onClick={goBack}
                   >
                     ← Back to questions
                   </button>
                 </>
+              )}
+
+              {displayedError && !isResult && (
+                <div
+                  id={errorId}
+                  className="qyx-quiz__error"
+                  role="alert"
+                >
+                  <p>{displayedError}</p>
+
+                  {validationErrors.length > 0 && (
+                    <ul>
+                      {validationErrors.map((message, index) => (
+                        <li key={`${index}-${message}`}>
+                          {message}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+
+              {needsRestart && (
+                <button
+                  type="button"
+                  className="qyx-quiz__primary"
+                  onClick={loadQuiz}
+                >
+                  Restart with updated questions
+                </button>
               )}
 
               {isResult && (
@@ -497,29 +680,29 @@ export default function FertilityQuiz() {
                   </div>
 
                   <span className="qyx-quiz__eyebrow">
-                    YOUR PERSONALIZED SUMMARY
+                    RESPONSE RECEIVED
                   </span>
 
-                  <h2
-                    id="qyx-quiz-title"
-                    ref={headingRef}
-                    tabIndex={-1}
-                  >
+                  <h2 id={titleId} ref={headingRef} tabIndex={-1}>
                     Let’s take the next step.
                   </h2>
 
                   <div className="qyx-quiz__result-copy">
-                    <p>{result[0]}</p>
-                    <p>{result[1]}</p>
+                    <p>Your answers have been saved successfully.</p>
+                    <p>
+                      A specialist can discuss your questions and help
+                      you explore your next steps.
+                    </p>
                   </div>
 
-                  <a
-                    href="/doctors"
+                  <Link
+                    to="/doctors"
                     className="qyx-quiz__primary"
+                    onClick={closeQuiz}
                   >
                     Connect with doctor
                     <span aria-hidden="true">↗</span>
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>

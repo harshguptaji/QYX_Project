@@ -12,6 +12,7 @@ import userRoutes from "./routes/userRoute.js";
 import doctorRoutes from "./routes/doctorRoute.js";
 import adminRoutes from "./routes/adminRoute.js"
 import contactRoutes from "./routes/contactRoute.js";
+import quizRoutes from "./routes/quizRoute.js"
 
 dotenv.config({ quiet: true });
 
@@ -66,6 +67,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/doctor", doctorRoutes);
 app.use("/api/accios", adminRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/quiz", quizRoutes);
 
 /*
  * Serve React in production
