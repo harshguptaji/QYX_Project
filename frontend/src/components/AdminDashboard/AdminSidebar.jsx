@@ -9,6 +9,7 @@ import {
   LogOut,
   ShieldCheck,
   Mail,
+  ClipboardList,
   X,
 } from "lucide-react";
 
@@ -43,7 +44,7 @@ const navigationItems = [
   {
     to: "/accios/quiz",
     label: "Quiz",
-    icon: Mail,
+    icon: ClipboardList,
     end: false,
   },
 ];
