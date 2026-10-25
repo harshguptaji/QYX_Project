@@ -1,0 +1,260 @@
+.qyx-development,
+.qyx-development *,
+.qyx-development *::before,
+.qyx-development *::after {
+  box-sizing: border-box;
+}
+
+.qyx-development {
+  display: grid;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: clamp(24px, 5vw, 64px) 20px;
+  place-items: center;
+
+  background:
+    radial-gradient(
+      circle at 15% 15%,
+      rgb(114 140 105 / 13%),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 90% 85%,
+      rgb(201 221 169 / 20%),
+      transparent 35%
+    ),
+    #fafaf4;
+
+  color: #243e2e;
+}
+
+.qyx-development__card {
+  width: min(100%, 740px);
+  min-width: 0;
+  padding: clamp(28px, 5vw, 56px);
+  border: 1px solid #d6e1d1;
+  border-radius: 28px;
+  background: rgb(255 255 255 / 85%);
+  box-shadow: 0 20px 80px rgb(36 62 46 / 5%);
+  text-align: center;
+}
+
+.qyx-development__brand {
+  display: inline-block;
+  color: #243e2e;
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  text-decoration: none;
+}
+
+.qyx-development__brand span {
+  color: #728c69;
+}
+
+.qyx-development__illustration {
+  position: relative;
+  display: grid;
+  width: 170px;
+  height: 170px;
+  margin: 32px auto;
+  place-items: center;
+}
+
+.qyx-development__ring {
+  position: absolute;
+  inset: 0;
+  border: 1px dashed #becfb6;
+  border-radius: 50%;
+}
+
+.qyx-development__icon {
+  display: grid;
+  width: 116px;
+  height: 116px;
+  place-items: center;
+  transform: rotate(-8deg);
+  border: 1px solid #d1dfc9;
+  border-radius: 32px;
+  background: #eaf1e8;
+  color: #557a60;
+}
+
+.qyx-development__icon svg {
+  width: 46px;
+  height: 46px;
+  stroke-width: 1.5;
+}
+
+.qyx-development__leaf {
+  position: absolute;
+  right: 6px;
+  bottom: 12px;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  background: #c9dda9;
+  color: #35583e;
+}
+
+.qyx-development__leaf svg {
+  width: 20px;
+  height: 20px;
+}
+
+.qyx-development__eyebrow {
+  margin: 0 0 16px;
+  color: #35583e;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.7;
+  letter-spacing: 0.14em;
+}
+
+.qyx-development h1 {
+  margin: 0;
+  color: #243e2e;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.1rem, 5vw, 3.7rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+
+.qyx-development h1 em {
+  color: #557a60;
+  font-weight: inherit;
+}
+
+.qyx-development__description {
+  max-width: 440px;
+  margin: 22px auto 0;
+  color: #526556;
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.qyx-development__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 24px;
+  padding: 8px 14px;
+  border: 1px solid #d6e1d1;
+  border-radius: 999px;
+  background: #f4f7ef;
+  color: #35583e;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.qyx-development__status > span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #728c69;
+}
+
+.qyx-development__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 50px;
+  margin: 30px auto 0;
+  padding: 13px 25px;
+  border: 1px solid #557a60;
+  border-radius: 999px;
+  background: #557a60;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.5;
+  text-decoration: none;
+
+  transition:
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+
+.qyx-development__button svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.qyx-development__button:hover {
+  transform: translateY(-2px);
+  border-color: #35583e;
+  background: #35583e;
+}
+
+.qyx-development a:focus-visible {
+  outline: 3px solid rgb(85 122 96 / 45%);
+  outline-offset: 5px;
+  border-radius: 8px;
+}
+
+.qyx-development__note {
+  margin: 18px 0 0;
+  color: #526556;
+  font-size: 0.77rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 480px) {
+  .qyx-development {
+    padding: 20px 14px;
+  }
+
+  .qyx-development__card {
+    padding: 28px 18px;
+    border-radius: 20px;
+  }
+
+  .qyx-development__illustration {
+    width: 140px;
+    height: 140px;
+    margin-block: 26px;
+  }
+
+  .qyx-development__icon {
+    width: 96px;
+    height: 96px;
+    border-radius: 26px;
+  }
+
+  .qyx-development__icon svg {
+    width: 38px;
+    height: 38px;
+  }
+
+  .qyx-development__eyebrow {
+    font-size: 0.61rem;
+    letter-spacing: 0.1em;
+  }
+
+  .qyx-development__description {
+    font-size: 0.9rem;
+  }
+
+  .qyx-development__button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qyx-development__button {
+    transition: none;
+  }
+
+  .qyx-development__button:hover {
+    transform: none;
+  }
+}

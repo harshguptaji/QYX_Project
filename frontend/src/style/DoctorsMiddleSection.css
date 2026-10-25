@@ -765,3 +765,12 @@
     transition: none;
   }
 }
+
+
+.doctor-card__booking-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  border-radius: 30px;
+}

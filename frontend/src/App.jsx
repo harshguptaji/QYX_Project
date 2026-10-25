@@ -22,6 +22,7 @@ import DoctorPage from "./pages/DoctorPage";
 import ForgotPassword from "./components/ForgotPassword";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import UnderDevelopmentPage from "./pages/UnderDevelopmentPage";
 
 // User dashboard
 import UserDashboard from "./pages/UserDashboard";
@@ -83,6 +84,7 @@ function App() {
 
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/privacy" element={<PrivacyPolicyPage />}/>
+      <Route path="/development" element={<UnderDevelopmentPage />} />
 
       <Route
         path="/forgot-password"
