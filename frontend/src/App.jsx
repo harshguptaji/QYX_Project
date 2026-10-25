@@ -20,6 +20,8 @@ import ContactPage from "./pages/ContactPage";
 import HowItsWorkPage from "./pages/HowItsWorkPage";
 import DoctorPage from "./pages/DoctorPage";
 import ForgotPassword from "./components/ForgotPassword";
+import TermsPage from "./pages/TermsPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 
 // User dashboard
 import UserDashboard from "./pages/UserDashboard";
@@ -78,6 +80,9 @@ function App() {
       />
 
       <Route path="/doctors" element={<DoctorPage />} />
+
+      <Route path="/terms" element={<TermsPage />} />
+      <Route path="/privacy" element={<PrivacyPolicyPage />}/>
 
       <Route
         path="/forgot-password"

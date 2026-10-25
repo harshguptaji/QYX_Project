@@ -1,5 +1,7 @@
 .qyx-footer,
-.qyx-footer * {
+.qyx-footer *,
+.qyx-footer *::before,
+.qyx-footer *::after {
   box-sizing: border-box;
 }
 
@@ -7,13 +9,16 @@
   --footer-forest: #173c32;
   --footer-sage: #c9dda9;
   --footer-ivory: #faf8f0;
-  --footer-text: rgba(250, 248, 240, 0.76);
+  --footer-text: rgba(250, 248, 240, 0.8);
   --footer-line: rgba(219, 231, 205, 0.18);
 
   position: relative;
+  isolation: isolate;
   width: 100%;
+  min-width: 0;
   overflow: hidden;
   color: var(--footer-ivory);
+
   background:
     radial-gradient(
       circle at 88% 4%,
@@ -21,51 +26,52 @@
       transparent 35%
     ),
     linear-gradient(135deg, #122e26 0%, #244c3d 100%);
+
   font-family: Inter, ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .qyx-footer::after {
   position: absolute;
+  z-index: -1;
   right: -160px;
   bottom: -220px;
   width: 460px;
   height: 460px;
-  content: "";
   border: 1px solid rgba(201, 221, 169, 0.12);
   border-radius: 50%;
+  content: "";
   pointer-events: none;
 }
 
 .qyx-footer__container {
-  position: relative;
-  z-index: 1;
-  width: min(100%, 1440px);
-  margin: 0 auto;
-  padding: clamp(64px, 8vw, 96px) clamp(18px, 6vw, 88px) 28px;
+  width: min(calc(100% - 80px), 1360px);
+  margin-inline: auto;
+  padding-block: clamp(56px, 6vw, 88px) 28px;
 }
+
+/* Brand plus a separate four-column navigation grid. */
 
 .qyx-footer__main {
   display: grid;
-  grid-template-columns:
-    minmax(0, 1.45fr)
-    repeat(3, minmax(0, 0.55fr));
-  gap: clamp(28px, 4vw, 64px);
+  grid-template-columns: minmax(240px, 1fr) minmax(0, 2.35fr);
   align-items: start;
+  gap: clamp(32px, 4vw, 64px);
 }
 
-.qyx-footer__main > * {
+.qyx-footer__main > *,
+.qyx-footer__link-groups > * {
   min-width: 0;
 }
 
 .qyx-footer__brand-column {
-  max-width: 390px;
+  max-width: 360px;
 }
 
 .qyx-footer__logo {
   display: inline-flex;
   align-items: center;
-  width: clamp(160px, 14vw, 190px);
+  width: clamp(150px, 13vw, 180px);
   max-width: 100%;
   padding: 8px 12px;
   border-radius: 13px;
@@ -81,12 +87,11 @@
   object-fit: contain;
 }
 
-.qyx-footer__brand-column > p {
-  max-width: 370px;
-  margin: 24px 0 20px;
+.qyx-footer__description {
+  margin: 22px 0;
   color: var(--footer-text);
-  font-size: 0.94rem;
-  line-height: 1.75;
+  font-size: 0.89rem;
+  line-height: 1.8;
   overflow-wrap: anywhere;
 }
 
@@ -95,80 +100,65 @@
   align-items: center;
   gap: 12px;
   color: #e4ebda;
-  font-size: 0.77rem;
-  font-weight: 750;
-  line-height: 1.5;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.6;
 }
 
 .qyx-footer__status > span {
-  position: relative;
+  flex: 0 0 8px;
   width: 8px;
   height: 8px;
-  flex: 0 0 auto;
   border-radius: 50%;
   background: var(--footer-sage);
-  box-shadow: 0 0 0 6px rgba(201, 221, 169, 0.12);
+  box-shadow: 0 0 0 5px rgba(201, 221, 169, 0.12);
 }
 
-.qyx-footer__booking {
+.qyx-footer__contact {
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+  margin-top: 22px;
+}
+
+.qyx-footer__contact a {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 9px;
-  max-width: 100%;
-  min-height: 46px;
-  margin-top: 25px;
-  padding: 11px 18px;
-  border: 1px solid var(--footer-sage);
-  border-radius: 12px;
-  color: var(--footer-forest);
-  background: var(--footer-sage);
-  box-shadow: 0 12px 28px rgba(8, 28, 20, 0.18);
-  font: inherit;
-  font-size: 0.84rem;
-  font-weight: 850;
-  line-height: 1.5;
-  text-align: center;
+  min-height: 32px;
+  color: var(--footer-ivory);
+  font-size: 0.85rem;
+  line-height: 1.6;
   text-decoration: none;
-  cursor: pointer;
-  transition:
-    transform 220ms ease,
-    color 220ms ease,
-    background-color 220ms ease,
-    border-color 220ms ease,
-    box-shadow 220ms ease;
+  overflow-wrap: anywhere;
 }
 
-.qyx-footer__booking:hover {
-  transform: translateY(-3px);
-  color: #122e26;
-  border-color: #dcebc3;
-  background: #dcebc3;
-  box-shadow: 0 16px 32px rgba(8, 28, 20, 0.24);
+.qyx-footer__contact a:hover {
+  color: var(--footer-sage);
 }
 
-.qyx-footer__booking:focus-visible,
-.qyx-footer a:focus-visible {
-  outline: 3px solid #dcebc3;
-  outline-offset: 4px;
+.qyx-footer__address {
+  margin-top: 14px;
+  color: var(--footer-text);
+  font-size: 0.82rem;
+  font-style: normal;
+  line-height: 1.85;
+  overflow-wrap: anywhere;
 }
 
-.qyx-footer__booking svg {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 auto;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+/* All four link groups stay on the same row on desktop. */
+
+.qyx-footer__link-groups {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(18px, 2vw, 32px);
 }
 
 .qyx-footer__links h2 {
-  margin: 4px 0 21px;
+  margin: 4px 0 20px;
   color: var(--footer-ivory);
-  font-size: 0.82rem;
-  font-weight: 850;
+  font-size: 0.78rem;
+  font-weight: 800;
   line-height: 1.5;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -176,23 +166,30 @@
 
 .qyx-footer__links ul {
   display: grid;
-  gap: 14px;
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+.qyx-footer__links li {
+  min-width: 0;
+}
+
 .qyx-footer__links a {
-  display: inline-flex;
+  display: inline-block;
   max-width: 100%;
+  padding-block: 3px;
   color: var(--footer-text);
-  font-size: 0.87rem;
-  line-height: 1.5;
+  font-size: 0.83rem;
+  line-height: 1.7;
   text-decoration: none;
   overflow-wrap: anywhere;
+  cursor: pointer;
+
   transition:
-    color 200ms ease,
-    transform 200ms ease;
+    color 180ms ease,
+    transform 180ms ease;
 }
 
 .qyx-footer__links a:hover {
@@ -200,48 +197,47 @@
   color: #dcebc3;
 }
 
-.qyx-footer__disclaimer {
-  display: grid;
-  grid-template-columns: minmax(150px, 0.32fr) minmax(0, 1.68fr);
-  gap: clamp(18px, 3vw, 40px);
-  margin-top: clamp(48px, 7vw, 76px);
-  padding: clamp(20px, 3vw, 28px);
+/* Informational notice */
+
+.qyx-footer__notice {
+  margin-top: clamp(36px, 5vw, 58px);
+  padding: 20px 24px;
   border: 1px solid var(--footer-line);
-  border-radius: 18px;
-  background: rgba(219, 231, 205, 0.055);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  border-radius: 14px;
+  background: rgba(219, 231, 205, 0.045);
 }
 
-.qyx-footer__disclaimer strong {
-  color: var(--footer-ivory);
-  font-size: 0.82rem;
-  line-height: 1.55;
-}
-
-.qyx-footer__disclaimer p {
+.qyx-footer__notice p {
   margin: 0;
-  color: rgba(250, 248, 240, 0.72);
-  font-size: 0.78rem;
-  line-height: 1.7;
-  overflow-wrap: anywhere;
+  color: var(--footer-text);
+  font-size: 0.79rem;
+  line-height: 1.8;
 }
+
+.qyx-footer__notice a {
+  color: var(--footer-ivory);
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
+/* Copyright and policy links */
 
 .qyx-footer__bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  margin-top: 28px;
-  padding-top: 25px;
+  gap: 20px 32px;
+  margin-top: 26px;
+  padding-top: 24px;
   border-top: 1px solid var(--footer-line);
 }
 
-.qyx-footer__bottom p {
+.qyx-footer__bottom > p {
+  flex-shrink: 0;
   margin: 0;
-  color: rgba(250, 248, 240, 0.65);
-  font-size: 0.76rem;
-  line-height: 1.5;
+  color: rgba(250, 248, 240, 0.74);
+  font-size: 0.75rem;
+  line-height: 1.7;
 }
 
 .qyx-footer__bottom nav {
@@ -249,68 +245,55 @@
   align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
-  gap: 12px 18px;
+  gap: 8px 20px;
 }
 
 .qyx-footer__bottom a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
   color: var(--footer-text);
   font-size: 0.75rem;
-  line-height: 1.5;
+  line-height: 1.6;
   text-decoration: none;
-  transition: color 200ms ease;
 }
 
 .qyx-footer__bottom a:hover {
   color: #dcebc3;
 }
 
-/* Tablets and smaller laptops */
-@media (max-width: 1050px) {
-  .qyx-footer__main {
-    grid-template-columns:
-      minmax(0, 1.2fr)
-      repeat(2, minmax(0, 0.7fr));
-    gap: 40px 32px;
-  }
-
-  .qyx-footer__links:last-child {
-    grid-column: 2;
-  }
+.qyx-footer a:focus-visible {
+  outline: 3px solid #dcebc3;
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
-/* Tablets */
-@media (max-width: 760px) {
+/* Smaller laptops and tablets:
+   brand on top, all four navigation groups below. */
+
+@media (max-width: 1100px) {
   .qyx-footer__container {
-    padding-top: 64px;
+    width: calc(100% - 56px);
   }
 
   .qyx-footer__main {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 40px 28px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 38px;
   }
 
   .qyx-footer__brand-column {
-    grid-column: 1 / -1;
-    max-width: 100%;
+    max-width: 600px;
   }
 
-  .qyx-footer__brand-column > p {
-    max-width: 520px;
-  }
-
-  .qyx-footer__links:last-child {
-    grid-column: auto;
-  }
-
-  .qyx-footer__disclaimer {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 14px;
+  .qyx-footer__link-groups {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
   }
 
   .qyx-footer__bottom {
-    flex-direction: column;
     align-items: flex-start;
-    gap: 18px;
+    flex-direction: column;
+    gap: 12px;
   }
 
   .qyx-footer__bottom nav {
@@ -318,70 +301,69 @@
   }
 }
 
-/* Mobile */
-@media (max-width: 520px) {
+/* Small tablets and phones: two navigation columns. */
+
+@media (max-width: 700px) {
   .qyx-footer__container {
-    padding: 48px 18px 24px;
+    width: calc(100% - 40px);
+    padding-block: 48px 24px;
   }
 
-  .qyx-footer__main {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 32px;
-  }
-
-  .qyx-footer__brand-column,
-  .qyx-footer__links:last-child {
-    grid-column: 1;
-  }
-
-  .qyx-footer__logo {
-    width: 160px;
-  }
-
-  .qyx-footer__brand-column > p {
-    margin-top: 20px;
-    font-size: 0.9rem;
-  }
-
-  .qyx-footer__booking {
-    width: 100%;
+  .qyx-footer__link-groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 24px;
   }
 
   .qyx-footer__links h2 {
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
 
   .qyx-footer__links ul {
-    gap: 12px;
+    gap: 8px;
   }
 
-  .qyx-footer__disclaimer {
-    margin-top: 36px;
-    padding: 20px;
-    border-radius: 14px;
+  .qyx-footer__links a {
+    padding-block: 5px;
+    font-size: 0.85rem;
   }
 
-  .qyx-footer__bottom {
-    margin-top: 24px;
-    padding-top: 20px;
+  .qyx-footer__notice {
+    padding: 17px;
+  }
+
+  .qyx-footer__bottom > p {
+    flex-shrink: 1;
   }
 
   .qyx-footer__bottom nav {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 11px;
+    gap: 8px 18px;
   }
 }
 
-/* Reduced motion */
+/* Very narrow phones */
+
+@media (max-width: 360px) {
+  .qyx-footer__container {
+    width: calc(100% - 32px);
+  }
+
+  .qyx-footer__link-groups {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+  }
+
+  .qyx-footer__bottom nav {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .qyx-footer__booking,
-  .qyx-footer__links a,
-  .qyx-footer__bottom a {
+  .qyx-footer__links a {
     transition: none;
   }
 
-  .qyx-footer__booking:hover,
   .qyx-footer__links a:hover {
     transform: none;
   }
