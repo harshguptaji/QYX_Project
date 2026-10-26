@@ -29,7 +29,7 @@ const steps = [
 
 const HowQYXWorks = () => {
   return (
-    <section className="how-qyx-works" aria-labelledby="how-qyx-title">
+    <section id="how-qyx-works" className="how-qyx-works" aria-labelledby="how-qyx-title">
       <div className="how-qyx-container">
         <div className="how-qyx-heading">
           <span className="how-qyx-eyebrow">HOW QYX WORKS</span>

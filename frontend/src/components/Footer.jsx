@@ -11,8 +11,8 @@ export const footerLinkGroups = [
       { label: "Book a consultation", href: "/doctors" },
       { label: "Meet our specialists", href: "/specialists" },
       { label: "How appointments work", href: "/how-it-works" },
-      { label: "Take the 2-min quiz", href: "/#professional-guidance" },
-      { label: "Privacy & Security", href: "/privacy-policy" },
+      { label: "Take the 2-min quiz", href: "/#hero-main-section" },
+      { label: "Privacy & Security", href: "/privacy" },
     ],
   },
   {
@@ -33,8 +33,8 @@ export const footerLinkGroups = [
       { label: "About us", href: "/about" },
       { label: "Our Team", href: "/about#our-team" },
       { label: "Career", href: "/career" },
-      { label: "For Doctors: Join our network", href: "/#learning-path" },
-      { label: "The QYX device (Coming Soon)", href: "/#faq" },
+      { label: "For Doctors: Join our network", href: "/specialists" },
+      { label: "The QYX device (Coming Soon)", href: "/" },
     ],
   },
   {
@@ -43,7 +43,7 @@ export const footerLinkGroups = [
     links: [
       { label: "Frequently asked questions", href: "/faq" },
       { label: "Contact Us", href: "/contact" },
-      { label: "Grievance redressal", href: "/privacy-policy#privacy-contact" },
+      { label: "Grievance redressal", href: "/privacy" },
     ],
   },
 ];
@@ -51,8 +51,8 @@ export const footerLinkGroups = [
 export const legalLinks = [
   { label: "Privacy policy", href: "/privacy" },
   { label: "Terms of use", href: "/terms" },
-  { label: "Medical disclaimer", href: "/medical-disclaimer" },
-  { label: "Cookie Preferences", href: "/" },
+  // { label: "Medical disclaimer", href: "/medical-disclaimer" },
+  { label: "Cookie Preferences", href: "/privacy" },
 ];
 
 // Keep native anchors for fragment links so they can scroll to a section.
@@ -107,12 +107,12 @@ export default function Footer({
             </span>
 
             <div className="qyx-footer__contact">
-              <a href="mailto:care@qyxmedtech.com">
-                care@qyxmedtech.com
+              <a href="mailto:support@qyxmedtech.com">
+                support@qyxmedtech.com
               </a>
 
-              <a href="tel:+917453898747">
-                +91 74538 98747
+              <a href="tel:+918077015881">
+                +91 807701 5881
               </a>
             </div>
 
@@ -150,15 +150,15 @@ export default function Footer({
 
         <div className="qyx-footer__notice">
           <p>
-            QYX connects you with independent, verified doctors through
-            telemedicine. It does not provide emergency care. In an
-            emergency, call <a href="tel:112">112</a>.
+            QYX offers general information and connects you with independent doctors, it does not diagnose, treat, or provide emergency care, so in an emergency call <a href="tel:112">112</a>.
           </p>
         </div>
 
         <div className="qyx-footer__bottom">
           <p>
             © {currentYear} QYX MedTech. All rights reserved.
+            <br />
+            CIN: U62099UT2025PTC020312
           </p>
 
           <nav aria-label="Legal information">

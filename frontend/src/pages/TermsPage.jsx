@@ -7,15 +7,15 @@ import Navbar from "../components/Navbar";
 
 // Replace these details before publication.
 const termsDetails = {
-  website: "[WEBSITE URL]",
-  legalEntity: "[FULL LEGAL ENTITY NAME]",
-  address: "[REGISTERED / BUSINESS ADDRESS]",
-  jurisdiction: "[CITY / STATE]",
-  legalEmail: "[GENERAL / LEGAL CONTACT EMAIL]",
-  supportEmail: "[SUPPORT / SECURITY EMAIL]",
-  privacyEmail: "[PRIVACY EMAIL]",
-  privacyPolicyUrl: "[PRIVACY POLICY URL]",
-  lastUpdated: "[INSERT PUBLICATION DATE]",
+  website: "https://www.qyxmedtech.com",
+  legalEntity: "QYX MEDTECH PVT LTD.",
+  address: "B-2, IT Park, Sahastradhara Road, Dehradun, Uttarakhand – 248001, India",
+  jurisdiction: "Dehradun, Uttarakhand",
+  legalEmail: "legal@qyxmedtech.com",
+  supportEmail: "support@qyxmedtech.com",
+  privacyEmail: "privacy@qyxmedtech.com",
+  privacyPolicyUrl: "/privacy",
+  lastUpdated: "26 October, 2026",
 };
 
 const termsSections = [

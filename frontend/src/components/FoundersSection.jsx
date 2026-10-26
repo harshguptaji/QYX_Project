@@ -17,7 +17,7 @@ const founders = [
 
 const FoundersSection = () => {
   return (
-    <section
+    <section id="our-team"
       className="qyx-founders-section"
       aria-labelledby="qyx-founders-title"
     >

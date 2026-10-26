@@ -7,17 +7,16 @@ import Navbar from "../components/Navbar";
 
 const privacyDetails = {
   website: "[WEBSITE URL]",
-  legalEntity: "[FULL LEGAL ENTITY NAME]",
-  address: "[REGISTERED / BUSINESS ADDRESS]",
-  privacyEmail: "[PRIVACY EMAIL]",
-  contactMethod: "[PHONE / OTHER CONTACT METHOD]",
-  withdrawalMethod: "[CONSENT WITHDRAWAL METHOD / PRIVACY EMAIL]",
-  grievanceContact: "[NAME OR DESIGNATION]",
-  phone: "[OPTIONAL PHONE]",
-  responseProcess: "[INSERT APPROVED PROCESS AND LEGALLY VERIFIED TIMELINE]",
-  retention:
-    "[INSERT APPROVED RETENTION PERIODS FOR ENQUIRIES, HEALTH-RELATED MESSAGES/UPLOADS, DOCTOR APPLICATIONS, ACCOUNTS, ORDERS, CONSENT RECORDS, SUPPORT TICKETS AND SECURITY LOGS]",
-  lastUpdated: "[INSERT PUBLICATION DATE]",
+  legalEntity: "QYX MEDTECH PVT LTD.",
+  address: "B-2, IT Park, Sahastradhara Road, Dehradun, Uttarakhand – 248001, India",
+  privacyEmail: "legal@qyxmmedtech.com",
+  contactMethod: "+91 8077015881",
+  withdrawalMethod: "support@qyxmedtech.com",
+  grievanceContact: "CEO",
+  phone: "+91 8077490910",
+  responseProcess: "with in 7 working days",
+  retention: "with in 7 working days",
+  lastUpdated: "26 October, 2026",
 };
 
 const privacySections = [

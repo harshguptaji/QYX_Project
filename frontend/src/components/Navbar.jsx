@@ -75,9 +75,9 @@ const Navbar = () => {
             }`}
           >
             <div className="navbar-links">
-              <Link to="/specialists" onClick={closeMenu}>
+              {/* <Link to="/specialists" onClick={closeMenu}>
                 Meet Our Specialists
-              </Link>
+              </Link> */}
 
               <Link to="/how-it-works" onClick={closeMenu}>
                 How It Works
