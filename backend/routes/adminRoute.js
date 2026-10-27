@@ -45,6 +45,15 @@ import {
   getQuizResponseById,
 } from "../controllers/quizResponseController.js";
 
+import {
+  getAllCareerApplications,
+  getCareerApplicationById,
+  getCareerApplicationStats,
+  markCareerApplicationRead,
+  markCareerApplicationUnread,
+  reviewCareerApplication,
+} from "../controllers/careerController.js";
+
 const router = express.Router();
 
 // Existing authentication routes
@@ -55,11 +64,7 @@ router.post("/logout", adminLogout);
 router.use(isAdminAuthenticated);
 
 // Existing admin registration and information routes
-router.post(
-  "/register",
-  authorizeAdminRoles("Root", "Admin"),
-  adminRegister
-);
+router.post("/register", authorizeAdminRoles("Root", "Admin"), adminRegister);
 
 router.get("/me", adminMe);
 
@@ -70,132 +75,139 @@ router.get("/all", allAdmins);
 router.get(
   "/users",
   authorizeAdminRoles("Root", "Admin", "Sub-Admin"),
-  allUsers
+  allUsers,
 );
 
-router.get(
-  "/users/:userId",
-  authorizeAdminRoles("Admin", "Root"),
-  userById
-);
+router.get("/users/:userId", authorizeAdminRoles("Admin", "Root"), userById);
 
 router.patch(
   "/users/:userId",
   authorizeAdminRoles("Admin", "Root"),
-  userEditByAdmin
+  userEditByAdmin,
 );
 
 // Contact routes
 router.get(
   "/contacts/stats",
   authorizeAdminRoles("Root", "Admin", "Sub-Admin"),
-  getContactStats
+  getContactStats,
 );
 
 router.get(
   "/contacts",
   authorizeAdminRoles("Root", "Admin", "Sub-Admin"),
-  getAllContacts
+  getAllContacts,
 );
 
 router.get(
   "/contacts/:contactId",
   authorizeAdminRoles("Root", "Admin", "Sub-Admin"),
-  getContactById
+  getContactById,
 );
 
 router.patch(
   "/contacts/:contactId/read",
   authorizeAdminRoles("Root", "Admin", "Sub-Admin"),
-  markContactAsRead
+  markContactAsRead,
 );
 
 router.patch(
   "/contacts/:contactId/unread",
   authorizeAdminRoles("Root", "Admin", "Sub-Admin"),
-  markContactAsUnread
+  markContactAsUnread,
 );
 
 // Existing admin edit and delete paths
-router.patch(
-  "/edit/:adminId",
-  authorizeAdminRoles("Root"),
-  adminEdit
-);
+router.patch("/edit/:adminId", authorizeAdminRoles("Root"), adminEdit);
 
-router.delete(
-  "/delete/:adminId",
-  authorizeAdminRoles("Root"),
-  adminDelete
-);
+router.delete("/delete/:adminId", authorizeAdminRoles("Root"), adminDelete);
 
 // Quiz management: Root and Admin only.
 // isAdminAuthenticated already runs above these routes.
 
-router.get(
-  "/quiz",
-  authorizeAdminRoles("Root", "Admin"),
-  getAdminQuiz
-);
+router.get("/quiz", authorizeAdminRoles("Root", "Admin"), getAdminQuiz);
 
-router.post(
-  "/quiz",
-  authorizeAdminRoles("Root", "Admin"),
-  createQuiz
-);
+router.post("/quiz", authorizeAdminRoles("Root", "Admin"), createQuiz);
 
-router.patch(
-  "/quiz",
-  authorizeAdminRoles("Root", "Admin"),
-  updateQuiz
-);
+router.patch("/quiz", authorizeAdminRoles("Root", "Admin"), updateQuiz);
 
 router.post(
   "/quiz/questions",
   authorizeAdminRoles("Root", "Admin"),
-  addQuestion
+  addQuestion,
 );
 
 // Keep reorder before /:questionId.
 router.patch(
   "/quiz/questions/reorder",
   authorizeAdminRoles("Root", "Admin"),
-  reorderQuestions
+  reorderQuestions,
 );
 
 router.patch(
   "/quiz/questions/:questionId",
   authorizeAdminRoles("Root", "Admin"),
-  updateQuestion
+  updateQuestion,
 );
 
 router.delete(
   "/quiz/questions/:questionId",
   authorizeAdminRoles("Root", "Admin"),
-  deleteQuestion
+  deleteQuestion,
 );
-
 
 // List, search and filter quiz responses.
 router.get(
   "/quiz/responses",
   authorizeAdminRoles("Root", "Admin"),
-  getAllQuizResponses
+  getAllQuizResponses,
 );
 
 // View one response with original questions and selected answers.
 router.get(
   "/quiz/responses/:responseId",
   authorizeAdminRoles("Root", "Admin"),
-  getQuizResponseById
+  getQuizResponseById,
 );
 
+// Admin Career Routes
+router.get(
+  "/careers/stats",
+  authorizeAdminRoles("Root", "Admin", "Sub-Admin"),
+  getCareerApplicationStats,
+);
+
+router.get(
+  "/careers",
+  authorizeAdminRoles("Root", "Admin", "Sub-Admin"),
+  getAllCareerApplications,
+);
+
+router.get(
+  "/careers/:applicationId",
+  authorizeAdminRoles("Root", "Admin", "Sub-Admin"),
+  getCareerApplicationById,
+);
+
+router.patch(
+  "/careers/:applicationId/read",
+  authorizeAdminRoles("Root", "Admin", "Sub-Admin"),
+  markCareerApplicationRead,
+);
+
+router.patch(
+  "/careers/:applicationId/unread",
+  authorizeAdminRoles("Root", "Admin", "Sub-Admin"),
+  markCareerApplicationUnread,
+);
+
+router.patch(
+  "/careers/:applicationId/review",
+  authorizeAdminRoles("Root", "Admin"),
+  reviewCareerApplication,
+);
 
 // Existing admin details path — keep last.
-router.get(
-  "/:adminId",
-  authorizeAdminRoles("Admin", "Root"),
-  adminById
-);
+router.get("/:adminId", authorizeAdminRoles("Admin", "Root"), adminById);
 
 export default router;

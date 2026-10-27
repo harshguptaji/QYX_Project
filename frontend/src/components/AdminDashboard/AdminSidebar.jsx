@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   Mail,
   ClipboardList,
+  BriefcaseBusiness,
   X,
 } from "lucide-react";
 
@@ -45,6 +46,12 @@ const navigationItems = [
     to: "/accios/quiz",
     label: "Quiz",
     icon: ClipboardList,
+    end: false,
+  },
+  {
+    to: "/accios/careers",
+    label: "Career enquiries",
+    icon: BriefcaseBusiness,
     end: false,
   },
 ];

@@ -9,6 +9,7 @@ import contactReducer from "../features/contact/contactSlice";
 import adminQuizReducer from "../features/admin/quiz/adminQuizSlice";
 import quizReducer from "../features/quiz/quizSlice";
 import adminQuizResponseReducer from "../features/admin/response/adminQuizResponseSlice";
+import careerReducer from "../features/career/careerSlice";
 
 
 export const store = configureStore({
@@ -23,5 +24,6 @@ export const store = configureStore({
         adminQuiz: adminQuizReducer,
         quiz: quizReducer,
         adminQuizResponses: adminQuizResponseReducer,
+        career: careerReducer,
     },
 });

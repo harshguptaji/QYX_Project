@@ -23,6 +23,7 @@ import ForgotPassword from "./components/ForgotPassword";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import UnderDevelopmentPage from "./pages/UnderDevelopmentPage";
+import CareerPage from "./pages/CareerPage";
 
 // User dashboard
 import UserDashboard from "./pages/UserDashboard";
@@ -42,6 +43,8 @@ import AdminAllAdminsPage from "./pages/Admin/AdminAllAdminsPage";
 import AdminDetailsPage from "./pages/Admin/AdminDetailsPage";
 import AdminQuizPage from "./pages/Admin/AdminQuizPage";
 import AdminQuizResponsesPage from "./pages/Admin/AdminQuizResponsesPage";
+import AdminCareerApplicationsPage from "./pages/Admin/AdminCareerApplicationsPage";
+import AdminCareerApplicationDetailsPage from "./pages/Admin/AdminCareerApplicationDetailsPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -85,6 +88,7 @@ function App() {
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/privacy" element={<PrivacyPolicyPage />}/>
       <Route path="/development" element={<UnderDevelopmentPage />} />
+      <Route path="/career" element={<CareerPage />} />
 
       <Route
         path="/forgot-password"
@@ -138,6 +142,10 @@ function App() {
         <Route path="quiz" element={<AdminQuizPage />} />
 
         <Route path="quiz/responses" element={<AdminQuizResponsesPage />}/>
+        
+        <Route path="careers" element={<AdminCareerApplicationsPage />}/>
+
+        <Route path="careers/:applicationId" element={<AdminCareerApplicationDetailsPage />}/>
 
       </Route>
 
