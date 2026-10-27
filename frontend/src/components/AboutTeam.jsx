@@ -1,65 +1,71 @@
-const teamFunctions = [
+import { Link } from "react-router-dom";
+
+const teamMembers = [
   {
     number: "01",
     name: "Kamal A. Rachuri",
     title: "ML & CV Engineer",
     description:
-      "VIT, IIT Madras, Owns the CV Pipeline and modeling tarining.",
-    skills: ["ML", "Model Training"],
+      "VIT, IIT Madras. Works on the computer vision pipeline and model training.",
+    skills: ["Machine Learning", "Model Training"],
   },
   {
     number: "02",
     name: "Abhishek Dixit",
     title: "Product Lead",
     description:
-      "AI/Technical and business engagement strategy.",
-    skills: ["Artificial Intelligence"],
+      "Works on AI, technical strategy, and business engagement.",
+    skills: ["Artificial Intelligence", "Product Strategy"],
   },
   {
     number: "03",
     name: "Harsh Gupta",
     title: "Full Stack Engineer",
     description:
-      "B.Tech in CS, expertees in MERN Stack, and developing consultation platform.",
-    skills: ["MERN", "JavaScript"],
-  },
-  {
-    number: "04",
-    name: "Name - 4",
-    title: "Patient Experience",
-    description:
-      "Shapes clear communication and supportive journeys before, during and after a consultation.",
-    skills: ["Care journey", "Patient support"],
+      "B.Tech in Computer Science with expertise in the MERN stack, developing the consultation platform.",
+    skills: ["MERN Stack", "JavaScript"],
   },
 ];
 
 export default function AboutTeam() {
   return (
-    <section className="qyx-about-team" id="our-team" aria-labelledby="qyx-team-title">
+    <section
+      className="qyx-about-team"
+      id="our-team"
+      aria-labelledby="qyx-team-title"
+    >
       <div className="qyx-about-container">
         <header className="qyx-about-team__header">
-          <span className="qyx-about-section-label">THE TEAM BEHIND THE EXPERIENCE</span>
+          <span className="qyx-about-section-label">
+            THE TEAM BEHIND THE EXPERIENCE
+          </span>
+
           <h2 id="qyx-team-title">
             Different disciplines, one responsible direction.
           </h2>
+
           <p>
-            This prototype uses team functions rather than unverified
-            individual profiles. Replace these cards with confirmed names,
-            photographs and credentials before launch.
+            Meet the people bringing together technology, product, and
+            care to build a more supportive fertility experience.
           </p>
         </header>
 
         <div className="qyx-about-team__grid">
-          {teamFunctions.map((team) => (
-            <article className="qyx-about-team__card" key={team.number}>
+          {teamMembers.map((member) => (
+            <article
+              className="qyx-about-team__card"
+              key={member.number}
+            >
               <div className="qyx-about-team__card-top">
-                <span>{team.number}</span>
-                <small>{team.name}</small>
+                <span>{member.number}</span>
+                <small>{member.name}</small>
               </div>
-              <h3>{team.title}</h3>
-              <p>{team.description}</p>
-              <ul>
-                {team.skills.map((skill) => (
+
+              <h3>{member.title}</h3>
+              <p>{member.description}</p>
+
+              <ul aria-label={`${member.name}'s skills`}>
+                {member.skills.map((skill) => (
                   <li key={skill}>{skill}</li>
                 ))}
               </ul>
@@ -67,14 +73,27 @@ export default function AboutTeam() {
           ))}
         </div>
 
-        {/* <div className="qyx-about-team__verification">
-          <span aria-hidden="true">i</span>
-          <p>
-            <strong>Before publishing real team profiles:</strong> verify
-            professional qualifications, registration information, role
-            descriptions, photographs and consent for public display.
-          </p>
-        </div> */}
+        <div className="qyx-about-team__career">
+          <div className="qyx-about-team__career-content">
+            <span>GROW WITH QYX</span>
+
+            <h3>Want to be part of our journey?</h3>
+
+            <p>
+              We’re building a thoughtful team around a shared purpose.
+              Explore our careers page and tell us how you’d like to
+              contribute.
+            </p>
+          </div>
+
+          <Link
+            to="/career"
+            className="qyx-about-team__career-button"
+          >
+            Explore Careers
+            <span aria-hidden="true">→</span>
+          </Link>
+        </div>
       </div>
     </section>
   );

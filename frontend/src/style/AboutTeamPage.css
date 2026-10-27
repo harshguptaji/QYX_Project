@@ -919,3 +919,292 @@
     transform: none;
   }
 }
+
+/* =========================
+   About team section
+   ========================= */
+
+.qyx-about-team,
+.qyx-about-team * {
+  box-sizing: border-box;
+}
+
+.qyx-about-team {
+  padding: clamp(64px, 8vw, 112px) 0;
+  color: var(--qyx-navy, #263b2e);
+  background: var(--qyx-soft, #f2f5ec);
+}
+
+.qyx-about-team__header {
+  max-width: 800px;
+}
+
+.qyx-about-team__header h2 {
+  margin: 14px 0 0;
+  color: var(--qyx-navy, #263b2e);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.1rem, 4.5vw, 4rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+}
+
+.qyx-about-team__header > p {
+  max-width: 700px;
+  margin: 20px 0 0;
+  color: var(--qyx-text, #687565);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.qyx-about-team__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: clamp(36px, 5vw, 56px);
+}
+
+.qyx-about-team__card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 300px;
+  padding: clamp(22px, 2.5vw, 30px);
+  border: 1px solid var(--qyx-line, #dce4d5);
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 14px 40px rgba(38, 59, 46, 0.04);
+  overflow-wrap: anywhere;
+
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.qyx-about-team__card:hover {
+  transform: translateY(-5px);
+  border-color: #bdcfb5;
+  box-shadow: 0 24px 58px rgba(38, 59, 46, 0.09);
+}
+
+.qyx-about-team__card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.qyx-about-team__card-top > span {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border-radius: 16px;
+  color: var(--qyx-blue-dark, #41654a);
+  background: var(--qyx-blue-soft, #edf3e5);
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+.qyx-about-team__card-top small {
+  max-width: 100%;
+  padding: 7px 11px;
+  border: 1px solid #dce6d0;
+  border-radius: 999px;
+  color: #4f6c43;
+  background: var(--qyx-mint-soft, #eef4e6);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.qyx-about-team__card h3 {
+  margin: 26px 0 10px;
+  color: var(--qyx-navy, #263b2e);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.qyx-about-team__card > p {
+  margin: 0;
+  color: var(--qyx-text, #687565);
+  font-size: 0.93rem;
+  line-height: 1.75;
+}
+
+.qyx-about-team__card ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: auto 0 0;
+  padding: 24px 0 0;
+  list-style: none;
+}
+
+.qyx-about-team__card li {
+  padding: 6px 10px;
+  border-radius: 9px;
+  color: #526c4b;
+  background: var(--qyx-soft, #f2f5ec);
+  font-size: 0.75rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+/* Careers call to action */
+
+.qyx-about-team__career {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  margin-top: 30px;
+  padding: clamp(24px, 3.5vw, 38px);
+  border: 1px solid #d2dfc9;
+  border-radius: 22px;
+  background:
+    radial-gradient(
+      circle at 95% 0%,
+      rgba(201, 221, 169, 0.38),
+      transparent 45%
+    ),
+    #eaf1e3;
+}
+
+.qyx-about-team__career-content {
+  min-width: 0;
+  max-width: 680px;
+}
+
+.qyx-about-team__career-content > span {
+  color: #597c62;
+  font-size: 0.72rem;
+  font-weight: 750;
+  line-height: 1.5;
+  letter-spacing: 0.13em;
+}
+
+.qyx-about-team__career-content h3 {
+  margin: 10px 0 8px;
+  color: #263b2e;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.5rem, 2.8vw, 2rem);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.qyx-about-team__career-content p {
+  margin: 0;
+  color: #596c58;
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+
+.qyx-about-team__career-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-shrink: 0;
+  min-height: 50px;
+  max-width: 100%;
+  padding: 13px 22px;
+  border: 1px solid #41654a;
+  border-radius: 999px;
+  color: #ffffff;
+  background: #41654a;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.qyx-about-team__career-button:hover {
+  transform: translateY(-2px);
+  background: #314f3a;
+  box-shadow: 0 12px 25px rgba(38, 59, 46, 0.16);
+}
+
+.qyx-about-team__career-button:focus-visible {
+  outline: 3px solid #91aa7d;
+  outline-offset: 4px;
+}
+
+.qyx-about-team__career-button span {
+  font-size: 1.1rem;
+}
+
+/* Tablet */
+
+@media (max-width: 1050px) {
+  .qyx-about-team__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .qyx-about-team__career {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .qyx-about-team__career-button {
+    width: fit-content;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 560px) {
+  .qyx-about-team {
+    padding: 60px 0;
+  }
+
+  .qyx-about-team__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .qyx-about-team__card {
+    min-height: 0;
+    padding: 22px;
+    border-radius: 18px;
+  }
+
+  .qyx-about-team__card h3 {
+    margin-top: 22px;
+  }
+
+  .qyx-about-team__career {
+    gap: 20px;
+    padding: 24px 20px;
+    border-radius: 18px;
+  }
+
+  .qyx-about-team__career-button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qyx-about-team__card,
+  .qyx-about-team__career-button {
+    transition: none;
+  }
+
+  .qyx-about-team__card:hover,
+  .qyx-about-team__career-button:hover {
+    transform: none;
+  }
+}
