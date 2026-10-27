@@ -39,7 +39,7 @@ const PrivateCareFeature = () => {
           </ul>
 
           <a
-            href="/consultation"
+            href="https://wa.me/918077015881?text=Hello%20QYX%20team%2C%20I%20would%20like%20to%20join%20the%20waitlist%20for%20your%20upcoming%20fertility%20device.%20Please%20share%20updates%20with%20me."
             className="private-care-feature-button"
           >
             Join The Waitlist

@@ -65,7 +65,7 @@ const ContactLocation = () => {
 
             <a
               className="qyx-contact-location__secondary"
-              href="tel:+917453898747"
+              href="tel:+918077015881"
             >
               Call our team
               <span aria-hidden="true">↗</span>

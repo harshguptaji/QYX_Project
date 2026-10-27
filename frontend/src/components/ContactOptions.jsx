@@ -1,6 +1,6 @@
 import "../style/ContactOptions.css";
 
-const ADMIN_PHONE = "917453898747";
+const ADMIN_PHONE = "918077015881";
 
 const getWhatsAppLink = (message) =>
   `https://wa.me/${ADMIN_PHONE}?text=${encodeURIComponent(message)}`;
@@ -9,21 +9,18 @@ const ContactOptions = () => {
   return (
     <section
       className="qyx-contact-options"
-      aria-labelledby="qyx-contact-options-title"
-    >
+      aria-labelledby="qyx-contact-options-title">
       <div className="qyx-contact-options__container">
         <div className="qyx-contact-options__heading">
-          <span className="qyx-contact-options__eyebrow">
-            LET’S CONNECT
-          </span>
+          <span className="qyx-contact-options__eyebrow">LET’S CONNECT</span>
 
           <h2 id="qyx-contact-options-title">
             Choose your way to <span>reach us.</span>
           </h2>
 
           <p>
-            Whether you’re exploring your first consultation or looking to
-            join our specialist network, we’re here to help.
+            Whether you’re exploring your first consultation or looking to join
+            our specialist network, we’re here to help.
           </p>
         </div>
 
@@ -43,11 +40,10 @@ const ContactOptions = () => {
             <a
               className="qyx-contact-options__link"
               href={getWhatsAppLink(
-                "Hello QYX team, I would like help with booking a consultation. Please guide me on the next steps."
+                "Hello QYX team, I would like help with booking a consultation. Please guide me on the next steps.",
               )}
               target="_blank"
-              rel="noopener noreferrer"
-            >
+              rel="noopener noreferrer">
               Chat on WhatsApp
               <span aria-hidden="true">↗</span>
             </a>
@@ -61,15 +57,12 @@ const ContactOptions = () => {
             <h3>Prefer a conversation?</h3>
 
             <p>
-              Speak with our team about appointment questions, booking
-              support, and general enquiries.
+              Speak with our team about appointment questions, booking support,
+              and general enquiries.
             </p>
 
-            <a
-              className="qyx-contact-options__link"
-              href="tel:+917453898747"
-            >
-              +91 74538 98747
+            <a className="qyx-contact-options__link" href="tel:+918077015881">
+              +91 807701 5881
               <span aria-hidden="true">↗</span>
             </a>
           </article>
@@ -82,18 +75,17 @@ const ContactOptions = () => {
             <h3>Grow your practice.</h3>
 
             <p>
-              Interested in joining QYX? Connect with our admin team to
-              learn about applications and credential verification.
+              Interested in joining QYX? Connect with our admin team to learn
+              about applications and credential verification.
             </p>
 
             <a
               className="qyx-contact-options__link"
               href={getWhatsAppLink(
-                "Hello QYX team, I am a doctor interested in joining your Specialist Network. Please share the application process and required credentials."
+                "Hello QYX team, I am a doctor interested in joining your Specialist Network. Please share the application process and required credentials.",
               )}
               target="_blank"
-              rel="noopener noreferrer"
-            >
+              rel="noopener noreferrer">
               Join the specialist network
               <span aria-hidden="true">↗</span>
             </a>
@@ -101,10 +93,7 @@ const ContactOptions = () => {
         </div>
 
         <div className="qyx-contact-options__note">
-          <span
-            className="qyx-contact-options__note-mark"
-            aria-hidden="true"
-          >
+          <span className="qyx-contact-options__note-mark" aria-hidden="true">
             i
           </span>
 

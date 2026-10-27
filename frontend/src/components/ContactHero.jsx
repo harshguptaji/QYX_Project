@@ -35,7 +35,7 @@ const ContactHero = () => {
 
             <a
               className="qyx-contact-hero__secondary"
-              href="https://wa.me/917453898747?text=Hello%20QYX%20team%2C%20I%20would%20like%20help%20with%20a%20consultation."
+              href="https://wa.me/918077015881?text=Hello%20QYX%20team%2C%20I%20would%20like%20help%20with%20a%20consultation."
               target="_blank"
               rel="noopener noreferrer"
             >
