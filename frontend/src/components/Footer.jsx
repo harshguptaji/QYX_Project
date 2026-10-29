@@ -23,7 +23,7 @@ export const footerLinkGroups = [
       { label: "Sperm health", href: "https://www.icmr.gov.in/icmrobject/uploads/STWs/1765885318_maleinfertility2.pdf" },
       { label: "Fertility Factors", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9942225/" },
       { label: "Semen Analysis", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9942225/" },
-      { label: "Preparing for a consultation", href: "https://nirwoh.icmr.gov.in/pcos-clinic/" },
+      { label: "Preparing for a consultation", href: "/doctors" },
     ],
   },
   {

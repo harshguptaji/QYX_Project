@@ -144,7 +144,7 @@
   height: 52px;
   display: grid;
   place-items: center;
-  padding: 0;
+  padding-bottom: 3px;
   border: 1px solid #aac7ae;
   border-radius: 50%;
   background: #fffdf7;
@@ -287,10 +287,13 @@
 
   .qyx-carousel-previous {
     justify-self: end;
+    padding-bottom: 3px;
   }
 
   .qyx-carousel-next {
     justify-self: start;
+    padding-bottom: 3px;
+
   }
 
   .qyx-carousel-dots {

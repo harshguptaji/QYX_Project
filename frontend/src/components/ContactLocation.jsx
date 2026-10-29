@@ -2,21 +2,19 @@ import "../style/ContactLocation.css";
 
 const ContactLocation = () => {
   const officeAddress =
-    "B-2, IT Park, Sahastradhara Road, Dehradun, Uttarakhand, India - 248001";
+    "Officespaze.com, IT Park, Plot Number B2, Sahastradhara Road, Doon IT Park, Govind Vihar, Dehradun, Uttarakhand - 248013";
 
-  const mapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(
-    officeAddress
-  )}&output=embed`;
+  const latitude = 30.3592295;
+  const longitude = 78.088687;
 
-  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-    officeAddress
-  )}`;
+  const mapEmbedUrl = `https://www.google.com/maps?q=${latitude},${longitude}&z=17&output=embed`;
+
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
 
   return (
     <section
       className="qyx-contact-location"
-      aria-labelledby="qyx-contact-location-title"
-    >
+      aria-labelledby="qyx-contact-location-title">
       <div className="qyx-contact-location__container">
         <div className="qyx-contact-location__content">
           <span className="qyx-contact-location__eyebrow">
@@ -29,15 +27,12 @@ const ContactLocation = () => {
           </h2>
 
           <p className="qyx-contact-location__description">
-            Have a question about QYX or want to connect with our team?
-            Contact us before planning your visit so we can help you
-            coordinate.
+            Have a question about QYX or want to connect with our team? Contact
+            us before planning your visit so we can help you coordinate.
           </p>
 
           <div className="qyx-contact-location__address">
-            <span className="qyx-contact-location__label">
-              OFFICE ADDRESS
-            </span>
+            <span className="qyx-contact-location__label">OFFICE ADDRESS</span>
 
             <h3>QYX Office, Dehradun</h3>
 
@@ -57,16 +52,14 @@ const ContactLocation = () => {
               className="qyx-contact-location__primary"
               href={directionsUrl}
               target="_blank"
-              rel="noopener noreferrer"
-            >
+              rel="noopener noreferrer">
               Get directions
               <span aria-hidden="true">↗</span>
             </a>
 
             <a
               className="qyx-contact-location__secondary"
-              href="tel:+918077015881"
-            >
+              href="tel:+918077015881">
               Call our team
               <span aria-hidden="true">↗</span>
             </a>
@@ -75,12 +68,14 @@ const ContactLocation = () => {
 
         <div className="qyx-contact-location__map-wrapper">
           <iframe
-            className="qyx-contact-location__map"
             src={mapEmbedUrl}
-            title="QYX office at B-2, IT Park, Sahastradhara Road, Dehradun"
+            title="QYX Office Location"
+            width="100%"
+            height="400"
+            style={{ border: 0 }}
             loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
             allowFullScreen
+            referrerPolicy="no-referrer-when-downgrade"
           />
 
           <div className="qyx-contact-location__map-caption">
@@ -93,8 +88,7 @@ const ContactLocation = () => {
               href={directionsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Get directions to the QYX office in Google Maps"
-            >
+              aria-label="Get directions to the QYX office in Google Maps">
               <span aria-hidden="true">↗</span>
             </a>
           </div>

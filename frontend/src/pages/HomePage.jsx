@@ -1,5 +1,6 @@
 
 import AwarenessGap from '../components/AwarenessGap'
+import BrandCarousel from '../components/BrandCarousel'
 import CareOutcomes from '../components/CareOutcomes'
 import FertilityAwareness from '../components/FertilityAwareness'
 import Footer from '../components/Footer'
@@ -19,6 +20,7 @@ const HomePage = () => {
     <>
       <Navbar/>
       <HeroBanner/>
+      <BrandCarousel/>
       <CareOutcomes/>
       <SpermCountSection/>
       <FertilityAwareness/>

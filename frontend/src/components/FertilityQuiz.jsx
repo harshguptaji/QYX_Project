@@ -21,7 +21,7 @@ const createEmptyContact = () => ({
   mobile: "",
   purposeOfVisiting: "",
   otherPurpose: "",
-  contactConsent: false,
+  contactConsent: true,
 });
 
 const PURPOSE_OPTIONS = [
