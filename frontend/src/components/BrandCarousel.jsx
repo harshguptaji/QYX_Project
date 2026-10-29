@@ -1,17 +1,45 @@
 import "../style/BrandCarousel.css";
 
+import tataLogo from "../assets/tata.png";
+import dpiitLogo from "../assets/tata.png";
+import isoLogo from "../assets/iso.png";
+import msmeLogo from "../assets/tata.png";
+
 const brands = [
-  { id: "tata-1mg", name: "Tata 1mg", mark: "1mg" },
-  { id: "dpiit", name: "DPIIT", mark: "DPIIT" },
-  { id: "iso", name: "ISO", mark: "ISO" },
-  { id: "msme", name: "MSME", mark: "MSME" },
+  {
+    id: "tata-1mg",
+    name: "Tata 1mg",
+    image: tataLogo,
+  },
+  {
+    id: "dpiit",
+    name: "DPIIT",
+    image: dpiitLogo,
+  },
+  {
+    id: "iso",
+    name: "ISO",
+    image: isoLogo,
+  },
+  {
+    id: "msme",
+    name: "MSME",
+    image: msmeLogo,
+  },
 ];
 
 function BrandCard({ brand }) {
   return (
     <div className="qyx-brands__card">
-      <span className="qyx-brands__mark" aria-hidden="true">
-        {brand.mark}
+      <span className="qyx-brands__logo">
+        <img
+          src={brand.image}
+          alt=""
+          width={80}
+          height={60}
+          decoding="async"
+          draggable={false}
+        />
       </span>
 
       <span className="qyx-brands__name">{brand.name}</span>
@@ -20,8 +48,10 @@ function BrandCard({ brand }) {
 }
 
 function BrandRow({ items, reverse = false }) {
-  // Repeat enough cards to cover wide screens before looping.
-  const repeatedItems = Array.from({ length: 4 }, () => items).flat();
+  const repeatedItems = Array.from(
+    { length: 4 },
+    () => items
+  ).flat();
 
   return (
     <div className="qyx-brands__row" aria-hidden="true">
@@ -49,23 +79,9 @@ export default function BrandCarousel() {
   return (
     <section
       className="qyx-brands"
-      aria-labelledby="qyx-brands-title"
+      aria-label="QYX ecosystem"
     >
       <div className="qyx-brands__container">
-        {/* <header className="qyx-brands__heading">
-          <span className="qyx-brands__eyebrow">THE QYX ECOSYSTEM</span>
-
-          <h2 id="qyx-brands-title">
-            Moving forward, <em>together.</em>
-          </h2>
-
-          <p>
-            Bringing our ecosystem together as we build the next chapter
-            of QYX.
-          </p>
-        </header> */}
-
-        {/* A single accessible list avoids announcing duplicated cards. */}
         <ul className="qyx-brands__accessible-list">
           {brands.map((brand) => (
             <li key={brand.id}>{brand.name}</li>
@@ -74,10 +90,7 @@ export default function BrandCarousel() {
       </div>
 
       <div className="qyx-brands__sliders">
-        {/* First row moves right. */}
         <BrandRow items={brands} reverse />
-
-        {/* Second row moves left. */}
         <BrandRow items={[...brands].reverse()} />
       </div>
     </section>

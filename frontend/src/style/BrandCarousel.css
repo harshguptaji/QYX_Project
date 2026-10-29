@@ -5,23 +5,17 @@
 
 .qyx-brands {
   --brand-forest: #263b2e;
-  --brand-green: #597c62;
-  --brand-sage: #c9dda9;
-  --brand-muted: #65735f;
   --brand-border: #dce4d5;
   --brand-background: #faf8f0;
   --brand-gap: 18px;
 
-  padding: clamp(52px, 7vw, 90px) 0;
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  padding-block: clamp(32px, 5vw, 60px);
   overflow: hidden;
   color: var(--brand-forest);
-  background:
-    radial-gradient(
-      ellipse at 50% 0,
-      rgba(201, 221, 169, 0.2),
-      transparent 65%
-    ),
-    var(--brand-background);
+  background: var(--brand-background);
 
   font-family: Inter, ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -32,52 +26,14 @@
   margin-inline: auto;
 }
 
-.qyx-brands__heading {
-  max-width: 680px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.qyx-brands__eyebrow {
-  display: inline-block;
-  color: var(--brand-green);
-  font-size: 0.72rem;
-  font-weight: 750;
-  line-height: 1.5;
-  letter-spacing: 0.15em;
-}
-
-.qyx-brands__heading h2 {
-  margin: 14px 0 16px;
-  color: var(--brand-forest);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2rem, 4.5vw, 3.6rem);
-  font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -0.04em;
-  text-wrap: balance;
-}
-
-.qyx-brands__heading h2 em {
-  color: var(--brand-green);
-  font-weight: inherit;
-}
-
-.qyx-brands__heading p {
-  max-width: 520px;
-  margin: 0 auto;
-  color: var(--brand-muted);
-  font-size: 0.96rem;
-  line-height: 1.75;
-}
-
 .qyx-brands__sliders {
   display: grid;
   gap: var(--brand-gap);
-  margin-top: clamp(30px, 5vw, 48px);
+  margin: 0;
 }
 
 .qyx-brands__row {
+  min-width: 0;
   overflow: hidden;
   padding-block: 4px;
 
@@ -108,10 +64,8 @@
   animation-direction: reverse;
 }
 
-/*
- * Both groups have identical width, including trailing space.
- * Moving halfway through the track creates a seamless loop.
- */
+/* Identical groups keep the animation seamless. */
+
 .qyx-brands__group {
   display: flex;
   flex-shrink: 0;
@@ -122,44 +76,50 @@
 .qyx-brands__card {
   display: flex;
   align-items: center;
-  gap: 16px;
-  flex: 0 0 244px;
-  width: 244px;
-  min-height: 104px;
-  padding: 20px;
+  gap: 18px;
+  flex: 0 0 260px;
+  width: 260px;
+  min-height: 108px;
+  padding: 18px 22px;
+
   border: 1px solid var(--brand-border);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.85);
+  border-radius: 16px;
+  background: #ffffff;
 }
 
-.qyx-brands__mark {
+.qyx-brands__logo {
   display: grid;
   place-items: center;
-  width: 64px;
-  height: 58px;
-  flex: 0 0 64px;
-  padding: 5px;
-  border: 1px solid #d9e5cf;
-  border-radius: 13px;
-  color: #41654a;
-  background: #edf3e5;
-  font-size: 0.86rem;
-  font-weight: 850;
-  line-height: 1.2;
-  letter-spacing: -0.03em;
+  flex: 0 0 80px;
+  width: 80px;
+  height: 64px;
+}
+
+/* Preserve logo proportions without cropping. */
+
+.qyx-brands__logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  user-select: none;
 }
 
 .qyx-brands__name {
   min-width: 0;
   color: var(--brand-forest);
-  font-size: 1.08rem;
-  font-weight: 750;
+  font-size: 1.05rem;
+  font-weight: 700;
   line-height: 1.4;
 }
 
-/* Pause while the visitor reads the carousel. */
-.qyx-brands__sliders:hover .qyx-brands__track {
-  animation-play-state: paused;
+/* Pause on devices that support hovering. */
+
+@media (hover: hover) {
+  .qyx-brands__sliders:hover .qyx-brands__track {
+    animation-play-state: paused;
+  }
 }
 
 .qyx-brands__accessible-list {
@@ -192,17 +152,17 @@
   }
 
   .qyx-brands__card {
-    flex-basis: 218px;
-    width: 218px;
-    min-height: 94px;
-    padding: 16px;
-    gap: 13px;
+    flex-basis: 230px;
+    width: 230px;
+    min-height: 96px;
+    padding: 16px 18px;
+    gap: 15px;
   }
 
-  .qyx-brands__mark {
-    width: 58px;
-    height: 54px;
-    flex-basis: 58px;
+  .qyx-brands__logo {
+    flex-basis: 70px;
+    width: 70px;
+    height: 58px;
   }
 
   .qyx-brands__name {
@@ -215,42 +175,36 @@
 @media (max-width: 560px) {
   .qyx-brands {
     --brand-gap: 12px;
-    padding-block: 48px;
-  }
-
-  .qyx-brands__heading p {
-    font-size: 0.9rem;
-  }
-
-  .qyx-brands__eyebrow {
-    font-size: 0.65rem;
+    padding-block: 30px;
   }
 
   .qyx-brands__card {
-    flex-basis: 184px;
-    width: 184px;
-    min-height: 82px;
-    padding: 13px;
-    gap: 11px;
-    border-radius: 14px;
+    flex-basis: 198px;
+    width: 198px;
+    min-height: 84px;
+    padding: 14px;
+    gap: 12px;
+    border-radius: 13px;
   }
 
-  .qyx-brands__mark {
-    width: 50px;
-    height: 48px;
-    flex-basis: 50px;
-    border-radius: 10px;
-    font-size: 0.73rem;
+  .qyx-brands__logo {
+    flex-basis: 62px;
+    width: 62px;
+    height: 50px;
   }
 
   .qyx-brands__name {
-    font-size: 0.91rem;
+    font-size: 0.93rem;
   }
 }
 
-/* Show every brand once without motion. */
+/* Accessible static version for reduced motion. */
 
 @media (prefers-reduced-motion: reduce) {
+  .qyx-brands__track {
+    animation: none;
+  }
+
   .qyx-brands__sliders {
     display: none;
   }
@@ -263,7 +217,7 @@
     gap: 12px;
     width: auto;
     height: auto;
-    margin: 30px 0 0;
+    margin: 0;
     padding: 0;
     overflow: visible;
     clip-path: none;
@@ -275,8 +229,8 @@
     padding: 14px 20px;
     border: 1px solid var(--brand-border);
     border-radius: 12px;
-    background: #ffffff;
     color: var(--brand-forest);
+    background: #ffffff;
     font-weight: 700;
   }
 }
