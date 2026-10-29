@@ -755,6 +755,14 @@
     top: 14px;
     right: 14px;
   }
+  .doctor-card__booking-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 0px;
+  text-decoration: none;
+  border-radius: 30px;
+}
 }
 
 /* Reduced motion */

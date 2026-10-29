@@ -368,3 +368,99 @@
     transform: none;
   }
 }
+
+/* Increase text sizes throughout the footer. */
+
+.qyx-footer__description {
+  font-size: 1rem;
+}
+
+.qyx-footer__status {
+  font-size: 0.87rem;
+}
+
+.qyx-footer__contact a {
+  font-size: 0.96rem;
+}
+
+.qyx-footer__address {
+  font-size: 0.93rem;
+}
+
+.qyx-footer__links h2 {
+  font-size: 0.9rem;
+}
+
+.qyx-footer__links a {
+  font-size: 0.95rem;
+}
+
+.qyx-footer__notice p {
+  font-size: 0.9rem;
+}
+
+.qyx-footer__bottom > p,
+.qyx-footer__bottom a {
+  font-size: 0.87rem;
+}
+
+/* Mobile: three navigation columns. */
+
+@media (max-width: 700px) {
+  .qyx-footer__container {
+    width: calc(100% - 32px);
+  }
+
+  .qyx-footer__link-groups {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 30px 16px;
+  }
+
+  .qyx-footer__links h2 {
+    margin-bottom: 14px;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+  }
+
+  .qyx-footer__links ul {
+    gap: 10px;
+  }
+
+  .qyx-footer__links a {
+    padding-block: 5px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: auto;
+  }
+
+  .qyx-footer__description {
+    font-size: 0.98rem;
+  }
+
+  .qyx-footer__notice {
+    padding: 18px;
+  }
+}
+
+/* Keep three columns on narrow phones. */
+
+@media (max-width: 360px) {
+  .qyx-footer__container {
+    width: calc(100% - 24px);
+  }
+
+  .qyx-footer__link-groups {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 26px 12px;
+  }
+
+  .qyx-footer__links h2 {
+    font-size: 0.8rem;
+  }
+
+  .qyx-footer__links a {
+    font-size: 0.85rem;
+  }
+}
