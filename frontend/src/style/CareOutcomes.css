@@ -526,3 +526,126 @@
     text-align: center;
   }
 }
+
+/* changes */
+
+@media (max-width: 760px) {
+  .qyx-outcomes__panel {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    padding: 28px 20px;
+  }
+
+  .qyx-outcomes__card {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: 18px;
+  }
+
+  .qyx-outcomes__card + .qyx-outcomes__card {
+    padding-top: 28px;
+    border-top: 1px solid rgba(201, 221, 169, 0.18);
+  }
+
+  /* Center the title above both columns. */
+  .qyx-outcomes__card h3 {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    align-self: auto;
+    margin: 0;
+    font-size: 1.05rem;
+    text-align: center;
+  }
+
+  /* Figure on the left. */
+  .qyx-outcomes__chart {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+    height: 180px;
+    margin: 0;
+  }
+
+  /* Description on the right. */
+  .qyx-outcomes__card > p {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: center;
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.75;
+    text-align: left;
+  }
+
+  .qyx-outcomes__donut svg {
+    width: min(100%, 170px);
+  }
+
+  .qyx-outcomes__donut > span {
+    font-size: clamp(28px, 6vw, 38px);
+  }
+
+  .qyx-outcomes__member-circle {
+    width: min(100%, 155px);
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .qyx-outcomes__member-fill {
+    inset: 10px;
+  }
+
+  .qyx-outcomes__circle-content span {
+    font-size: clamp(25px, 5.5vw, 34px);
+  }
+
+  .qyx-outcomes__bar-chart {
+    gap: 12px;
+  }
+
+  .qyx-outcomes__bar-number {
+    font-size: clamp(22px, 4.8vw, 32px);
+    white-space: nowrap;
+  }
+
+  .qyx-outcomes__bar {
+    width: min(100%, 135px);
+    height: 110px;
+  }
+
+  .qyx-outcomes__arrow {
+    font-size: 48px;
+  }
+}
+
+@media (max-width: 380px) {
+  .qyx-outcomes__panel {
+    padding: 24px 14px;
+  }
+
+  .qyx-outcomes__card {
+    column-gap: 12px;
+  }
+
+  .qyx-outcomes__chart {
+    height: 155px;
+  }
+
+  .qyx-outcomes__card h3 {
+    font-size: 0.98rem;
+  }
+
+  .qyx-outcomes__card > p {
+    font-size: 0.88rem;
+    line-height: 1.65;
+  }
+
+  .qyx-outcomes__bar-number {
+    font-size: 22px;
+  }
+
+  .qyx-outcomes__bar {
+    height: 95px;
+  }
+}

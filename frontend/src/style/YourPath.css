@@ -175,3 +175,14 @@
     transition: none;
   }
 }
+
+@media (max-width: 600px) {
+  .your-path-card img {
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .your-path-card:hover img {
+    transform: none;
+  }
+}
