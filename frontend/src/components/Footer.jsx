@@ -34,7 +34,6 @@ export const footerLinkGroups = [
       { label: "Our Team", href: "/about#our-team" },
       { label: "Career", href: "/career" },
       { label: "For Doctors: Join our network", href: "/specialists" },
-      { label: "The QYX device (Coming Soon)", href: "/" },
     ],
   },
   {
