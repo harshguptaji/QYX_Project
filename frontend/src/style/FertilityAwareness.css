@@ -1,18 +1,41 @@
+.fertility-awareness,
+.fertility-awareness * {
+  box-sizing: border-box;
+}
+
 .fertility-awareness {
   padding: clamp(64px, 8vw, 112px) 24px;
-  background-color: #fffdf7;
+  background: #fffdf7;
 }
 
 .fertility-awareness-container {
-  width: min(100%, 1200px);
-  margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  grid-template-areas:
+    "label image"
+    "content image";
   align-items: center;
-  gap: clamp(36px, 6vw, 88px);
+  column-gap: clamp(36px, 6vw, 88px);
+  row-gap: 18px;
+
+  width: min(100%, 1200px);
+  margin-inline: auto;
+}
+
+.fertility-awareness-label {
+  grid-area: label;
+  align-self: end;
+  margin: 0;
+  color: #587b60;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
 }
 
 .fertility-awareness-image {
+  grid-area: image;
   min-width: 0;
 }
 
@@ -25,19 +48,13 @@
 }
 
 .fertility-awareness-content {
+  grid-area: content;
+  align-self: start;
+  min-width: 0;
   max-width: 520px;
 }
 
-.fertility-awareness-label {
-  display: inline-block;
-  margin-bottom: 18px;
-  color: #587b60;
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.13em;
-}
-
-.fertility-awareness-content h2 {
+.fertility-awareness-content h3 {
   margin: 0;
   color: #183e2b;
   font-size: clamp(2rem, 3.5vw, 3.6rem);
@@ -52,14 +69,29 @@
   line-height: 1.75;
 }
 
+/* Mobile order: title, image, text. */
+
 @media (max-width: 768px) {
   .fertility-awareness {
     padding: 64px 20px;
   }
 
   .fertility-awareness-container {
-    grid-template-columns: 1fr;
-    gap: 32px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "label"
+      "image"
+      "content";
+    gap: 26px;
+  }
+
+  .fertility-awareness-label {
+    text-align: center;
+  }
+
+  .fertility-awareness-image {
+    width: min(100%, 560px);
+    margin-inline: auto;
   }
 
   .fertility-awareness-content {
@@ -72,8 +104,8 @@
     padding: 48px 16px;
   }
 
-  .fertility-awareness-image img {
-    border-radius: 16px;
+  .fertility-awareness-container {
+    gap: 22px;
   }
 
   .fertility-awareness-label {
@@ -81,8 +113,8 @@
     letter-spacing: 0.1em;
   }
 
-  .fertility-awareness-container {
-    gap: 28px;
+  .fertility-awareness-image img {
+    border-radius: 16px;
   }
 
   .fertility-awareness-content p {
