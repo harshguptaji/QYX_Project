@@ -116,9 +116,9 @@ export default function Footer({
             </div>
 
             <address className="qyx-footer__address">
-              QYX Office
+              B-2, IT Park, 
               <br />
-              B-2, IT Park, Sahastradhara Road,
+              Sahastradhara Road, Doon IT Park, Govind Vihar
               <br />
               Dehradun, Uttarakhand – 248001, India
             </address>
