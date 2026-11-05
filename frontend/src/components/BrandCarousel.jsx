@@ -1,9 +1,9 @@
 import "../style/BrandCarousel.css";
 
 import tataLogo from "../assets/tata.png";
-import dpiitLogo from "../assets/tata.png";
+import dpiitLogo from "../assets/dpiit.png";
 import isoLogo from "../assets/iso.png";
-import msmeLogo from "../assets/tata.png";
+import msmeLogo from "../assets/msme.png";
 
 const brands = [
   {
