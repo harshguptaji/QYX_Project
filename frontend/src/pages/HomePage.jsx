@@ -29,8 +29,8 @@ const HomePage = () => {
       <AwarenessGap/>
       <YourPath/>
       <HowQYXWorks/>
-      <DigitalSemenAnalysis/>
       <PrivateCareFeature/>
+      <DigitalSemenAnalysis/>
       <QYXCarousel/>
       {/* <FoundersSection/> */}
       <Footer/>
