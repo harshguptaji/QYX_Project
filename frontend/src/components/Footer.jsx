@@ -22,8 +22,8 @@ export const footerLinkGroups = [
       { label: "Male fertility basics", href: "https://www.icmr.gov.in/icmrobject/custom_data/pdf/downloadable-books/STW_Manual_v1.pdf" },
       { label: "Sperm health", href: "https://www.icmr.gov.in/icmrobject/uploads/STWs/1765885318_maleinfertility2.pdf" },
       { label: "Fertility Factors", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9942225/" },
-      { label: "Semen Analysis", href: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9942225/" },
       { label: "Preparing for a consultation", href: "/doctors" },
+      { label: "Semen Analysis", href: "https://qyxdev--qyx-app.us-east.modal.run/login" },
     ],
   },
   {

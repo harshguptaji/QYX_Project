@@ -2,6 +2,7 @@
 import AwarenessGap from '../components/AwarenessGap'
 import BrandCarousel from '../components/BrandCarousel'
 import CareOutcomes from '../components/CareOutcomes'
+import DigitalSemenAnalysis from '../components/DigitalSemenAnalysis'
 import FertilityAwareness from '../components/FertilityAwareness'
 import Footer from '../components/Footer'
 // import FoundersSection from '../components/FoundersSection'
@@ -28,6 +29,7 @@ const HomePage = () => {
       <AwarenessGap/>
       <YourPath/>
       <HowQYXWorks/>
+      <DigitalSemenAnalysis/>
       <PrivateCareFeature/>
       <QYXCarousel/>
       {/* <FoundersSection/> */}
